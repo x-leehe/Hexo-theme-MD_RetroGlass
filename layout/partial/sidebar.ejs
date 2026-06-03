@@ -1,0 +1,79 @@
+<!-- ============================================================
+  MD-RetroGlass — Sidebar partial (desktop only)
+  ============================================================ -->
+<aside class="site-sidebar">
+  <!-- Profile Card -->
+  <div class="sidebar-card profile-card">
+    <% if (theme.avatar) { %>
+    <img src="<%= url_for(theme.avatar) %>" alt="<%= config.author %>" class="sidebar-avatar">
+    <% } %>
+    <h3 class="sidebar-name"><%= config.author %></h3>
+    <p class="sidebar-bio"><%= config.subtitle || config.description %></p>
+
+    <!-- Tags (MD3 chips) -->
+    <div class="sidebar-tags">
+      <% var tagCloud = site.tags.sort('length', -1).limit(8).toArray(); %>
+      <% tagCloud.forEach(function(tag) { %>
+      <a href="<%= url_for(tag.path) %>" class="sidebar-tag-chip">
+        <%= tag.name %>
+        <span class="tag-count"><%= tag.length %></span>
+      </a>
+      <% }); %>
+    </div>
+  </div>
+
+  <!-- Social Links Card -->
+  <% if (theme.social && Object.keys(theme.social).length > 0) { %>
+  <div class="sidebar-card social-card">
+    <h4 class="sidebar-card-title">
+      <svg class="sym-icon" aria-hidden="true"><use href="#link"/></svg>
+      <span>Links</span>
+    </h4>
+    <div class="social-links">
+      <% for (var name in theme.social) { %>
+      <a href="<%= theme.social[name] %>" class="social-link-item" target="_blank" rel="noopener" title="<%= name %>">
+        <span class="social-icon">
+          <% if (name === 'GitHub') { %><svg class="sym-icon" aria-hidden="true"><use href="#code"/></svg><% } %>
+          <% if (name === 'Telegram') { %><svg class="sym-icon" aria-hidden="true"><use href="#send"/></svg><% } %>
+          <% if (name === 'Email') { %><svg class="sym-icon" aria-hidden="true"><use href="#mail"/></svg><% } %>
+          <% if (name === 'Steam') { %><svg class="sym-icon" aria-hidden="true"><use href="#sports_esports"/></svg><% } %>
+          <% if (name !== 'GitHub' && name !== 'Telegram' && name !== 'Email' && name !== 'Steam') { %><svg class="sym-icon" aria-hidden="true"><use href="#open_in_new"/></svg><% } %>
+        </span>
+        <span class="social-name"><%= name %></span>
+      </a>
+      <% } %>
+    </div>
+  </div>
+  <% } %>
+
+  <!-- Music Player Card -->
+  <% if (theme.music && theme.music.enable) { %>
+  <div class="sidebar-card music-card">
+    <h4 class="sidebar-card-title">
+      <svg class="sym-icon" aria-hidden="true"><use href="#music_note"/></svg>
+      <span>Music</span>
+    </h4>
+    <div class="music-player-wrap">
+      <%- partial('partial/music', { theme: theme }) %>
+    </div>
+  </div>
+  <% } %>
+
+  <!-- Recent Posts Card -->
+  <div class="sidebar-card recent-posts-card">
+    <h4 class="sidebar-card-title">
+      <svg class="sym-icon" aria-hidden="true"><use href="#article"/></svg>
+      <span>Recent Posts</span>
+    </h4>
+    <ul class="recent-posts-list">
+      <% site.posts.sort('date', -1).limit(5).forEach(function(post) { %>
+      <li>
+        <a href="<%= url_for(post.path) %>" class="recent-post-link">
+          <span class="recent-post-title"><%= post.title %></span>
+          <span class="recent-post-date"><%= date(post.date, 'MM-DD') %></span>
+        </a>
+      </li>
+      <% }); %>
+    </ul>
+  </div>
+</aside>

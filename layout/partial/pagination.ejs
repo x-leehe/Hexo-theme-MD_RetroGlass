@@ -1,0 +1,38 @@
+<!-- ============================================================
+  MD-RetroGlass — Pagination partial
+  ============================================================ -->
+<% if (page.total > 1) { %>
+<nav class="pagination">
+  <div class="pagination-inner">
+    <% if (page.prev) { %>
+    <a href="<%= url_for(page.prev_link) %>" class="pagination-btn pagination-prev">
+      <svg class="sym-icon" aria-hidden="true"><use href="#chevron_left"/></svg>
+      <span>上一页</span>
+    </a>
+    <% } else { %>
+    <span class="pagination-btn pagination-prev disabled">
+      <svg class="sym-icon" aria-hidden="true"><use href="#chevron_left"/></svg>
+      <span>上一页</span>
+    </span>
+    <% } %>
+
+    <div class="pagination-info">
+      <span class="pagination-current"><%= page.current %></span>
+      <span class="pagination-sep">/</span>
+      <span class="pagination-total"><%= page.total %></span>
+    </div>
+
+    <% if (page.next) { %>
+    <a href="<%= url_for(page.next_link) %>" class="pagination-btn pagination-next">
+      <span>下一页</span>
+      <svg class="sym-icon" aria-hidden="true"><use href="#chevron_right"/></svg>
+    </a>
+    <% } else { %>
+    <span class="pagination-btn pagination-next disabled">
+      <span>下一页</span>
+      <svg class="sym-icon" aria-hidden="true"><use href="#chevron_right"/></svg>
+    </span>
+    <% } %>
+  </div>
+</nav>
+<% } %>

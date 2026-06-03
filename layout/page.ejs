@@ -1,0 +1,41 @@
+<!-- ============================================================
+  MD-RetroGlass — Standalone page
+  ============================================================ -->
+<article class="page-full">
+  <div class="page-full-inner">
+    <header class="page-full-header">
+      <h1 class="page-full-title"><%= page.title %></h1>
+      <% if (page.updated) { %>
+      <div class="page-full-meta">
+        <span class="post-meta-item">
+          <svg class="sym-icon" aria-hidden="true"><use href="#edit"/></svg>
+          <time datetime="<%= date(page.updated, 'YYYY-MM-DD') %>">
+            Updated: <%= date(page.updated, theme.post.date_format || 'YYYY-MM-DD') %>
+          </time>
+        </span>
+      </div>
+      <% } %>
+    </header>
+
+    <% if (theme.toc && theme.toc.enable && page.toc !== false) { %>
+    <div class="post-toc">
+      <details class="toc-details">
+        <summary class="toc-summary">
+          <svg class="sym-icon" aria-hidden="true"><use href="#toc"/></svg>
+          <span>目录</span>
+        </summary>
+        <div class="toc-body">
+          <%- toc(page.content, { list_number: theme.toc.list_number, max_depth: theme.toc.max_depth }) %>
+        </div>
+      </details>
+    </div>
+    <% } %>
+
+    <div class="page-full-content">
+      <%- page.content %>
+    </div>
+  </div>
+</article>
+
+<!-- Gitalk (if enabled for this page) -->
+<%- partial('partial/gitalk', { page: page, theme: theme }) %>

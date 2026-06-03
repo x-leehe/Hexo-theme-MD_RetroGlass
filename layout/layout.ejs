@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="<%= config.language || 'zh-CN' %>">
+
+<%- partial('partial/head', { page: page, config: config, theme: theme }) %>
+
+<body>
+  <!-- SVG Icon Sprite (once per page) -->
+  <%- partial('partial/sprite') %>
+
+  <!-- Background Layer -->
+  <div class="fallback-bg"></div>
+  <img id="bg-canvas-back" src="<%= url_for(theme.backgrounds[0]) %>" alt="" crossorigin="anonymous">
+  <img id="bg-canvas" src="<%= url_for(theme.backgrounds[0]) %>" alt="Background" crossorigin="anonymous">
+
+  <!-- Background Rotation Controls -->
+  <% if (theme.backgrounds && theme.backgrounds.length > 1) { %>
+  <div class="bg-controls" id="bg-controls">
+    <button class="bg-arrow bg-prev" id="bg-prev" title="上一张">
+      <svg class="sym-icon" aria-hidden="true"><use href="#chevron_left"/></svg>
+    </button>
+    <div class="bg-dots" id="bg-dots"></div>
+    <button class="bg-arrow bg-next" id="bg-next" title="下一张">
+      <svg class="sym-icon" aria-hidden="true"><use href="#chevron_right"/></svg>
+    </button>
+  </div>
+  <% } %>
+
+  <div class="site-wrapper">
+    <!-- Header -->
+    <%- partial('partial/header', { config: config, theme: theme, page: page }) %>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <%- body %>
+    </main>
+
+    <!-- Sidebar (desktop) -->
+    <%- partial('partial/sidebar', { config: config, theme: theme, page: page, site: site }) %>
+
+    <!-- Footer -->
+    <%- partial('partial/footer', { config: config, theme: theme }) %>
+  </div>
+
+  <!-- Scroll to Top -->
+  <% if (theme.scroll_to_top) { %>
+  <button id="scroll-to-top" class="scroll-to-top" title="回到顶部">
+    <svg class="sym-icon" aria-hidden="true"><use href="#arrow_upward"/></svg>
+  </button>
+  <% } %>
+
+  <!-- Background Images Config (passed to JS) -->
+  <script id="bg-config" type="application/json">
+    <%- JSON.stringify(theme.backgrounds ? theme.backgrounds.map(function(bg) { return url_for(bg); }) : []) %>
+  </script>
+
+  <!-- Gitalk JS init (always available, even on pages without comments) -->
+  <% if (theme.gitalk && theme.gitalk.enable) { %>
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+  <script>
+    window._gitalkBase = {
+      clientID: '<%= theme.gitalk.clientID %>',
+      clientSecret: '<%= theme.gitalk.clientSecret %>',
+      repo: '<%= theme.gitalk.repo %>',
+      owner: '<%= theme.gitalk.owner %>',
+      admin: <%- JSON.stringify(theme.gitalk.admin) %>,
+      distractionFreeMode: <%= theme.gitalk.distractionFreeMode || false %>,
+      createIssueManually: <%= theme.gitalk.createIssueManually !== false %>,
+      labels: <%- JSON.stringify(theme.gitalk.labels || ['Gitalk']) %>,
+    };
+    window._initGitalk = function() {
+      var container = document.getElementById('gitalk-container');
+      if (!container) return;
+      var pageId = container.getAttribute('data-id');
+      if (!pageId) return;
+      container.innerHTML = '';
+      var config = Object.assign({}, window._gitalkBase, { id: pageId });
+      new Gitalk(config).render('gitalk-container');
+    };
+  </script>
+  <% } %>
+
+  <!-- Scripts -->
+  <script src="<%= url_for('js/dynamic-color.js') %>"></script>
+  <script src="<%= url_for('js/main.js') %>"></script>
+  <script src="<%= url_for('js/pjax.js') %>"></script>
+</body>
+
+</html>

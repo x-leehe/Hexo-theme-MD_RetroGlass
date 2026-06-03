@@ -1,0 +1,133 @@
+# ============================================================
+# MD-RetroGlass Theme Configuration
+# ============================================================
+# A Hexo theme with Material Design 3 glassmorphism aesthetics.
+# Features: dynamic color, glassmorphism, PJAX, APlayer+MetingJS,
+#           Gitalk comments, Win10-style tag tiles, code copy.
+# ============================================================
+
+# -------------------------------
+# Site Identity
+# -------------------------------
+avatar: /images/avatar.jpg
+favicon: /images/favicon.png
+
+# -------------------------------
+# Navigation Menu
+# -------------------------------
+menu:
+  Home: /
+  Archives: /archives
+  Tags: /tags
+  Categories: /categories
+  About: /about
+  Friends: /friends
+
+# -------------------------------
+# Social Links
+# -------------------------------
+social:
+  GitHub: https://github.com/yourname
+  Telegram: https://t.me/yourname
+  Email: mailto:you@example.com
+  Steam: https://steamcommunity.com/id/yourname
+
+# -------------------------------
+# Background Images
+# -------------------------------
+# Array of background image paths (relative to theme source/images/)
+# These rotate automatically on the client side.
+backgrounds:
+  - /images/bg-default.png
+
+# -------------------------------
+# Glassmorphism Settings
+# -------------------------------
+glass:
+  blur: 24px
+  opacity: 0.7
+  border_radius: 28px
+  border_opacity: 0.15
+
+# -------------------------------
+# Typography
+# -------------------------------
+font:
+  body: "'HarmonyOS Sans', 'Noto Sans SC', sans-serif"
+  code: "'JetBrains Mono', 'Fira Code', monospace"
+  size: 16px
+  line_height: 1.75
+
+# -------------------------------
+# Code Highlighting
+# -------------------------------
+syntax_highlighter: highlight.js
+
+# -------------------------------
+# Gitalk Comments
+# -------------------------------
+# See: https://github.com/gitalk/gitalk#options
+gitalk:
+  enable: false                   # Set to true and fill in below
+  clientID: ''                    # GitHub OAuth App clientID
+  clientSecret: ''                # GitHub OAuth App clientSecret
+  repo: ''                        # Repository name for storing comments
+  owner: ''                       # GitHub username
+  admin:
+    - ''
+  distractionFreeMode: false
+  createIssueManually: false
+  labels:
+    - Gitalk
+
+# -------------------------------
+# APlayer + MetingJS Music Player
+# -------------------------------
+# See: https://github.com/metowolf/MetingJS
+music:
+  enable: false                   # Set to true and fill in below
+  server: netease
+  type: playlist
+  id: ''                          # Your playlist ID
+  api: 'https://api.meting.icodeq.com/api?server=:server&type=:type&id=:id&r=:r'
+  list_folded: true
+  autoplay: false
+  order: list
+  preload: auto
+
+# -------------------------------
+# SEO & Meta
+# -------------------------------
+seo:
+  robots: ''
+  google_site_verification: ''
+  bing_site_verification: ''
+
+# -------------------------------
+# RSS
+# -------------------------------
+rss:
+  enable: true
+
+# -------------------------------
+# Footer
+# -------------------------------
+footer:
+  since: 2024
+  copyright: ''                   # Your name
+  powered_by: true                # Show "Powered by Hexo" credit
+  icp: ''                         # ICP备案号（可选）
+
+# -------------------------------
+# Misc
+# -------------------------------
+toc:
+  enable: true
+  list_number: false
+  max_depth: 3
+
+post:
+  date_format: YYYY-MM-DD
+  reading_time: true              # Estimate reading time
+
+scroll_to_top: true

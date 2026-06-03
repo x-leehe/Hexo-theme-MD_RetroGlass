@@ -1,0 +1,52 @@
+<!-- ============================================================
+  MD-RetroGlass — Archive page (grouped by year)
+  ============================================================ -->
+<div class="archive-container">
+  <div class="archive-inner">
+    <header class="archive-header">
+      <h1 class="archive-title">
+        <svg class="sym-icon" aria-hidden="true"><use href="#archive"/></svg>
+        <span>Archives</span>
+      </h1>
+      <% if (site.posts.length > 0) { %>
+      <p class="archive-count"><%= site.posts.length %> posts in total</p>
+      <% } %>
+    </header>
+
+    <% var yearlyPosts = {}; %>
+    <% page.posts.each(function(post) { %>
+      <% var year = date(post.date, 'YYYY'); %>
+      <% if (!yearlyPosts[year]) { yearlyPosts[year] = []; } %>
+      <% yearlyPosts[year].push(post); %>
+    <% }); %>
+
+    <% if (Object.keys(yearlyPosts).length === 0) { %>
+    <div class="empty-state">
+      <svg class="sym-icon" aria-hidden="true"><use href="#archive"/></svg>
+      <p>No archives yet.</p>
+    </div>
+    <% } else { %>
+
+    <div class="archive-list">
+      <% Object.keys(yearlyPosts).sort().reverse().forEach(function(year) { %>
+      <section class="archive-year">
+        <h2 class="archive-year-title"><%= year %></h2>
+        <ul class="archive-posts">
+          <% yearlyPosts[year].forEach(function(post) { %>
+          <li class="archive-post-item">
+            <time class="archive-post-date" datetime="<%= date(post.date, 'YYYY-MM-DD') %>">
+              <%= date(post.date, 'MM-DD') %>
+            </time>
+            <a href="<%= url_for(post.path) %>" class="archive-post-link">
+              <%= post.title %>
+            </a>
+          </li>
+          <% }); %>
+        </ul>
+      </section>
+      <% }); %>
+    </div>
+
+    <% } %>
+  </div>
+</div>

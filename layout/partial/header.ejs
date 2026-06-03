@@ -1,0 +1,44 @@
+<!-- ============================================================
+  MD-RetroGlass — Header partial
+  ============================================================ -->
+<header class="site-header">
+  <div class="header-inner">
+    <!-- Logo / Site Title -->
+    <a href="<%= url_for('/') %>" class="site-logo">
+      <% if (theme.avatar) { %>
+      <img src="<%= url_for(theme.avatar) %>" alt="<%= config.author %>" class="logo-avatar">
+      <% } %>
+      <span class="logo-text">
+        <span class="logo-title"><%= config.title %></span>
+        <% if (config.subtitle) { %>
+        <span class="logo-subtitle"><%= config.subtitle %></span>
+        <% } %>
+      </span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="nav-desktop">
+      <% for (var item in theme.menu) { %>
+        <a href="<%= url_for(theme.menu[item]) %>"
+           class="nav-item<%= (page.path === theme.menu[item] || (theme.menu[item] !== '/' && page.path.startsWith(theme.menu[item]))) ? ' active' : '' %>">
+          <%= item %>
+        </a>
+      <% } %>
+    </nav>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="菜单">
+      <svg class="sym-icon" aria-hidden="true"><use href="#menu"/></svg>
+    </button>
+  </div>
+
+  <!-- Mobile Navigation Overlay -->
+  <nav class="nav-mobile" id="nav-mobile">
+    <% for (var item in theme.menu) { %>
+      <a href="<%= url_for(theme.menu[item]) %>"
+         class="nav-item-mobile<%= (page.path === theme.menu[item] || (theme.menu[item] !== '/' && page.path.startsWith(theme.menu[item]))) ? ' active' : '' %>">
+        <%= item %>
+      </a>
+    <% } %>
+  </nav>
+</header>

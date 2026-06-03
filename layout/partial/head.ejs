@@ -1,0 +1,64 @@
+<!-- ============================================================
+  MD-RetroGlass — <head> partial
+  ============================================================ -->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- Title -->
+  <title>
+    <% if (is_home()) { %>
+      <%= config.title %>
+    <% } else if (is_post()) { %>
+      <%= page.title %> — <%= config.title %>
+    <% } else if (is_archive()) { %>
+      Archives — <%= config.title %>
+    <% } else if (is_tag()) { %>
+      Tag: <%= page.tag %> — <%= config.title %>
+    <% } else if (is_category()) { %>
+      Category: <%= page.category %> — <%= config.title %>
+    <% } else { %>
+      <%= page.title %> — <%= config.title %>
+    <% } %>
+  </title>
+
+  <!-- SEO -->
+  <% if (theme.seo && theme.seo.robots) { %>
+  <meta name="robots" content="<%= theme.seo.robots %>">
+  <% } %>
+  <meta name="description" content="<%= page.description || config.description %>">
+  <meta name="author" content="<%= config.author %>">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="<%= is_post() ? 'article' : 'website' %>">
+  <meta property="og:title" content="<%= page.title || config.title %>">
+  <meta property="og:description" content="<%= page.description || config.description %>">
+  <meta property="og:url" content="<%= full_url_for(page.path) %>">
+  <meta property="og:site_name" content="<%= config.title %>">
+
+  <!-- Favicon -->
+  <% if (theme.favicon) { %>
+  <link rel="icon" type="image/png" href="<%= url_for(theme.favicon) %>">
+  <% } %>
+
+  <!-- Fonts via CDN -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/harmonyos-sans@5/index.css">
+
+  <!-- Highlight.js (dark theme) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11/styles/atom-one-dark.css">
+
+  <!-- Theme Stylesheet -->
+  <link rel="stylesheet" href="<%= url_for('css/style.css') %>">
+
+  <!-- RSS -->
+  <% if (theme.rss && theme.rss.enable) { %>
+  <link rel="alternate" type="application/rss+xml" title="<%= config.title %>" href="<%= url_for('/atom.xml') %>">
+  <% } %>
+
+  <!-- Preload background -->
+  <% if (theme.backgrounds && theme.backgrounds.length > 0) { %>
+  <link rel="preload" as="image" href="<%= url_for(theme.backgrounds[0]) %>" crossorigin="anonymous">
+  <% } %>
+</head>

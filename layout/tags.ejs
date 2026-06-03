@@ -1,0 +1,90 @@
+<!-- ============================================================
+  MD-RetroGlass — Tags (Win10 Start Menu tile grid)
+  ============================================================ -->
+<div class="start-container">
+  <div class="start-inner">
+
+    <!-- Title Bar (like Start Menu header) -->
+    <div class="start-titlebar">
+      <div class="start-titlebar-icon">
+        <svg class="sym-icon" aria-hidden="true"><use href="#tag"/></svg>
+      </div>
+      <h1 class="start-titlebar-text">Tags</h1>
+      <% if (site.tags.length > 0) { %>
+      <span class="start-titlebar-count"><%= site.tags.length %></span>
+      <% } %>
+    </div>
+
+    <!-- Search / Filter -->
+    <div class="start-search">
+      <svg class="sym-icon" aria-hidden="true"><use href="#search"/></svg>
+      <input type="text" class="start-search-input" id="tag-filter"
+             placeholder="Search tags…" autocomplete="off">
+    </div>
+
+    <!-- Empty State -->
+    <% if (site.tags.length === 0) { %>
+    <div class="empty-state">
+      <svg class="sym-icon" aria-hidden="true"><use href="#tag"/></svg>
+      <p>No tags yet.</p>
+    </div>
+    <% } else { %>
+
+    <!-- Tile Grid -->
+    <div class="tile-grid" id="tile-grid">
+      <% site.tags.sort('length', -1).forEach(function(tag, idx) { %>
+        <%
+          // Tile size by post count (1→small, 2-3→wide, 4+→large)
+          var count = tag.length;
+          var size = count >= 4 ? 'lg' : (count >= 2 ? 'md' : 'sm');
+          // Color hue by name hash for consistent per-tag accent
+          var hue = (function(s) {
+            var h = 0;
+            for (var i = 0; i < s.length; i++) h = ((h << 5) - h) + s.charCodeAt(i);
+            return Math.abs(h) % 360;
+          })(tag.name);
+        %>
+      <a href="<%= url_for(tag.path) %>"
+         class="tile tile-<%= size %>"
+         data-tag="<%= tag.name.toLowerCase() %>"
+         style="--tile-hue: <%= hue %>">
+        <div class="tile-face">
+          <span class="tile-icon">
+            <svg class="sym-icon" aria-hidden="true"><use href="#tag"/></svg>
+          </span>
+          <span class="tile-label"><%= tag.name %></span>
+          <span class="tile-badge"><%= count %></span>
+        </div>
+      </a>
+      <% }); %>
+    </div>
+
+    <p class="start-footer-text" id="no-tag-match" style="display:none">
+      No tags match your search.
+    </p>
+
+    <% } %>
+  </div>
+</div>
+
+<script>
+(function(){
+  var input = document.getElementById('tag-filter');
+  var grid = document.getElementById('tile-grid');
+  var noMatch = document.getElementById('no-tag-match');
+  if (!input || !grid) return;
+
+  input.addEventListener('input', function(){
+    var q = input.value.trim().toLowerCase();
+    var tiles = grid.querySelectorAll('.tile');
+    var visible = 0;
+    tiles.forEach(function(t){
+      var tag = (t.getAttribute('data-tag') || '').toLowerCase();
+      var match = !q || tag.indexOf(q) !== -1;
+      t.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    if (noMatch) noMatch.style.display = (q && visible === 0) ? '' : 'none';
+  });
+})();
+</script>

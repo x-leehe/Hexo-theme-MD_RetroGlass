@@ -1,0 +1,70 @@
+<!-- ============================================================
+  MD-RetroGlass — Home page (post list)
+  ============================================================ -->
+<div class="posts-container">
+  <% page.posts.each(function(post) { %>
+  <article class="post-card">
+    <div class="post-card-inner">
+      <!-- Post Meta -->
+      <div class="post-card-meta">
+        <time class="post-card-date" datetime="<%= date(post.date, 'YYYY-MM-DD') %>">
+          <svg class="sym-icon" aria-hidden="true"><use href="#calendar_today"/></svg>
+          <span><%= date(post.date, theme.post.date_format || 'YYYY-MM-DD') %></span>
+        </time>
+        <% if (post.categories && post.categories.length > 0) { %>
+        <span class="post-card-categories">
+          <svg class="sym-icon" aria-hidden="true"><use href="#folder"/></svg>
+          <% post.categories.forEach(function(cat) { %>
+          <a href="<%= url_for(cat.path) %>" class="category-link"><%= cat.name %></a>
+          <% }); %>
+        </span>
+        <% } %>
+      </div>
+
+      <!-- Post Title -->
+      <h2 class="post-card-title">
+        <a href="<%= url_for(post.path) %>"><%= post.title %></a>
+      </h2>
+
+      <!-- Post Excerpt -->
+      <% if (post.excerpt) { %>
+      <div class="post-card-excerpt">
+        <%- post.excerpt %>
+      </div>
+      <% } %>
+
+      <!-- Post Footer -->
+      <div class="post-card-footer">
+        <!-- Tags -->
+        <% if (post.tags && post.tags.length > 0) { %>
+        <div class="post-card-tags">
+          <% post.tags.forEach(function(tag) { %>
+          <a href="<%= url_for(tag.path) %>" class="post-tag-chip">
+            <svg class="sym-icon" aria-hidden="true"><use href="#tag"/></svg>
+            <%= tag.name %>
+          </a>
+          <% }); %>
+        </div>
+        <% } %>
+
+        <!-- Read More -->
+        <a href="<%= url_for(post.path) %>" class="post-card-readmore">
+          <span>Read More</span>
+          <svg class="sym-icon" aria-hidden="true"><use href="#arrow_forward"/></svg>
+        </a>
+      </div>
+    </div>
+  </article>
+  <% }); %>
+
+  <!-- Empty State -->
+  <% if (page.posts.length === 0) { %>
+  <div class="empty-state">
+    <svg class="sym-icon" aria-hidden="true"><use href="#edit_note"/></svg>
+    <p>还没有文章，快去写第一篇吧！</p>
+  </div>
+  <% } %>
+</div>
+
+<!-- Pagination -->
+<%- partial('partial/pagination', { page: page }) %>

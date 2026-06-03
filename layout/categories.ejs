@@ -1,0 +1,82 @@
+<!-- ============================================================
+  MD-RetroGlass — Categories (Win10 Start Menu grouped tiles)
+  ============================================================ -->
+<div class="start-container">
+  <div class="start-inner">
+
+    <!-- Title Bar -->
+    <div class="start-titlebar">
+      <div class="start-titlebar-icon">
+        <svg class="sym-icon" aria-hidden="true"><use href="#folder"/></svg>
+      </div>
+      <h1 class="start-titlebar-text">Categories</h1>
+      <% if (site.categories.length > 0) { %>
+      <span class="start-titlebar-count"><%= site.categories.length %></span>
+      <% } %>
+    </div>
+
+    <!-- Empty State -->
+    <% if (site.categories.length === 0) { %>
+    <div class="empty-state">
+      <svg class="sym-icon" aria-hidden="true"><use href="#folder"/></svg>
+      <p>No categories yet.</p>
+    </div>
+    <% } else { %>
+
+    <div class="category-groups">
+      <% site.categories.sort('length', -1).forEach(function(cat, idx) { %>
+        <%
+          var hue = (function(s) {
+            var h = 0;
+            for (var i = 0; i < s.length; i++) h = ((h << 5) - h) + s.charCodeAt(i);
+            return Math.abs(h) % 360;
+          })(cat.name);
+        %>
+      <section class="cat-group" style="--cat-hue: <%= hue %>">
+        <!-- Category Header Tile (large, like a Start Menu "folder" tile) -->
+        <a href="<%= url_for(cat.path) %>" class="cat-header-tile">
+          <div class="cat-header-face">
+            <span class="cat-header-icon">
+              <svg class="sym-icon" aria-hidden="true"><use href="#folder"/></svg>
+            </span>
+            <div class="cat-header-text">
+              <span class="cat-header-name"><%= cat.name %></span>
+              <span class="cat-header-count"><%= cat.length %> post<%= cat.length > 1 ? 's' : '' %></span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Post Tiles (medium / small tiles below the header) -->
+        <% if (cat.posts && cat.posts.length > 0) { %>
+        <div class="cat-post-tiles">
+          <% cat.posts.sort('date', -1).limit(6).forEach(function(post, pidx) { %>
+          <a href="<%= url_for(post.path) %>" class="tile tile-sm cat-post-tile">
+            <div class="tile-face">
+              <span class="tile-icon">
+                <svg class="sym-icon" aria-hidden="true"><use href="#article"/></svg>
+              </span>
+              <span class="tile-label"><%= post.title %></span>
+              <span class="tile-sub"><%= date(post.date, 'MM-DD') %></span>
+            </div>
+          </a>
+          <% }); %>
+
+          <% if (cat.posts.length > 6) { %>
+          <a href="<%= url_for(cat.path) %>" class="tile tile-sm cat-more-tile">
+            <div class="tile-face">
+              <span class="tile-icon">
+                <svg class="sym-icon" aria-hidden="true"><use href="#arrow_forward"/></svg>
+              </span>
+              <span class="tile-label">+<%= cat.posts.length - 6 %> more</span>
+            </div>
+          </a>
+          <% } %>
+        </div>
+        <% } %>
+      </section>
+      <% }); %>
+    </div>
+
+    <% } %>
+  </div>
+</div>
