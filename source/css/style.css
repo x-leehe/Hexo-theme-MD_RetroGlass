@@ -1413,6 +1413,9 @@ pre code {
   color: var(--md-sys-color-on-surface);
   font-size: var(--font-size-sm);
   transition: color var(--transition-fast);
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .archive-post-link:hover {
@@ -1464,10 +1467,14 @@ pre code {
 
 .start-titlebar-text {
   flex: 1;
+  min-width: 0;
   font-size: var(--font-size-xl);
   font-weight: 600;
   color: var(--md-sys-color-on-surface);
   margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .start-titlebar-count {
@@ -1719,6 +1726,7 @@ pre code {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .cat-header-count {
@@ -2281,6 +2289,27 @@ pre code {
     width: 20px;
     height: 20px;
   }
+
+  /* Compact APlayer for tablet */
+  .music-player-wrap .aplayer .aplayer-pic {
+    width: 64px !important;
+    height: 64px !important;
+  }
+  .music-player-wrap .aplayer .aplayer-info {
+    padding: 4px 8px;
+  }
+  .music-player-wrap .aplayer .aplayer-music {
+    font-size: 0.7rem;
+  }
+  .music-player-wrap .aplayer .aplayer-author {
+    font-size: 0.65rem;
+  }
+  .music-player-wrap .aplayer .aplayer-controller {
+    padding: 0 4px;
+  }
+  .music-player-wrap .aplayer .aplayer-time {
+    font-size: 0.65rem;
+  }
 }
 
 /* Mobile */
@@ -2326,6 +2355,27 @@ pre code {
 
   .comments-container {
     padding: 20px;
+  }
+
+  /* Further compact APlayer for small phones */
+  .music-player-wrap .aplayer .aplayer-pic {
+    width: 52px !important;
+    height: 52px !important;
+  }
+  .music-player-wrap .aplayer .aplayer-info {
+    padding: 2px 6px;
+  }
+  .music-player-wrap .aplayer .aplayer-music {
+    font-size: 0.65rem;
+  }
+  .music-player-wrap .aplayer .aplayer-author {
+    font-size: 0.6rem;
+  }
+  .music-player-wrap .aplayer .aplayer-controller {
+    padding: 0 2px;
+  }
+  .music-player-wrap .aplayer .aplayer-time {
+    font-size: 0.6rem;
   }
 }
 
