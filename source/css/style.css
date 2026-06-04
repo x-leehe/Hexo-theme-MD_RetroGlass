@@ -53,6 +53,32 @@
   --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* htmx loading indicator */
+.htmx-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 9999;
+  background: transparent;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.htmx-request .htmx-indicator,
+.htmx-indicator.htmx-request {
+  opacity: 1;
+  background: linear-gradient(90deg, transparent, var(--md-sys-color-primary), transparent);
+  animation: htmx-loading-bar 0.8s ease-in-out infinite;
+}
+
+@keyframes htmx-loading-bar {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
 /* ============================================================
    2. Reset & Base
    ============================================================ */
@@ -95,6 +121,18 @@ a:hover {
 img {
   max-width: 100%;
   height: auto;
+}
+
+/* Prevent content overflow on all elements */
+pre,
+table {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+pre code {
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 ::selection {
@@ -366,6 +404,8 @@ img {
 /* ---- Main Content ---- */
 .main-content {
   min-height: 60vh;
+  min-width: 0; /* Allow grid item to shrink below content size */
+  overflow: hidden; /* Contain any overflowing children */
 }
 
 /* ---- Sidebar ---- */
@@ -1764,7 +1804,7 @@ img {
 }
 
 /* ============================================================
-   14. Comments Section (Gitalk)
+   14. Comments Section (Gitalk / Utterances)
    ============================================================ */
 .comments-section {
   margin-top: 24px;
@@ -1840,6 +1880,15 @@ img {
   background: var(--md-sys-color-surface) !important;
   border: 1px solid var(--md-sys-color-outline) !important;
   border-radius: var(--glass-radius-sm) !important;
+}
+
+/* Utterances container */
+#utterances-container {
+  min-height: 200px;
+}
+
+#utterances-container .utterances {
+  max-width: 100%;
 }
 
 /* ============================================================
@@ -2128,10 +2177,10 @@ img {
   }
 }
 
-/* Medium Desktop: sidebar below main */
+/* Medium Desktop / Tablet: sidebar below main */
 @media (min-width: 769px) and (max-width: 1024px) {
   .site-wrapper {
-    max-width: var(--content-max-width);
+    max-width: 720px;
     padding: 0 20px;
   }
 
@@ -2154,6 +2203,7 @@ img {
   }
 
   .site-wrapper {
+    max-width: 100%;
     padding: 0 12px;
     gap: 16px;
   }
@@ -2235,6 +2285,12 @@ img {
 @media (max-width: 480px) {
   :root {
     --font-size-base: 15px;
+  }
+
+  .site-wrapper {
+    max-width: 100%;
+    padding: 0 8px;
+    gap: 12px;
   }
 
   .post-full-inner,

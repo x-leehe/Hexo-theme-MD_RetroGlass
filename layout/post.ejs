@@ -111,5 +111,9 @@
   </div>
 </article>
 
-<!-- Gitalk Comments -->
+<!-- Comments -->
+<% if (theme.comment_system === 'utterances') { %>
+<%- partial('partial/utterances', { page: page, theme: theme }) %>
+<% } else { %>
 <%- partial('partial/gitalk', { page: page, theme: theme }) %>
+<% } %>

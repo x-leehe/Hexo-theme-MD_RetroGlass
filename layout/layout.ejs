@@ -3,7 +3,16 @@
 
 <%- partial('partial/head', { page: page, config: config, theme: theme }) %>
 
-<body>
+<body hx-boost="true"
+      hx-target=".main-content"
+      hx-select=".main-content"
+      hx-swap="outerHTML show:window:top"
+      hx-push-url="true"
+      hx-indicator="#htmx-indicator">
+
+  <!-- htmx loading indicator -->
+  <div id="htmx-indicator" class="htmx-indicator"></div>
+
   <!-- SVG Icon Sprite (once per page) -->
   <%- partial('partial/sprite') %>
 
@@ -53,8 +62,36 @@
     <%- JSON.stringify(theme.backgrounds ? theme.backgrounds.map(function(bg) { return url_for(bg); }) : []) %>
   </script>
 
-  <!-- Gitalk JS init (always available, even on pages without comments) -->
-  <% if (theme.gitalk && theme.gitalk.enable) { %>
+  <!-- Utterances global config (always available for PJAX re-init) -->
+  <% if (theme.comment_system === 'utterances' && theme.utterances && theme.utterances.enable) { %>
+  <script>
+    window._utterancesConfig = {
+      repo: '<%= theme.utterances.repo %>',
+      issueTerm: '<%= theme.utterances.issue_term %>',
+      label: '<%= theme.utterances.label %>',
+      theme: '<%= theme.utterances.theme %>'
+    };
+    window._initUtterances = function() {
+      var el = document.getElementById('utterances-container');
+      if (!el) return;
+      el.innerHTML = '';
+      var script = document.createElement('script');
+      script.src = 'https://utteranc.es/client.js';
+      script.setAttribute('repo', window._utterancesConfig.repo);
+      script.setAttribute('issue-term', window._utterancesConfig.issueTerm);
+      if (window._utterancesConfig.label) {
+        script.setAttribute('label', window._utterancesConfig.label);
+      }
+      script.setAttribute('theme', window._utterancesConfig.theme);
+      script.crossOrigin = 'anonymous';
+      script.async = true;
+      el.appendChild(script);
+    };
+  </script>
+  <% } %>
+
+  <!-- Comment System JS init (always available for PJAX re-init) -->
+  <% if (theme.comment_system === 'gitalk' && theme.gitalk && theme.gitalk.enable) { %>
   <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
   <script>
     window._gitalkBase = {
@@ -80,6 +117,7 @@
   <% } %>
 
   <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/htmx.org@2/dist/htmx.min.js"></script>
   <script src="<%= url_for('js/dynamic-color.js') %>"></script>
   <script src="<%= url_for('js/main.js') %>"></script>
   <script src="<%= url_for('js/pjax.js') %>"></script>

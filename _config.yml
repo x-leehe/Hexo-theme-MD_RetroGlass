@@ -64,6 +64,11 @@ font:
 syntax_highlighter: highlight.js
 
 # -------------------------------
+# Comment System (choose one: gitalk | utterances)
+# -------------------------------
+comment_system: utterances
+
+# -------------------------------
 # Gitalk Comments
 # -------------------------------
 # See: https://github.com/gitalk/gitalk#options
@@ -79,6 +84,17 @@ gitalk:
   createIssueManually: false
   labels:
     - Gitalk
+
+# -------------------------------
+# Utterances Comments
+# -------------------------------
+# See: https://utteranc.es/
+utterances:
+  enable: false                   # Set to true and fill in below
+  repo: ''                        # GitHub repo (format: owner/repo)
+  issue_term: pathname            # pathname | url | title | og:title
+  label: ''                       # Optional issue label
+  theme: github-dark   # github-light | github-dark | preferred-color-scheme
 
 # -------------------------------
 # APlayer + MetingJS Music Player

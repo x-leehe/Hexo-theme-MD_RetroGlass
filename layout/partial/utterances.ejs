@@ -1,0 +1,25 @@
+<!-- ============================================================
+  MD-RetroGlass — Utterances comments partial
+  ============================================================ -->
+<% if (theme.utterances && theme.utterances.enable && page.comments !== false) { %>
+<section class="comments-section">
+  <div class="comments-container">
+    <h3 class="comments-title">
+      <svg class="sym-icon" aria-hidden="true"><use href="#chat"/></svg>
+      <span>Comments</span>
+    </h3>
+    <div id="utterances-container"></div>
+  </div>
+</section>
+
+<script>
+  // Utterances init delegated to global _initUtterances (defined in layout.ejs)
+  if (typeof window._initUtterances === 'function') {
+    window._initUtterances();
+  } else {
+    window.addEventListener('load', function() {
+      if (typeof window._initUtterances === 'function') window._initUtterances();
+    });
+  }
+</script>
+<% } %>
