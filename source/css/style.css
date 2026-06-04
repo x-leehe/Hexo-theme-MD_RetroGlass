@@ -405,7 +405,6 @@ pre code {
 .main-content {
   min-height: 60vh;
   min-width: 0; /* Allow grid item to shrink below content size */
-  overflow: hidden; /* Contain any overflowing children */
 }
 
 /* ---- Sidebar ---- */
@@ -1533,17 +1532,18 @@ pre code {
   overflow: hidden;
   position: relative;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
-  /* MD3 accent background — hue from data attr, saturation+light from MD3 tokens */
-  background: hsl(var(--tile-hue, 220), 35%, 32%);
-  border: 1px solid hsl(var(--tile-hue, 220), 25%, 42%);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
 }
 
 .tile:hover {
   transform: scale(1.03);
   box-shadow: 0 6px 20px rgba(0,0,0,0.45);
   z-index: 2;
-  border-color: hsl(var(--tile-hue, 220), 50%, 55%);
+  border-color: var(--md-sys-color-primary);
 }
 
 .tile:active {
@@ -1580,7 +1580,7 @@ pre code {
 
 /* Tile icon — small in corner */
 .tile-icon {
-  color: rgba(255,255,255,0.7);
+  color: var(--md-sys-color-on-surface-variant);
 }
 
 .tile-icon .sym-icon {
@@ -1598,7 +1598,7 @@ pre code {
 .tile-label {
   font-size: var(--font-size-sm);
   font-weight: 500;
-  color: #fff;
+  color: var(--md-sys-color-on-surface);
   line-height: 1.3;
   word-break: break-word;
   display: -webkit-box;
@@ -1618,8 +1618,8 @@ pre code {
 .tile-badge {
   font-size: 0.7rem;
   font-weight: 600;
-  color: rgba(255,255,255,0.55);
-  background: rgba(0,0,0,0.2);
+  color: var(--md-sys-color-on-surface-variant);
+  background: var(--md-sys-color-surface-variant);
   padding: 2px 8px;
   border-radius: 10px;
   align-self: flex-end;
@@ -1633,7 +1633,7 @@ pre code {
 /* Tile subtitle (for category post tiles) */
 .tile-sub {
   font-size: 0.7rem;
-  color: rgba(255,255,255,0.5);
+  color: var(--md-sys-color-on-surface-variant);
   margin-top: 2px;
 }
 
@@ -1667,16 +1667,18 @@ pre code {
   border-radius: var(--glass-radius-xs);
   overflow: hidden;
   margin-bottom: 10px;
-  background: hsl(var(--cat-hue, 220), 35%, 32%);
-  border: 1px solid hsl(var(--cat-hue, 220), 25%, 42%);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .cat-header-tile:hover {
   transform: scale(1.02);
   box-shadow: 0 6px 20px rgba(0,0,0,0.45);
-  border-color: hsl(var(--cat-hue, 220), 50%, 55%);
+  border-color: var(--md-sys-color-primary);
 }
 
 .cat-header-face {
@@ -1690,11 +1692,11 @@ pre code {
   width: 48px;
   height: 48px;
   border-radius: 10px;
-  background: rgba(255,255,255,0.15);
+  background: var(--md-sys-color-primary-container);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--md-sys-color-on-primary-container);
   flex-shrink: 0;
 }
 
@@ -1713,7 +1715,7 @@ pre code {
 .cat-header-name {
   font-size: var(--font-size-lg);
   font-weight: 600;
-  color: #fff;
+  color: var(--md-sys-color-on-surface);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1721,7 +1723,7 @@ pre code {
 
 .cat-header-count {
   font-size: var(--font-size-xs);
-  color: rgba(255,255,255,0.6);
+  color: var(--md-sys-color-on-surface-variant);
 }
 
 /* Post tiles row below category header */
@@ -1742,12 +1744,12 @@ pre code {
 
 /* "more" tile for categories */
 .cat-more-tile {
-  background: hsl(var(--cat-hue, 220), 20%, 28%) !important;
-  border-color: hsl(var(--cat-hue, 220), 15%, 36%) !important;
+  background: var(--md-sys-color-surface-variant) !important;
+  border-color: var(--md-sys-color-outline) !important;
 }
 
 .cat-more-tile:hover {
-  background: hsl(var(--cat-hue, 220), 30%, 36%) !important;
+  background: var(--md-sys-color-primary-container) !important;
 }
 
 /* ============================================================
