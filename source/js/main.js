@@ -284,8 +284,15 @@
       copyBtn.innerHTML = '<svg class="sym-icon" aria-hidden="true"><use href="#content_copy"/></svg><span>Copy</span>';
 
       copyBtn.addEventListener('click', function () {
-        var codeEl = fig.querySelector('.code code') || fig.querySelector('code');
-        var text = codeEl ? codeEl.textContent || '' : '';
+        // Collect all code lines (supports per-row split layout)
+        var codeEls = fig.querySelectorAll('.code code');
+        var text;
+        if (codeEls.length > 0) {
+          text = Array.from(codeEls).map(function (el) { return el.textContent || ''; }).join('\n');
+        } else {
+          var single = fig.querySelector('code');
+          text = single ? single.textContent || '' : '';
+        }
 
         // Use Clipboard API
         if (navigator.clipboard && navigator.clipboard.writeText) {

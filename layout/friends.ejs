@@ -1,0 +1,129 @@
+<!-- ============================================================
+  MD-RetroGlass — Friends (Win10 Start Menu tile grid)
+  ============================================================ -->
+<div class="start-container">
+  <div class="start-inner">
+
+    <!-- Title Bar -->
+    <div class="start-titlebar">
+      <div class="start-titlebar-icon">
+        <svg class="sym-icon" aria-hidden="true"><use href="#link"/></svg>
+      </div>
+      <h1 class="start-titlebar-text">Friends</h1>
+      <% if (page.friends && page.friends.length > 0) { %>
+      <span class="start-titlebar-count"><%= page.friends.length %></span>
+      <% } %>
+    </div>
+
+    <!-- Empty State -->
+    <% if (!page.friends || page.friends.length === 0) { %>
+    <div class="empty-state">
+      <svg class="sym-icon" aria-hidden="true"><use href="#link"/></svg>
+      <p>No friends yet.</p>
+      <p style="margin-top:8px;font-size:0.85rem">
+        Leave a comment below to exchange links!
+      </p>
+    </div>
+    <% } else { %>
+
+    <!-- Search / Filter -->
+    <div class="start-search">
+      <svg class="sym-icon" aria-hidden="true"><use href="#search"/></svg>
+      <input type="text" class="start-search-input" id="friend-filter"
+             placeholder="Search friends…" autocomplete="off">
+    </div>
+
+    <!-- Tile Grid -->
+    <div class="tile-grid" id="tile-grid">
+      <% page.friends.forEach(function(friend, idx) { %>
+        <%
+          // Tile size: sm = 1×1, md = 2×1 (wider for those with desc)
+          var size = friend.desc ? 'md' : 'sm';
+          // Color hue by name hash for consistent per-friend accent
+          var hue = (function(s) {
+            var h = 0;
+            for (var i = 0; i < s.length; i++) h = ((h << 5) - h) + s.charCodeAt(i);
+            return Math.abs(h) % 360;
+          })(friend.name);
+        %>
+      <a href="<%= friend.url %>"
+         class="tile tile-<%= size %>"
+         data-friend="<%= friend.name.toLowerCase() %>"
+         target="_blank"
+         rel="noopener noreferrer"
+         style="--tile-hue: <%= hue %>">
+        <div class="tile-face">
+          <span class="tile-icon">
+            <% if (friend.avatar) { %>
+            <img src="<%= friend.avatar %>"
+                 alt="<%= friend.name %>"
+                 class="friend-avatar"
+                 loading="lazy"
+                 referrerpolicy="no-referrer">
+            <% } else { %>
+            <svg class="sym-icon" aria-hidden="true"><use href="#open_in_new"/></svg>
+            <% } %>
+          </span>
+          <span class="tile-label"><%= friend.name %></span>
+          <% if (friend.desc) { %>
+          <span class="tile-sub"><%= friend.desc %></span>
+          <% } %>
+        </div>
+      </a>
+      <% }); %>
+    </div>
+
+    <p class="start-footer-text" id="no-friend-match" style="display:none">
+      No friends match your search.
+    </p>
+
+    <% } %>
+
+    <!-- Page Content (e.g. format instructions) — same styling as post/page -->
+    <% if (page.content) { %>
+    <article class="page-full" style="margin-top:24px">
+      <div class="page-full-inner">
+        <div class="page-full-content">
+          <%- page.content %>
+        </div>
+      </div>
+    </article>
+    <% } %>
+  </div>
+</div>
+
+<!-- Comments -->
+<% if (page.comments !== false) { %>
+<% if (theme.comment_system === 'utterances') { %>
+<%- partial('partial/utterances', { page: page, theme: theme }) %>
+<% } else { %>
+<%- partial('partial/gitalk', { page: page, theme: theme }) %>
+<% } %>
+<% } %>
+
+<script>
+(function(){
+  var input = document.getElementById('friend-filter');
+  var grid = document.getElementById('tile-grid');
+  var noMatch = document.getElementById('no-friend-match');
+  if (!input || !grid) return;
+
+  input.addEventListener('input', function(){
+    var q = input.value.trim().toLowerCase();
+    var tiles = grid.querySelectorAll('.tile');
+    var visible = 0;
+    tiles.forEach(function(t){
+      var name = (t.getAttribute('data-friend') || '').toLowerCase();
+      if (q === '' || name.indexOf(q) !== -1) {
+        t.style.display = '';
+        visible++;
+      } else {
+        t.style.display = 'none';
+      }
+    });
+    if (noMatch) {
+      noMatch.style.display = visible === 0 ? '' : 'none';
+    }
+  });
+})();
+</script>

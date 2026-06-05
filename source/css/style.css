@@ -407,6 +407,30 @@ pre code {
   min-width: 0; /* Allow grid item to shrink below content size */
 }
 
+/* Page transition: enter animation (triggers on DOM insert) */
+.main-content {
+  animation: pageEnter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Page transition: leaving state (set by JS before swap) */
+.main-content.is-leaving {
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.18s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* ---- Sidebar ---- */
 .site-sidebar {
   display: flex;
@@ -997,25 +1021,33 @@ pre code {
 .page-full-content figure.highlight table {
   border-collapse: collapse;
   width: 100%;
+  border: none;
+  padding: 16px 0;
+}
+
+.post-full-content figure.highlight tr,
+.page-full-content figure.highlight tr {
+  border: none;
 }
 
 .post-full-content figure.highlight td,
 .page-full-content figure.highlight td {
   padding: 0;
+  vertical-align: top;
+  border: none;
 }
 
 /* ---- Gutter: line numbers ---- */
 .post-full-content figure.highlight .gutter pre,
 .page-full-content figure.highlight .gutter pre {
   margin: 0;
-  padding: 16px 14px;
-  background: rgba(0, 0, 0, 0.25);
+  padding: 0 14px;
+  background: transparent;
   border: none;
   border-radius: 0;
   text-align: right;
   overflow: hidden;
-  /* keep in sync with .code column */
-  line-height: 1.6;
+  line-height: 1.5;
   color: rgba(205, 214, 244, 0.3);
   font-size: var(--font-size-sm);
   font-family: var(--font-code);
@@ -1027,11 +1059,11 @@ pre code {
 .post-full-content figure.highlight .code pre,
 .page-full-content figure.highlight .code pre {
   margin: 0;
-  padding: 16px 20px;
+  padding: 0 20px;
   background: transparent;
   border: none;
   border-radius: 0;
-  line-height: 1.6;
+  line-height: 1.5;
   overflow-x: auto;
 }
 
@@ -1599,6 +1631,21 @@ pre code {
 .tile-lg .tile-icon .sym-icon {
   width: 30px;
   height: 30px;
+}
+
+/* Friend avatar inside tile */
+.friend-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--md-sys-color-outline-variant);
+}
+
+.tile-md .friend-avatar,
+.tile-lg .friend-avatar {
+  width: 34px;
+  height: 34px;
 }
 
 /* Tile label — tag name */
