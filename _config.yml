@@ -1,9 +1,8 @@
 # ============================================================
 # MD-RetroGlass Theme Configuration
 # ============================================================
-# A Hexo theme with Material Design 3 glassmorphism aesthetics.
-# Features: dynamic color, glassmorphism, PJAX, APlayer+MetingJS,
-#           Gitalk comments, Win10-style tag tiles, code copy.
+# A Hexo theme with Material Design 3 glassmorphism aesthetics,
+# styled to match the PageProj (x-leehe.ccwu.cc) visual identity.
 # ============================================================
 
 # -------------------------------
@@ -27,10 +26,10 @@ menu:
 # Social Links
 # -------------------------------
 social:
-  GitHub: https://github.com/yourname
-  Telegram: https://t.me/yourname
-  Email: mailto:you@example.com
-  Steam: https://steamcommunity.com/id/yourname
+  GitHub: https://github.com/x-leehe
+  Telegram: https://t.me/about_leehe
+  Email: mailto:x-leehe@outlook.com
+  Steam: https://steamcommunity.com/id/x-leehe
 
 # -------------------------------
 # Background Images
@@ -71,15 +70,15 @@ comment_system: utterances
 # -------------------------------
 # Gitalk Comments
 # -------------------------------
-# See: https://github.com/gitalk/gitalk#options
 gitalk:
-  enable: false                   # Set to true and fill in below
-  clientID: ''                    # GitHub OAuth App clientID
-  clientSecret: ''                # GitHub OAuth App clientSecret
-  repo: ''                        # Repository name for storing comments
-  owner: ''                       # GitHub username
+  enable: false
+  clientID: clientID     # Your GitHub OAuth App clientID
+  clientSecret: clientSecret  # Your GitHub OAuth App clientSecret
+  repo: about_me        # Repository name for storing comments
+  owner: x-leehe
   admin:
-    - ''
+    - x-leehe
+  id: location.pathname
   distractionFreeMode: false
   createIssueManually: false
   labels:
@@ -90,22 +89,21 @@ gitalk:
 # -------------------------------
 # See: https://utteranc.es/
 utterances:
-  enable: false                   # Set to true and fill in below
-  repo: ''                        # GitHub repo (format: owner/repo)
+  enable: true                   # Set to true and fill in below
+  repo: 'x-leehe/about_me'        # GitHub repo (format: owner/repo)
   issue_term: pathname            # pathname | url | title | og:title
-  label: ''                       # Optional issue label
-  theme: github-dark   # github-light | github-dark | preferred-color-scheme
+  label: 'from blog'                       # Optional issue label
+  theme: photon-dark   # github-light | github-dark | preferred-color-scheme
 
 # -------------------------------
 # APlayer + MetingJS Music Player
 # -------------------------------
-# See: https://github.com/metowolf/MetingJS
 music:
-  enable: false                   # Set to true and fill in below
+  enable: true
   server: netease
   type: playlist
-  id: ''                          # Your playlist ID
-  api: 'https://api.meting.icodeq.com/api?server=:server&type=:type&id=:id&r=:r'
+  id: '912199427'
+  api: 'https://meting.x-leehe.ccwu.cc/api?server=:server&type=:type&id=:id&r=:r'
   list_folded: true
   autoplay: false
   order: list
@@ -115,7 +113,7 @@ music:
 # SEO & Meta
 # -------------------------------
 seo:
-  robots: ''
+  robots: noindex, nofollow    # 搜索引擎不允许抓取任何内容
   google_site_verification: ''
   bing_site_verification: ''
 
@@ -129,10 +127,11 @@ rss:
 # Footer
 # -------------------------------
 footer:
-  since: 2024
-  copyright: ''                   # Your name
-  powered_by: true                # Show "Powered by Hexo" credit
-  icp: ''                         # ICP备案号（可选）
+  since: 2025
+  copyright: X-LeeHe
+  powered_by: true             # Show "Powered by Hexo" credit
+  icp: ''                      # ICP备案号，支持HTML（如 <a href="https://beian.miit.gov.cn/">蜀ICP备XX号</a>）
+  custom_html: ''              # 页脚自定义HTML（公安备案、版权声明等）
 
 # -------------------------------
 # Misc
@@ -140,10 +139,10 @@ footer:
 toc:
   enable: true
   list_number: false
-  max_depth: 3
+  max_depth: 4
 
 post:
   date_format: YYYY-MM-DD
-  reading_time: true              # Estimate reading time
+  reading_time: true           # Estimate reading time
 
 scroll_to_top: true

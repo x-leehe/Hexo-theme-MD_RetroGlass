@@ -213,17 +213,58 @@
   }
 
   // ==========================================================
-  // 5. Table of Contents — auto-open on desktop
+  // 5. Table of Contents — custom toggle with animation
   // ==========================================================
   function initToc() {
-    var details = document.querySelector('.toc-details');
-    if (!details) return;
+    var toggle = document.getElementById('toc-toggle');
+    var body = document.getElementById('toc-body');
+    if (!toggle || !body) return;
 
-    // Auto-open on larger screens
+    // Toggle open/close
+    toggle.addEventListener('click', function () {
+      var isOpen = body.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', isOpen);
+    });
+
+    // TOC link click → smooth scroll to heading + background flash
+    body.querySelectorAll('a[href^="#"]').forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        var raw = link.getAttribute('href');
+        var id = decodeURIComponent(raw.substring(1));
+        var target = document.getElementById(id);
+        if (!target) return;
+
+        // Remove flash from any previously-flashed heading
+        var prev = document.querySelector('.toc-flash');
+        if (prev) prev.classList.remove('toc-flash');
+
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Add flash class after scroll completes
+        setTimeout(function () {
+          // Force reflow so animation restarts if same heading clicked twice
+          void target.offsetWidth;
+          target.classList.add('toc-flash');
+
+          // Remove after animation ends
+          target.addEventListener('animationend', function handler() {
+            target.classList.remove('toc-flash');
+            target.removeEventListener('animationend', handler);
+          });
+        }, 400);
+      });
+    });
+
+    // Auto-open on desktop
     if (window.innerWidth >= 1025) {
-      details.setAttribute('open', '');
+      body.classList.add('open');
+      toggle.setAttribute('aria-expanded', 'true');
     }
   }
+
+  // Expose for PJAX re-init
+  window._initToc = initToc;
 
   // ==========================================================
   // 6. Code Block Headers — language label + copy button
@@ -343,6 +384,40 @@
   window._initCodeHeaders = initCodeHeaders;
 
   // ==========================================================
+  // 6. Navigation Indicator — MD3 sliding pill
+  //     Only visible on top-level pages (hides on blog posts).
+  // ==========================================================
+  function initNavIndicator() {
+    var indicator = document.getElementById('nav-indicator');
+    var nav = document.querySelector('.nav-desktop');
+    if (!indicator || !nav) return;
+
+    var activeItem = nav.querySelector('.nav-item.active');
+
+    if (!activeItem) {
+      indicator.style.opacity = '0';
+      return;
+    }
+
+    var itemRect = activeItem.getBoundingClientRect();
+    var navRect = nav.getBoundingClientRect();
+
+    indicator.style.left = (itemRect.left - navRect.left) + 'px';
+    indicator.style.width = itemRect.width + 'px';
+    indicator.style.opacity = '1';
+  }
+
+  // Expose for PJAX re-init
+  window._initNavIndicator = initNavIndicator;
+
+  // Recalculate on resize (debounced)
+  var _navResizeTimer = null;
+  window.addEventListener('resize', function () {
+    if (_navResizeTimer) clearTimeout(_navResizeTimer);
+    _navResizeTimer = setTimeout(initNavIndicator, 150);
+  });
+
+  // ==========================================================
   // 7. External Links — target="_blank" + noopener
   // ==========================================================
   function initExternalLinks() {
@@ -368,6 +443,7 @@
       initScrollToTop();
       initToc();
       initCodeHeaders();
+      initNavIndicator();
       initExternalLinks();
     });
   } else {
@@ -376,6 +452,8 @@
     initMobileMenu();
     initScrollToTop();
     initToc();
+    initCodeHeaders();
+    initNavIndicator();
     initExternalLinks();
   }
 })();

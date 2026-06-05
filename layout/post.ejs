@@ -66,16 +66,19 @@
 
     <!-- Table of Contents -->
     <% if (theme.toc && theme.toc.enable && page.toc !== false) { %>
-    <div class="post-toc">
-      <details class="toc-details">
-        <summary class="toc-summary">
-          <svg class="sym-icon" aria-hidden="true"><use href="#toc"/></svg>
-          <span>目录</span>
-        </summary>
-        <div class="toc-body">
-          <%- toc(page.content, { list_number: theme.toc.list_number, max_depth: theme.toc.max_depth }) %>
+    <div class="post-toc" id="post-toc" hx-disable>
+      <button class="toc-summary" id="toc-toggle" aria-expanded="false">
+        <svg class="sym-icon" aria-hidden="true"><use href="#toc"/></svg>
+        <span>目录</span>
+        <svg class="sym-icon toc-arrow" aria-hidden="true"><use href="#chevron_right"/></svg>
+      </button>
+      <div class="toc-body" id="toc-body">
+        <div class="toc-body-inner">
+          <div class="toc-body-inner-pad">
+            <%- toc(page.content, { list_number: theme.toc.list_number, max_depth: theme.toc.max_depth }) %>
+          </div>
         </div>
-      </details>
+      </div>
     </div>
     <% } %>
 

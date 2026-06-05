@@ -15,30 +15,30 @@
   // 1. Update nav active state after navigation
   // ==========================================================
   function updateActiveNav(path) {
+    // Strip trailing slash for consistent matching
+    var cleanPath = path.replace(/\/$/, '') || '/';
+
     document.querySelectorAll('.nav-desktop .nav-item').forEach(function (el) {
-      el.classList.remove('active');
+      var href = el.getAttribute('href').replace(/\/$/, '') || '/';
+      var isActive = (cleanPath === href ||
+        (href !== '/' && cleanPath.indexOf(href) === 0));
+      el.classList.toggle('active', isActive);
     });
     document.querySelectorAll('.nav-item-mobile').forEach(function (el) {
-      el.classList.remove('active');
+      var href = el.getAttribute('href').replace(/\/$/, '') || '/';
+      var isActive = (cleanPath === href ||
+        (href !== '/' && cleanPath.indexOf(href) === 0));
+      el.classList.toggle('active', isActive);
     });
-
-    var match = document.querySelector(
-      '.nav-desktop .nav-item[href="' + path + '"], ' +
-      '.nav-item-mobile[href="' + path + '"]'
-    );
-    if (match) match.classList.add('active');
-
-    if (path === '/' || path === '/index.html') {
-      var home = document.querySelector(
-        '.nav-desktop .nav-item[href="/"], ' +
-        '.nav-item-mobile[href="/"]'
-      );
-      if (home) home.classList.add('active');
-    }
 
     // Close mobile menu
     var mobileNav = document.getElementById('nav-mobile');
     if (mobileNav) mobileNav.classList.remove('active');
+
+    // Reposition nav indicator after active state changes
+    if (typeof window._initNavIndicator === 'function') {
+      window._initNavIndicator();
+    }
   }
 
   // ==========================================================
@@ -145,6 +145,11 @@
       window._initCodeHeaders();
     }
 
+    // Re-init nav indicator (MD3 sliding pill)
+    if (typeof window._initNavIndicator === 'function') {
+      window._initNavIndicator();
+    }
+
     // Split code block table into per-line rows (fixes gutter alignment on wrap)
     splitCodeLines();
 
@@ -195,10 +200,9 @@
       el.parentNode.replaceChild(a, el);
     });
 
-    // Re-open ToC on desktop
-    var details = document.querySelector('.toc-details');
-    if (details && window.innerWidth >= 1025) {
-      details.setAttribute('open', '');
+    // Re-init Table of Contents (custom toggle + animation)
+    if (typeof window._initToc === 'function') {
+      window._initToc();
     }
   }
 
@@ -218,18 +222,24 @@
 
   document.body.addEventListener('htmx:afterSettle', function (evt) {
     if (!evt.detail || !evt.detail.boosted) return;
-    var path = evt.detail.pathInfo ? evt.detail.pathInfo.path : location.pathname;
+    var path = (evt.detail.pathInfo && evt.detail.pathInfo.path) || location.pathname;
     updateActiveNav(path);
     onContentReady();
   });
 
   // --- Run on initial page load (not just htmx navigations) ---
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
-      splitCodeLines();
-    });
-  } else {
+  function onInitialLoad() {
     splitCodeLines();
+    updateActiveNav(location.pathname);
+    if (typeof window._initNavIndicator === 'function') {
+      window._initNavIndicator();
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', onInitialLoad);
+  } else {
+    onInitialLoad();
   }
 
 })();

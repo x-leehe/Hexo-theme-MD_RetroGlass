@@ -325,15 +325,33 @@ pre code {
   display: flex;
   align-items: center;
   gap: 4px;
+  position: relative;
+}
+
+/* MD3 Navigation Indicator — the sliding pill */
+.nav-indicator {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 24px;
+  background: var(--md-sys-color-primary-container);
+  transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
 }
 
 .nav-item {
+  position: relative;
+  z-index: 1;
   padding: 8px 16px;
   border-radius: 24px;
   color: var(--md-sys-color-on-surface-variant);
   font-size: var(--font-size-sm);
   font-weight: 500;
-  transition: all var(--transition-fast);
+  transition: color var(--transition-fast);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -344,7 +362,7 @@ pre code {
 }
 
 .nav-item.active {
-  background: var(--md-sys-color-primary-container);
+  background: transparent;
   color: var(--md-sys-color-on-primary-container);
 }
 
@@ -623,6 +641,23 @@ pre code {
   color: var(--md-sys-color-outline);
 }
 
+.footer-icp,
+.footer-custom {
+  margin-left: 12px;
+  padding-left: 12px;
+  border-left: 1px solid var(--md-sys-color-outline);
+}
+
+.footer-icp a,
+.footer-custom a {
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.footer-icp a:hover,
+.footer-custom a:hover {
+  color: var(--md-sys-color-primary);
+}
+
 /* ============================================================
    5. Post Cards (Index / Home Page)
    ============================================================ */
@@ -767,6 +802,24 @@ pre code {
   color: var(--md-sys-color-on-primary-container);
 }
 
+/* TOC heading flash — background highlight on the heading itself */
+@keyframes toc-flash-bg {
+  0%   { background-color: transparent; }
+  10%  { background-color: transparent; }
+  30%  { background-color: var(--md-sys-color-primary-container); }
+  45%  { background-color: transparent; }
+  60%  { background-color: var(--md-sys-color-primary-container); }
+  100% { background-color: transparent; }
+}
+
+.toc-flash {
+  animation: toc-flash-bg 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
+  /* keep border-bottom visible on h2 */
+}
+
 /* Read More */
 .post-card-readmore {
   display: inline-flex;
@@ -890,17 +943,17 @@ pre code {
 
 /* Typography in post content */
 .post-full-content h1,
-.page-full-content h1 { font-size: 1.8rem; margin: 40px 0 16px; font-weight: 700; }
+.page-full-content h1 { font-size: 1.8rem; margin: 40px 0 16px; font-weight: 700; scroll-margin-top: 100px; }
 .post-full-content h2,
-.page-full-content h2 { font-size: 1.5rem; margin: 36px 0 14px; font-weight: 600; padding-bottom: 8px; border-bottom: 1px solid var(--md-sys-color-outline); }
+.page-full-content h2 { font-size: 1.5rem; margin: 36px 0 14px; font-weight: 600; padding-bottom: 8px; border-bottom: 1px solid var(--md-sys-color-outline); scroll-margin-top: 100px; }
 .post-full-content h3,
-.page-full-content h3 { font-size: 1.25rem; margin: 28px 0 12px; font-weight: 600; }
+.page-full-content h3 { font-size: 1.25rem; margin: 28px 0 12px; font-weight: 600; scroll-margin-top: 100px; }
 .post-full-content h4,
-.page-full-content h4 { font-size: 1.1rem; margin: 24px 0 10px; font-weight: 600; }
+.page-full-content h4 { font-size: 1.1rem; margin: 24px 0 10px; font-weight: 600; scroll-margin-top: 100px; }
 .post-full-content h5,
 .page-full-content h5,
 .post-full-content h6,
-.page-full-content h6 { font-size: 1rem; margin: 20px 0 8px; font-weight: 600; }
+.page-full-content h6 { font-size: 1rem; margin: 20px 0 8px; font-weight: 600; scroll-margin-top: 100px; }
 
 .post-full-content p,
 .page-full-content p { margin-bottom: 16px; }
@@ -1180,15 +1233,13 @@ pre code {
    ============================================================ */
 .post-toc {
   margin-bottom: 24px;
-}
-
-.toc-details {
   background: var(--md-sys-color-surface-variant);
   border-radius: var(--glass-radius-xs);
   overflow: hidden;
 }
 
 .toc-summary {
+  width: 100%;
   padding: 12px 16px;
   cursor: pointer;
   display: flex;
@@ -1197,7 +1248,9 @@ pre code {
   font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--md-sys-color-on-surface-variant);
-  user-select: none;
+  background: none;
+  border: none;
+  outline: none;
   transition: background var(--transition-fast);
 }
 
@@ -1211,7 +1264,33 @@ pre code {
   flex-shrink: 0;
 }
 
+/* Chevron arrow — rotates on open */
+.toc-arrow {
+  margin-left: auto;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toc-summary[aria-expanded="true"] .toc-arrow {
+  transform: rotate(90deg);
+}
+
+/* Grid-based expand/collapse animation */
 .toc-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toc-body.open {
+  grid-template-rows: 1fr;
+}
+
+.toc-body-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.toc-body-inner-pad {
   padding: 0 16px 16px;
   font-size: var(--font-size-sm);
   line-height: 1.8;
