@@ -433,6 +433,19 @@
   }
 
   // ==========================================================
+  // 8. Spoiler — click to toggle reveal
+  // ==========================================================
+  function initSpoiler() {
+    document.querySelectorAll('.spoiler').forEach(function (el) {
+      if (el.dataset.spoilerBound) return;
+      el.dataset.spoilerBound = '1';
+      el.addEventListener('click', function () {
+        this.classList.toggle('revealed');
+      });
+    });
+  }
+
+  // ==========================================================
   // Boot
   // ==========================================================
   if (document.readyState === 'loading') {
@@ -445,6 +458,8 @@
       initCodeHeaders();
       initNavIndicator();
       initExternalLinks();
+      initSpoiler();
+      initSpoiler();
     });
   } else {
     initBgRotation();
@@ -455,5 +470,6 @@
     initCodeHeaders();
     initNavIndicator();
     initExternalLinks();
+    initSpoiler();
   }
 })();

@@ -7,6 +7,55 @@
 /* ============================================================
    1. CSS Custom Properties (MD3 Color Tokens)
    ============================================================ */
+
+/* ---- Custom Fonts ---- */
+
+/* HarmonyOS Sans SC — Body text (6 weights) */
+@font-face {
+  font-family: 'HarmonyOS Sans SC';
+  src: url('/fonts/HarmonyOS_Sans_SC_Thin.ttf') format('truetype');
+  font-weight: 100; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'HarmonyOS Sans SC';
+  src: url('/fonts/HarmonyOS_Sans_SC_Light.ttf') format('truetype');
+  font-weight: 300; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'HarmonyOS Sans SC';
+  src: url('/fonts/HarmonyOS_Sans_SC_Regular.ttf') format('truetype');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'HarmonyOS Sans SC';
+  src: url('/fonts/HarmonyOS_Sans_SC_Medium.ttf') format('truetype');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'HarmonyOS Sans SC';
+  src: url('/fonts/HarmonyOS_Sans_SC_Bold.ttf') format('truetype');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'HarmonyOS Sans SC';
+  src: url('/fonts/HarmonyOS_Sans_SC_Black.ttf') format('truetype');
+  font-weight: 900; font-style: normal; font-display: swap;
+}
+
+/* JetBrainsMapleMono — Code */
+@font-face {
+  font-family: 'JetBrainsMapleMono';
+  src: url('/fonts/JetBrainsMapleMono-Regular.ttf') format('truetype');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+
+/* AaCute — Spoiler text */
+@font-face {
+  font-family: 'AaCute';
+  src: url('/fonts/AaCute-full.ttf') format('truetype');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+
 :root {
   /* Default palette 鈥?Material Blue dark scheme */
   --md-sys-color-primary: #a1c9ff;
@@ -32,8 +81,9 @@
   --glass-radius-xs: 12px;
 
   /* Typography */
-  --font-body: 'HarmonyOS Sans', 'Noto Sans SC', sans-serif;
-  --font-code: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --font-body: 'HarmonyOS Sans SC', 'Noto Sans SC', sans-serif;
+  --font-code: 'JetBrainsMapleMono', 'JetBrains Mono', 'Fira Code', monospace;
+  --font-spoiler: 'AaCute', var(--font-body);
   --font-size-base: 16px;
   --line-height-base: 1.75;
   --font-size-sm: 0.875rem;

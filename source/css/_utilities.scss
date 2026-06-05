@@ -15,3 +15,30 @@
 
 .text-center { text-align: center; }
 .text-muted { color: var(--md-sys-color-on-surface-variant); }
+
+/* ---- Spoiler (黑幕/剧透文本) ---- */
+.spoiler,
+.post-full-content .spoiler,
+.page-full-content .spoiler {
+  background-color: #000000;
+  color: #000000;
+  font-family: var(--font-spoiler);
+  padding: 2px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  /* Make inline code inside spoiler also hidden */
+  & code {
+    background-color: transparent;
+    color: inherit;
+  }
+}
+
+.spoiler:hover,
+.spoiler:focus-visible,
+.post-full-content .spoiler:hover,
+.page-full-content .spoiler:hover,
+.spoiler.revealed {
+  background-color: rgba(128, 128, 128, 0.3);
+  color: var(--md-sys-color-on-surface);
+}
