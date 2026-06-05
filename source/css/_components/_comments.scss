@@ -1,0 +1,87 @@
+﻿/* ============================================================
+   14. Comments Section (Gitalk / Utterances)
+   ============================================================ */
+.comments-section {
+  margin-top: 24px;
+}
+
+.comments-container {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  border-radius: var(--glass-radius);
+  padding: 32px;
+  box-shadow: var(--glass-shadow);
+}
+
+.comments-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+/* Gitalk Dark Theme Overrides */
+.gt-container {
+  color: var(--md-sys-color-on-surface) !important;
+}
+
+.gt-container .gt-comment-content {
+  background-color: var(--md-sys-color-surface-variant) !important;
+  border-radius: var(--glass-radius-xs) !important;
+  border: 1px solid var(--md-sys-color-outline) !important;
+}
+
+.gt-container .gt-comment-body {
+  color: var(--md-sys-color-on-surface) !important;
+}
+
+.gt-container .gt-header-textarea {
+  background: var(--md-sys-color-surface-variant) !important;
+  color: var(--md-sys-color-on-surface) !important;
+  border: 1px solid var(--md-sys-color-outline) !important;
+  border-radius: var(--glass-radius-xs) !important;
+}
+
+.gt-container .gt-header-textarea:focus {
+  border-color: var(--md-sys-color-primary) !important;
+}
+
+.gt-container .gt-btn {
+  background: var(--md-sys-color-primary-container) !important;
+  color: var(--md-sys-color-on-primary-container) !important;
+  border: none !important;
+  border-radius: 20px !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.gt-container .gt-btn:hover {
+  background: var(--md-sys-color-primary) !important;
+  color: var(--md-sys-color-on-primary) !important;
+}
+
+.gt-container .gt-comment-admin .gt-comment-content {
+  border-color: var(--md-sys-color-primary) !important;
+}
+
+.gt-container a {
+  color: var(--md-sys-color-primary) !important;
+}
+
+.gt-container .gt-popup {
+  background: var(--md-sys-color-surface) !important;
+  border: 1px solid var(--md-sys-color-outline) !important;
+  border-radius: var(--glass-radius-sm) !important;
+}
+
+/* Utterances container */
+#utterances-container {
+  min-height: 200px;
+}
+
+#utterances-container .utterances {
+  max-width: 100%;
+}

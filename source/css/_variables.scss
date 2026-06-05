@@ -1,0 +1,80 @@
+﻿/* ============================================================
+   MD-RetroGlass 鈥?Main Stylesheet
+   Material Design 3 with Glassmorphism for Hexo
+   Consistent with PageProj (x-leehe.ccwu.cc) visual identity
+   ============================================================ */
+
+/* ============================================================
+   1. CSS Custom Properties (MD3 Color Tokens)
+   ============================================================ */
+:root {
+  /* Default palette 鈥?Material Blue dark scheme */
+  --md-sys-color-primary: #a1c9ff;
+  --md-sys-color-on-primary: #00325b;
+  --md-sys-color-primary-container: #004881;
+  --md-sys-color-on-primary-container: #d2e4ff;
+  --md-sys-color-surface: #181a1b;
+  --md-sys-color-on-surface: #e2e2e6;
+  --md-sys-color-surface-variant: #43474e;
+  --md-sys-color-on-surface-variant: #c3c7cf;
+  --md-sys-color-outline: #8d9199;
+  --md-sys-color-outline-variant: #43474e;
+  --md-sys-color-error: #ffb4ab;
+  --md-sys-color-on-error: #690005;
+
+  /* Glassmorphism tokens */
+  --glass-bg: rgba(28, 27, 31, 0.7);
+  --glass-blur: 24px;
+  --glass-border: 1px solid var(--md-sys-color-outline);
+  --glass-radius: 28px;
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --glass-radius-sm: 16px;
+  --glass-radius-xs: 12px;
+
+  /* Typography */
+  --font-body: 'HarmonyOS Sans', 'Noto Sans SC', sans-serif;
+  --font-code: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --font-size-base: 16px;
+  --line-height-base: 1.75;
+  --font-size-sm: 0.875rem;
+  --font-size-xs: 0.8rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem;
+
+  /* Layout */
+  --content-max-width: 800px;
+  --sidebar-width: 320px;
+  --header-height: 64px;
+
+  /* Transitions */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* htmx loading indicator */
+.htmx-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 9999;
+  background: transparent;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.htmx-request .htmx-indicator,
+.htmx-indicator.htmx-request {
+  opacity: 1;
+  background: linear-gradient(90deg, transparent, var(--md-sys-color-primary), transparent);
+  animation: htmx-loading-bar 0.8s ease-in-out infinite;
+}
+
+@keyframes htmx-loading-bar {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}

@@ -1,0 +1,223 @@
+﻿/* ============================================================
+   18. Responsive Design
+   ============================================================ */
+
+/* Large Desktop: sidebar beside main content */
+@media (min-width: 1025px) {
+  .site-wrapper {
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+    grid-template-areas:
+      "header header"
+      "sidebar   main"
+      "footer footer";
+  }
+
+  .site-header { grid-area: header; }
+  .main-content { grid-area: main; }
+  .site-sidebar { grid-area: sidebar; }
+  .site-footer { grid-area: footer; }
+
+  .post-nav {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Medium Desktop / Tablet: sidebar below main */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .site-wrapper {
+    max-width: 720px;
+    padding: 0 20px;
+  }
+
+  .site-sidebar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .profile-card {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  :root {
+    --glass-radius: 20px;
+    --glass-radius-sm: 12px;
+  }
+
+  .site-wrapper {
+    max-width: 100%;
+    padding: 0 12px;
+    gap: 16px;
+  }
+
+  .header-inner {
+    padding: 10px 16px;
+  }
+
+  .nav-desktop {
+    display: none;
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  .post-full-inner,
+  .page-full-inner,
+  .archive-inner,
+  .tags-inner,
+  .categories-inner {
+    padding: 24px;
+  }
+
+  .post-full-title,
+  .page-full-title {
+    font-size: 1.5rem;
+  }
+
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-prev,
+  .post-nav-next {
+    grid-column: 1;
+  }
+
+  .post-nav-next {
+    text-align: left;
+  }
+
+  .post-nav-next .post-nav-label {
+    justify-content: flex-start;
+  }
+
+  .post-nav-title {
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .sidebar-card {
+    padding: 20px;
+  }
+
+  .bg-controls {
+    bottom: 12px;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 32px;
+  }
+
+  .bg-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .bg-dot.active {
+    width: 18px;
+  }
+
+  .bg-arrow .sym-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Compact APlayer for tablet */
+  .music-player-wrap .aplayer .aplayer-pic {
+    width: 64px !important;
+    height: 64px !important;
+  }
+  .music-player-wrap .aplayer .aplayer-info {
+    padding: 4px 8px;
+  }
+  .music-player-wrap .aplayer .aplayer-music {
+    font-size: 0.7rem;
+  }
+  .music-player-wrap .aplayer .aplayer-author {
+    font-size: 0.65rem;
+  }
+  .music-player-wrap .aplayer .aplayer-controller {
+    padding: 0 4px;
+  }
+  .music-player-wrap .aplayer .aplayer-time {
+    font-size: 0.65rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  :root {
+    --font-size-base: 15px;
+  }
+
+  .site-wrapper {
+    max-width: 100%;
+    padding: 0 8px;
+    gap: 12px;
+  }
+
+  .post-full-inner,
+  .page-full-inner,
+  .archive-inner,
+  .tags-inner,
+  .categories-inner {
+    padding: 20px;
+    border-radius: var(--glass-radius-sm);
+  }
+
+  .post-card-inner {
+    padding: 20px;
+  }
+
+  .post-full-meta {
+    gap: 12px;
+  }
+
+  .post-card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .scroll-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .comments-container {
+    padding: 20px;
+  }
+
+  /* Further compact APlayer for small phones */
+  .music-player-wrap .aplayer .aplayer-pic {
+    width: 52px !important;
+    height: 52px !important;
+  }
+  .music-player-wrap .aplayer .aplayer-info {
+    padding: 2px 6px;
+  }
+  .music-player-wrap .aplayer .aplayer-music {
+    font-size: 0.65rem;
+  }
+  .music-player-wrap .aplayer .aplayer-author {
+    font-size: 0.6rem;
+  }
+  .music-player-wrap .aplayer .aplayer-controller {
+    padding: 0 2px;
+  }
+  .music-player-wrap .aplayer .aplayer-time {
+    font-size: 0.6rem;
+  }
+}

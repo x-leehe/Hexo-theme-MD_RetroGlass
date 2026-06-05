@@ -1,0 +1,17 @@
+{
+  "name": "hexo-theme-md-retroglass",
+  "version": "1.0.0",
+  "description": "Material Design 3 Glassmorphism theme for Hexo",
+  "author": "X-LeeHe",
+  "repository": "https://github.com/x-leehe/Hexo-theme-MD_RetroGlass",
+  "keywords": [
+    "hexo",
+    "theme",
+    "material-design",
+    "glassmorphism"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "hexo-renderer-sass": "^0.5.0"
+  }
+}

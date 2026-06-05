@@ -1,0 +1,159 @@
+﻿/* ============================================================   13. Categories Page 鈥?Win10 Grouped Tiles
+   ============================================================ */
+
+.category-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Each category section */
+.cat-group {
+  /* nothing here 鈥?the tiles carry all the visual weight */
+}
+
+/* Category header tile (large wide tile) */
+.cat-header-tile {
+  display: block;
+  text-decoration: none;
+  border-radius: var(--glass-radius-xs);
+  overflow: hidden;
+  margin-bottom: 10px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cat-header-tile:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+  border-color: var(--md-sys-color-primary);
+}
+
+.cat-header-face {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+}
+
+.cat-header-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: var(--md-sys-color-primary-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--md-sys-color-on-primary-container);
+  flex-shrink: 0;
+}
+
+.cat-header-icon .sym-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.cat-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cat-header-name {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.cat-header-count {
+  font-size: var(--font-size-xs);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+/* Post tiles row below category header */
+.cat-post-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.cat-post-tile .tile-face {
+  padding: 14px;
+}
+
+.cat-post-tile .tile-label {
+  font-size: var(--font-size-xs);
+  -webkit-line-clamp: 3;
+}
+
+/* "more" tile for categories */
+.cat-more-tile {
+  background: var(--md-sys-color-surface-variant) !important;
+  border-color: var(--md-sys-color-outline) !important;
+}
+
+.cat-more-tile:hover {
+  background: var(--md-sys-color-primary-container) !important;
+}
+
+/* ============================================================
+   Responsive 鈥?Tiles
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .tile-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-auto-rows: 100px;
+    gap: 8px;
+  }
+
+  .tile-md {
+    grid-column: span 2;
+  }
+
+  .tile-lg {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .tile-face { padding: 12px; }
+  .tile-label { font-size: 0.75rem; }
+
+  .cat-post-tiles {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+  }
+
+  .cat-header-face { padding: 16px; }
+  .cat-header-icon { width: 40px; height: 40px; }
+  .cat-header-icon .sym-icon { width: 24px; height: 24px; }
+}
+
+@media (max-width: 480px) {
+  .tile-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 90px;
+    gap: 6px;
+  }
+
+  .tile-md,
+  .tile-lg {
+    grid-column: span 3;
+    grid-row: span 1;
+  }
+
+  .tile-face { padding: 10px; }
+  .tile-label { font-size: 0.7rem; }
+
+  .start-titlebar { padding: 12px 16px; }
+  .start-search { padding: 8px 12px; }
+}

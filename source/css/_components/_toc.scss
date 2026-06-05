@@ -1,0 +1,93 @@
+﻿/* ============================================================
+   8. Table of Contents
+   ============================================================ */
+.post-toc {
+  margin-bottom: 24px;
+  background: var(--md-sys-color-surface-variant);
+  border-radius: var(--glass-radius-xs);
+  overflow: hidden;
+}
+
+.toc-summary {
+  width: 100%;
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface-variant);
+  background: none;
+  border: none;
+  outline: none;
+  transition: background var(--transition-fast);
+}
+
+.toc-summary:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.toc-summary .sym-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Chevron arrow 鈥?rotates on open */
+.toc-arrow {
+  margin-left: auto;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toc-summary[aria-expanded="true"] .toc-arrow {
+  transform: rotate(90deg);
+}
+
+/* Grid-based expand/collapse animation */
+.toc-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toc-body.open {
+  grid-template-rows: 1fr;
+}
+
+.toc-body-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.toc-body-inner-pad {
+  padding: 0 16px 16px;
+  font-size: var(--font-size-sm);
+  line-height: 1.8;
+}
+
+.toc-body ol,
+.toc-body ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.toc-body ol { counter-reset: toc-counter; }
+
+.toc-body li { margin: 4px 0; }
+
+.toc-body a {
+  color: var(--md-sys-color-on-surface-variant);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.toc-body a:hover {
+  color: var(--md-sys-color-primary);
+}
+
+.toc-body .toc-child {
+  padding-left: 20px;
+  border-left: 2px solid var(--md-sys-color-outline);
+  margin: 4px 0;
+}

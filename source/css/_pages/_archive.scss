@@ -1,0 +1,84 @@
+﻿/* ============================================================
+   11. Archive Page
+   ============================================================ */
+.archive-inner {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  border-radius: var(--glass-radius);
+  padding: 32px;
+  box-shadow: var(--glass-shadow);
+}
+
+.archive-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.archive-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+}
+
+.archive-count {
+  font-size: var(--font-size-sm);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.archive-year {
+  margin-bottom: 24px;
+}
+
+.archive-year-title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--md-sys-color-primary);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--md-sys-color-outline);
+}
+
+.archive-posts {
+  list-style: none;
+}
+
+.archive-post-item {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background var(--transition-fast);
+}
+
+.archive-post-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.archive-post-date {
+  font-size: var(--font-size-xs);
+  color: var(--md-sys-color-outline);
+  font-family: var(--font-code);
+  flex-shrink: 0;
+  min-width: 45px;
+}
+
+.archive-post-link {
+  color: var(--md-sys-color-on-surface);
+  font-size: var(--font-size-sm);
+  transition: color var(--transition-fast);
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.archive-post-link:hover {
+  color: var(--md-sys-color-primary);
+}

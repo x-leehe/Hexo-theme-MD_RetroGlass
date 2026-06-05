@@ -1,0 +1,179 @@
+﻿/* ============================================================
+   6. Single Post / Page Full View
+   ============================================================ */
+.post-full-inner,
+.page-full-inner {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  border-radius: var(--glass-radius);
+  padding: 40px;
+  box-shadow: var(--glass-shadow);
+}
+
+.post-full-header,
+.page-full-header {
+  margin-bottom: 32px;
+}
+
+.post-full-title,
+.page-full-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 16px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.post-full-meta,
+.page-full-meta {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  font-size: var(--font-size-sm);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.post-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.post-meta-item .sym-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.post-full-categories,
+.post-full-tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.post-full-categories .sym-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+/* Post Content */
+.post-full-content,
+.page-full-content {
+  color: var(--md-sys-color-on-surface);
+  line-height: var(--line-height-base);
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Typography in post content */
+.post-full-content h1,
+.page-full-content h1 { font-size: 1.8rem; margin: 40px 0 16px; font-weight: 700; scroll-margin-top: 100px; }
+.post-full-content h2,
+.page-full-content h2 { font-size: 1.5rem; margin: 36px 0 14px; font-weight: 600; padding-bottom: 8px; border-bottom: 1px solid var(--md-sys-color-outline); scroll-margin-top: 100px; }
+.post-full-content h3,
+.page-full-content h3 { font-size: 1.25rem; margin: 28px 0 12px; font-weight: 600; scroll-margin-top: 100px; }
+.post-full-content h4,
+.page-full-content h4 { font-size: 1.1rem; margin: 24px 0 10px; font-weight: 600; scroll-margin-top: 100px; }
+.post-full-content h5,
+.page-full-content h5,
+.post-full-content h6,
+.page-full-content h6 { font-size: 1rem; margin: 20px 0 8px; font-weight: 600; scroll-margin-top: 100px; }
+
+.post-full-content p,
+.page-full-content p { margin-bottom: 16px; }
+
+.post-full-content ul,
+.post-full-content ol,
+.page-full-content ul,
+.page-full-content ol {
+  margin: 0 0 16px 24px;
+}
+
+.post-full-content li,
+.page-full-content li { margin-bottom: 6px; }
+
+.post-full-content blockquote,
+.page-full-content blockquote {
+  margin: 16px 0;
+  padding: 16px 20px;
+  border-left: 4px solid var(--md-sys-color-primary);
+  background: rgba(161, 201, 255, 0.08);
+  border-radius: 0 var(--glass-radius-xs) var(--glass-radius-xs) 0;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.post-full-content blockquote p:last-child,
+.page-full-content blockquote p:last-child { margin-bottom: 0; }
+
+.post-full-content a,
+.page-full-content a {
+  color: var(--md-sys-color-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.post-full-content a:hover,
+.page-full-content a:hover {
+  color: var(--md-sys-color-on-primary-container);
+}
+
+/* Tables */
+.post-full-content table,
+.page-full-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: var(--font-size-sm);
+}
+
+.post-full-content th,
+.page-full-content th {
+  background: var(--md-sys-color-surface-variant);
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.post-full-content td,
+.page-full-content td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--md-sys-color-outline);
+}
+
+.post-full-content tr:hover td,
+.page-full-content tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Horizontal Rule */
+.post-full-content hr,
+.page-full-content hr {
+  border: none;
+  border-top: 1px solid var(--md-sys-color-outline);
+  margin: 32px 0;
+}
+
+/* Images in posts */
+.post-full-content img,
+.page-full-content img {
+  border-radius: var(--glass-radius-sm);
+  margin: 16px auto;
+  display: block;
+}
+
+/* Footnotes */
+.post-full-content .footnote-item,
+.page-full-content .footnote-item {
+  font-size: var(--font-size-sm);
+  color: var(--md-sys-color-on-surface-variant);
+}

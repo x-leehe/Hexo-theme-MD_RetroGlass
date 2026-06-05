@@ -1,0 +1,243 @@
+﻿/* ============================================================   12. Win10 Start Menu 鈥?Shared Styles
+   ============================================================ */
+
+.start-container {
+  /* outer wrapper 鈥?no glass, let tiles be the star */
+}
+
+.start-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ---- Title Bar (like Start Menu top) ---- */
+.start-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  border-radius: var(--glass-radius-sm);
+}
+
+.start-titlebar-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-sys-color-primary-container);
+  border-radius: 8px;
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.start-titlebar-icon .sym-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.start-titlebar-text {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.start-titlebar-count {
+  font-size: var(--font-size-xs);
+  background: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-on-surface-variant);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+/* ---- Search Bar ---- */
+.start-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 10px 16px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  border-radius: var(--glass-radius-sm);
+}
+
+.start-search .sym-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--md-sys-color-on-surface-variant);
+  flex-shrink: 0;
+}
+
+.start-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--md-sys-color-on-surface);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  caret-color: var(--md-sys-color-primary);
+}
+
+.start-search-input::placeholder {
+  color: var(--md-sys-color-outline);
+}
+
+/* ---- Tile Grid ---- */
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  grid-auto-rows: 130px;
+  gap: 12px;
+  grid-auto-flow: dense;
+}
+
+/* ---- Individual Tile ---- */
+.tile {
+  display: block;
+  text-decoration: none;
+  border-radius: var(--glass-radius-xs);
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.tile:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+  z-index: 2;
+  border-color: var(--md-sys-color-primary);
+}
+
+.tile:active {
+  transform: scale(0.98);
+}
+
+/* --- Tile sizes (Win10: small 1脳1, medium 2脳1, large 2脳2) --- */
+.tile-sm {
+  grid-row: span 1;
+  grid-column: span 1;
+}
+
+.tile-md {
+  grid-row: span 1;
+  grid-column: span 2;
+}
+
+.tile-lg {
+  grid-row: span 2;
+  grid-column: span 2;
+}
+
+/* ---- Tile Inner Face ---- */
+.tile-face {
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+/* Tile icon 鈥?small in corner */
+.tile-icon {
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.tile-icon .sym-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.tile-md .tile-icon .sym-icon,
+.tile-lg .tile-icon .sym-icon {
+  width: 30px;
+  height: 30px;
+}
+
+/* Friend avatar inside tile */
+.friend-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--md-sys-color-outline-variant);
+}
+
+.tile-md .friend-avatar,
+.tile-lg .friend-avatar {
+  width: 34px;
+  height: 34px;
+}
+
+/* Tile label 鈥?tag name */
+.tile-label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface);
+  line-height: 1.3;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tile-md .tile-label,
+.tile-lg .tile-label {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  -webkit-line-clamp: 3;
+}
+
+/* Tile badge 鈥?post count */
+.tile-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface-variant);
+  background: var(--md-sys-color-surface-variant);
+  padding: 2px 8px;
+  border-radius: 10px;
+  align-self: flex-end;
+}
+
+.tile-md .tile-badge,
+.tile-lg .tile-badge {
+  font-size: 0.75rem;
+}
+
+/* Tile subtitle (for category post tiles) */
+.tile-sub {
+  font-size: 0.7rem;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-top: 2px;
+}
+
+/* ---- "No match" footer text ---- */
+.start-footer-text {
+  text-align: center;
+  padding: 32px 0;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: var(--font-size-sm);
+}
