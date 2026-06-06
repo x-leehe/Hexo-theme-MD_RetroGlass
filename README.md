@@ -125,7 +125,7 @@ Choose your comment backend via `comment_system`:
 comment_system: utterances
 ```
 
-#### Option A: Utterances
+#### Option A: Utterances (Lightweight, no OAuth, but less customizable)
 
 1. Install the [utterances GitHub App](https://github.com/apps/utterances) on your target repo
 2. Configure:
@@ -139,7 +139,7 @@ utterances:
   theme: github-dark               # github-light | github-dark | preferred-color-scheme | icy-dark | photon-dark
 ```
 
-#### Option B: Gitalk
+#### Option B: Gitalk (OAuth required, more customizable but potentially less secure)
 
 1. Create a [GitHub OAuth App](https://github.com/settings/developers)
 2. Configure:
