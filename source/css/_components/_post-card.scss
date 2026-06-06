@@ -9,8 +9,8 @@
 
 .post-card-inner {
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
   border: var(--glass-border);
   border-radius: var(--glass-radius);
   padding: 28px;
@@ -94,6 +94,7 @@
   margin-bottom: 16px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
