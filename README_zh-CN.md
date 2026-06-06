@@ -346,6 +346,7 @@ shortcodes:
 - **[JetBrainsMapleMono](https://github.com/SpaceTimee/Fusion-JetBrainsMapleMono)** — 融合 JetBrains Mono 与 Maple Mono 的优美等宽字体，用于代码块。
 - **[萌娘百科](https://mzh.moegirl.org.cn/)**(或[moegirlICU](https://moegirl.icu/)) — `{{Spoiler|text}}` 语法灵感来源于萌娘百科的剧透标签约定。
 - **[hexo-theme-whirlwind](https://github.com/SakuraKoi/Hexo-theme-Whirlwind)** — 部分架构模式（评论系统切换、侧边栏布局）借鉴自该主题。
+- **[Github Copilot](https://copilot.github.com/)** — 代码片段和文档撰写过程中得到的 AI 辅助。
 
 ## 许可证
 

@@ -346,6 +346,7 @@ All modern browsers that support `backdrop-filter` (Chrome 76+, Edge 79+, Safari
 - **[JetBrainsMapleMono](https://github.com/SpaceTimee/Fusion-JetBrainsMapleMono)** — A beautiful monospace font blending JetBrains Mono with Maple Mono, used for code blocks.
 - **[Moegirl Wiki](https://mzh.moegirl.org.cn/)**(or [moegirlICU](https://moegirl.icu/))** — The `{{Spoiler|text}}` syntax was inspired by Moegirl Wiki's spoiler tag convention.
 - **[hexo-theme-whirlwind](https://github.com/SakuraKoi/Hexo-theme-Whirlwind)** — Partial architectural patterns (comment system switching, sidebar layout) were adapted from this theme.
+- **[Github Copilot](https://copilot.github.com/)** — AI assistance during code snippets and documentation writing.
 
 ## License
 
