@@ -14,8 +14,9 @@ A Hexo theme with Material Design 3 glassmorphism aesthetics.
 - **APlayer + MetingJS** — Embedded music player with Netease playlist support
 - **Dual Comment System** — Switch between Gitalk and [utterances](https://utteranc.es) via one config line
 - **Win10 Start Menu Tiles** — Tag/category pages with tile grid layout
-- **Code Blocks** — Language labels + copy-to-clipboard buttons with PrismJS
-- **Shortcodes** — `{{Tip|…}}` `{{Warn|…}}` `{{Critical|…}}` admonitions, `{{Hidden|…}}` foldable blocks, `{{Spoiler|…}}` click-to-reveal text
+- **Code Blocks** — Auto-detected language labels (30+ languages) + copy-to-clipboard with PrismJS
+- **Post Navigation** — Previous / Next post links at the bottom of each post
+- **Shortcodes** — `{{Tip|…}}` / `{% tip %}…{% endtip %}` admonitions, foldable blocks, spoiler text (inline + Nunjucks syntax)
 - **Dual Background** — Parallax effect + cross-fade rotation
 - **Local SVG Icons** — Material Symbols sprite (~7KB, zero CDN dependencies for icons)
 - **Responsive** — Desktop sidebar layout, full-width mobile adaptive
@@ -183,7 +184,7 @@ backgrounds:
   - /images/bg-03.jpg
 ```
 
-Backgrounds rotate automatically every 15 seconds with a cross-fade transition. Users can also manually switch via arrow buttons and dot indicators. A parallax effect tracks mouse movement on desktop.
+Backgrounds rotate automatically every 15 seconds with a cross-fade transition. Users can also manually switch via on-screen arrow buttons, dot indicators, or keyboard <kbd>←</kbd> / <kbd>→</kbd> arrow keys. A parallax effect tracks mouse movement on desktop.
 
 ### Table of Contents (TOC)
 
@@ -194,6 +195,8 @@ toc:
   max_depth: 4
 ```
 
+The TOC is rendered as a collapsible panel with a smooth grid-based expand/collapse animation. On desktop (≥1025px) it auto-expands; on mobile it stays collapsed by default. Clicking a TOC link scrolls smoothly to the target heading with a brief highlight flash.
+
 ### Post Display
 
 ```yaml
@@ -201,6 +204,8 @@ post:
   date_format: YYYY-MM-DD
   reading_time: true       # Estimate reading time (~500 chars/min)
 ```
+
+Each post shows the published date, last updated date (if different), estimated reading time, and word count. The Previous / Next post navigation appears at the bottom of every post.
 
 ### Footer
 
@@ -239,12 +244,23 @@ scroll_to_top: true
 
 ### Shortcodes
 
-All shortcodes use the syntax `{{Function|Description|content}}`. The `Description` field is optional — leave it empty to use the default label. All support **multi-line content** with full Markdown formatting.
+All shortcodes support **two syntaxes**:
+
+| Style | Syntax | Best for |
+|-------|--------|----------|
+| **Inline** | `{{Function|Description|content}}` | Single-line, quick usage |
+| **Nunjucks** | `{% function Description %}content{% endfunction %}` | Multi-line, full Markdown in body |
+
+Both are case-insensitive. The `Description` field is optional — leave it empty (inline: `||`, Nunjucks: omit) to use the default label.
 
 #### Spoiler — Click-to-reveal text
 
 ```
 {{Spoiler||The cake is a lie.}}
+
+{% spoiler %}
+The cake is a **lie**.
+{% endspoiler %}
 ```
 
 Text is blacked out until clicked or hovered. Ideal for hiding spoilers.
@@ -253,6 +269,10 @@ Text is blacked out until clicked or hovered. Ideal for hiding spoilers.
 
 ```
 {{Hidden|Click to expand|Some **Markdown** content here.}}
+
+{% hidden Click to expand %}
+Some **Markdown** content here.
+{% endhidden %}
 ```
 
 Renders as a `<details>` / `<summary>` collapsible section.
@@ -261,14 +281,22 @@ Renders as a `<details>` / `<summary>` collapsible section.
 
 ```
 {{Tip|Note|This is a helpful **tip** with formatting.}}
+
+{% tip Note %}
+This is a helpful **tip** with formatting.
+{% endtip %}
 ```
 
-Blue-themed admonition for hints, notes, and supplementary info.
+Blue-themed admonition for hints, notes, and supplementary info. (`Info` / `info` works identically.)
 
 #### Warn — Warning box
 
 ```
 {{Warn||This action is **irreversible**.}}
+
+{% warn %}
+This action is **irreversible**.
+{% endwarn %}
 ```
 
 Yellow-themed admonition for cautionary notes.
@@ -277,6 +305,10 @@ Yellow-themed admonition for cautionary notes.
 
 ```
 {{Critical|Disclaimer|**Use at your own risk.**}}
+
+{% critical Disclaimer %}
+**Use at your own risk.**
+{% endcritical %}
 ```
 
 Red-themed admonition for severe warnings or disclaimers.
@@ -294,7 +326,11 @@ shortcodes:
   critical_default: 严重警告
 ```
 
-No extra plugins needed — handled by the theme's built-in `scripts/shortcodes.js` filter.
+No extra plugins needed — the `{{}}` syntax is handled by `before_post_render` filter, and the `{% %}` syntax is registered as native Hexo/Nunjucks tags in `scripts/shortcodes.js`.
+
+### Code Block Headers
+
+Each code block automatically displays a **language label** (auto-detected from 30+ languages including JavaScript, TypeScript, Python, Rust, Go, Docker, YAML, etc.) and a **copy-to-clipboard button**. Unknown languages are capitalized by name. Fully re-initialized on htmx page transitions.
 
 ## Navigation
 
