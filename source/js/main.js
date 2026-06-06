@@ -18,8 +18,8 @@
   // 1. Background Rotation (cross-fade)
   // ==========================================================
 
-  var BG_IMAGES = [];
-  var bgConfigEl = document.getElementById('bg-config');
+  let BG_IMAGES = [];
+  const bgConfigEl = document.getElementById('bg-config');
   if (bgConfigEl) {
     try {
       BG_IMAGES = JSON.parse(bgConfigEl.textContent || '[]');
@@ -28,17 +28,17 @@
     }
   }
 
-  var currentBgIndex = 0;
-  var autoRotateTimer = null;
-  var AUTO_ROTATE_INTERVAL = 15000; // 15s auto rotation
+  let currentBgIndex = 0;
+  let autoRotateTimer = null;
+  const AUTO_ROTATE_INTERVAL = 15000; // 15s auto rotation
 
   function initBgRotation() {
-    var bgCanvas = document.getElementById('bg-canvas');
-    var bgBack = document.getElementById('bg-canvas-back');
-    var prevBtn = document.getElementById('bg-prev');
-    var nextBtn = document.getElementById('bg-next');
-    var dotsContainer = document.getElementById('bg-dots');
-    var controls = document.getElementById('bg-controls');
+    const bgCanvas = document.getElementById('bg-canvas');
+    const bgBack = document.getElementById('bg-canvas-back');
+    const prevBtn = document.getElementById('bg-prev');
+    const nextBtn = document.getElementById('bg-next');
+    const dotsContainer = document.getElementById('bg-dots');
+    const controls = document.getElementById('bg-controls');
 
     if (!bgCanvas || BG_IMAGES.length <= 1) {
       if (controls) controls.style.display = 'none';
@@ -49,7 +49,7 @@
       if (!dotsContainer) return;
       dotsContainer.innerHTML = '';
       BG_IMAGES.forEach(function (_, i) {
-        var dot = document.createElement('div');
+        const dot = document.createElement('div');
         dot.className = 'bg-dot' + (i === currentBgIndex ? ' active' : '');
         dot.addEventListener('click', function () { switchToBg(i); });
         dotsContainer.appendChild(dot);
@@ -59,14 +59,14 @@
     function switchToBg(index) {
       if (index === currentBgIndex || index < 0 || index >= BG_IMAGES.length) return;
       currentBgIndex = index;
-      var nextSrc = BG_IMAGES[index];
+      const nextSrc = BG_IMAGES[index];
 
-      var preload = new Image();
+      const preload = new Image();
       preload.src = nextSrc;
 
       function doCrossfade() {
         // 将当前视差同步到后层，避免交叉淡入淡出时出现错位
-        var t = 'translate(' + bgParallaxX + 'px, ' + bgParallaxY + 'px)';
+        const t = 'translate(' + bgParallaxX + 'px, ' + bgParallaxY + 'px)';
         bgBack.style.transform = t;
         bgBack.src = nextSrc;
         bgBack.style.opacity = '1';
@@ -125,21 +125,21 @@
   //    Moves both bg-canvas and bg-canvas-back in sync so the
   //    cross-fade never reveals a misaligned layer underneath.
   // ==========================================================
-  var bgParallaxX = 0, bgParallaxY = 0;
+  let bgParallaxX = 0, bgParallaxY = 0;
 
   function initParallax() {
-    var bgCanvas = document.getElementById('bg-canvas');
-    var bgBack = document.getElementById('bg-canvas-back');
+    const bgCanvas = document.getElementById('bg-canvas');
+    const bgBack = document.getElementById('bg-canvas-back');
     if (!bgCanvas) return;
 
     document.addEventListener('mousemove', function (e) {
-      var clientX = e.clientX, clientY = e.clientY;
-      var centerX = window.innerWidth / 2;
-      var centerY = window.innerHeight / 2;
+      const clientX = e.clientX, clientY = e.clientY;
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
       // 最大偏移 10px（与 PageProj 一致）
       bgParallaxX = (clientX - centerX) / centerX * 10;
       bgParallaxY = (clientY - centerY) / centerY * 10;
-      var t = 'translate(' + bgParallaxX + 'px, ' + bgParallaxY + 'px)';
+      const t = 'translate(' + bgParallaxX + 'px, ' + bgParallaxY + 'px)';
       bgCanvas.style.transform = t;
       if (bgBack) bgBack.style.transform = t;
     });
@@ -149,14 +149,14 @@
   // 3. Mobile Menu Toggle
   // ==========================================================
   function initMobileMenu() {
-    var toggle = document.getElementById('mobile-menu-toggle');
-    var menu = document.getElementById('nav-mobile');
+    const toggle = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('nav-mobile');
 
     if (!toggle || !menu) return;
 
     toggle.addEventListener('click', function () {
-      var isOpen = menu.classList.toggle('active');
-      var icon = toggle.querySelector('.sym-icon use');
+      const isOpen = menu.classList.toggle('active');
+      const icon = toggle.querySelector('.sym-icon use');
       if (icon) {
         icon.setAttribute('href', isOpen ? '#close' : '#menu');
       }
@@ -166,7 +166,7 @@
     menu.querySelectorAll('.nav-item-mobile').forEach(function (link) {
       link.addEventListener('click', function () {
         menu.classList.remove('active');
-        var icon = toggle.querySelector('.sym-icon use');
+        const icon = toggle.querySelector('.sym-icon use');
         if (icon) icon.setAttribute('href', '#menu');
       });
     });
@@ -176,7 +176,7 @@
       if (!menu.classList.contains('active')) return;
       if (!menu.contains(e.target) && e.target !== toggle && !toggle.contains(e.target)) {
         menu.classList.remove('active');
-        var icon = toggle.querySelector('.sym-icon use');
+        const icon = toggle.querySelector('.sym-icon use');
         if (icon) icon.setAttribute('href', '#menu');
       }
     });
@@ -186,10 +186,10 @@
   // 4. Scroll to Top Button
   // ==========================================================
   function initScrollToTop() {
-    var btn = document.getElementById('scroll-to-top');
+    const btn = document.getElementById('scroll-to-top');
     if (!btn) return;
 
-    var ticking = false;
+    let ticking = false;
 
     function updateVisibility() {
       if (window.scrollY > 400) {
@@ -216,13 +216,13 @@
   // 5. Table of Contents — custom toggle with animation
   // ==========================================================
   function initToc() {
-    var toggle = document.getElementById('toc-toggle');
-    var body = document.getElementById('toc-body');
+    const toggle = document.getElementById('toc-toggle');
+    const body = document.getElementById('toc-body');
     if (!toggle || !body) return;
 
     // Toggle open/close
     toggle.addEventListener('click', function () {
-      var isOpen = body.classList.toggle('open');
+      const isOpen = body.classList.toggle('open');
       toggle.setAttribute('aria-expanded', isOpen);
     });
 
@@ -230,13 +230,13 @@
     body.querySelectorAll('a[href^="#"]').forEach(function (link) {
       link.addEventListener('click', function (e) {
         e.preventDefault();
-        var raw = link.getAttribute('href');
-        var id = decodeURIComponent(raw.substring(1));
-        var target = document.getElementById(id);
+        const raw = link.getAttribute('href');
+        const id = decodeURIComponent(raw.substring(1));
+        const target = document.getElementById(id);
         if (!target) return;
 
         // Remove flash from any previously-flashed heading
-        var prev = document.querySelector('.toc-flash');
+        const prev = document.querySelector('.toc-flash');
         if (prev) prev.classList.remove('toc-flash');
 
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -269,7 +269,7 @@
   // ==========================================================
   // 6. Code Block Headers — language label + copy button
   // ==========================================================
-  var LANG_NAMES = {
+  const LANG_NAMES = {
     js: 'JavaScript', javascript: 'JavaScript',
     ts: 'TypeScript', typescript: 'TypeScript',
     css: 'CSS',
@@ -292,46 +292,46 @@
 
   function langDisplay(cls) {
     if (!cls) return '';
-    var lower = cls.toLowerCase();
+    const lower = cls.toLowerCase();
     if (LANG_NAMES[lower]) return LANG_NAMES[lower];
     // Capitalize first letter for unknown languages
     return cls.charAt(0).toUpperCase() + cls.slice(1);
   }
 
   function initCodeHeaders() {
-    var codeBlocks = document.querySelectorAll('.post-full-content pre.line-numbers, .page-full-content pre.line-numbers');
+    const codeBlocks = document.querySelectorAll('.post-full-content pre.line-numbers, .page-full-content pre.line-numbers');
     codeBlocks.forEach(function (pre) {
       // Already has header
       if (pre.querySelector(':scope > .highlight-header')) return;
 
       // Extract language from class (e.g. "line-numbers language-css")
-      var classes = pre.className.split(/\s+/);
-      var langCls = '';
+      const classes = pre.className.split(/\s+/);
+      let langCls = '';
       classes.forEach(function (c) {
         if (c.startsWith('language-') && c !== 'language-plain') {
           langCls = c.replace('language-', '');
         }
       });
-      var label = langDisplay(langCls);
+      const label = langDisplay(langCls);
 
       // Build header
-      var header = document.createElement('div');
+      const header = document.createElement('div');
       header.className = 'highlight-header';
 
       // Left: icon + language name
-      var langSpan = document.createElement('span');
+      const langSpan = document.createElement('span');
       langSpan.className = 'highlight-lang';
       langSpan.innerHTML = '<svg class="sym-icon" aria-hidden="true"><use href="#code"/></svg><span>' + label + '</span>';
 
       // Right: copy button
-      var copyBtn = document.createElement('button');
+      const copyBtn = document.createElement('button');
       copyBtn.className = 'highlight-copy-btn';
       copyBtn.title = 'Copy code';
       copyBtn.innerHTML = '<svg class="sym-icon" aria-hidden="true"><use href="#content_copy"/></svg><span>Copy</span>';
 
       copyBtn.addEventListener('click', function () {
-        var codeEl = pre.querySelector(':scope > code');
-        var text = codeEl ? (codeEl.textContent || '') : '';
+        const codeEl = pre.querySelector(':scope > code');
+        const text = codeEl ? (codeEl.textContent || '') : '';
 
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(text).then(function () {
@@ -352,7 +352,7 @@
     });
 
     function fallbackCopy(text, btn) {
-      var ta = document.createElement('textarea');
+      const ta = document.createElement('textarea');
       ta.value = text;
       ta.style.position = 'fixed';
       ta.style.left = '-9999px';
@@ -361,7 +361,7 @@
       ta.focus();
       ta.select();
       try {
-        var ok = document.execCommand('copy');
+        const ok = document.execCommand('copy');
         if (ok) showCopied(btn);
       } catch (e) { /* ignore */ }
       document.body.removeChild(ta);
@@ -385,19 +385,19 @@
   //     Only visible on top-level pages (hides on blog posts).
   // ==========================================================
   function initNavIndicator() {
-    var indicator = document.getElementById('nav-indicator');
-    var nav = document.querySelector('.nav-desktop');
+    const indicator = document.getElementById('nav-indicator');
+    const nav = document.querySelector('.nav-desktop');
     if (!indicator || !nav) return;
 
-    var activeItem = nav.querySelector('.nav-item.active');
+    const activeItem = nav.querySelector('.nav-item.active');
 
     if (!activeItem) {
       indicator.style.opacity = '0';
       return;
     }
 
-    var itemRect = activeItem.getBoundingClientRect();
-    var navRect = nav.getBoundingClientRect();
+    const itemRect = activeItem.getBoundingClientRect();
+    const navRect = nav.getBoundingClientRect();
 
     indicator.style.left = (itemRect.left - navRect.left) + 'px';
     indicator.style.width = itemRect.width + 'px';
@@ -408,7 +408,7 @@
   window._initNavIndicator = initNavIndicator;
 
   // Recalculate on resize (debounced)
-  var _navResizeTimer = null;
+  let _navResizeTimer = null;
   window.addEventListener('resize', function () {
     if (_navResizeTimer) clearTimeout(_navResizeTimer);
     _navResizeTimer = setTimeout(initNavIndicator, 150);
@@ -418,7 +418,7 @@
   // 7. External Links — target="_blank" + noopener
   // ==========================================================
   function initExternalLinks() {
-    var contentAreas = document.querySelectorAll('.post-full-content, .page-full-content');
+    const contentAreas = document.querySelectorAll('.post-full-content, .page-full-content');
     contentAreas.forEach(function (area) {
       area.querySelectorAll('a[href^="http"]').forEach(function (link) {
         if (!link.hostname.includes(window.location.hostname)) {

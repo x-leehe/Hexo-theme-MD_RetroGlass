@@ -16,23 +16,23 @@
   // ==========================================================
   function updateActiveNav(path) {
     // Strip trailing slash for consistent matching
-    var cleanPath = path.replace(/\/$/, '') || '/';
+    const cleanPath = path.replace(/\/$/, '') || '/';
 
     document.querySelectorAll('.nav-desktop .nav-item').forEach(function (el) {
-      var href = el.getAttribute('href').replace(/\/$/, '') || '/';
-      var isActive = (cleanPath === href ||
+      const href = el.getAttribute('href').replace(/\/$/, '') || '/';
+      const isActive = (cleanPath === href ||
         (href !== '/' && cleanPath.indexOf(href) === 0));
       el.classList.toggle('active', isActive);
     });
     document.querySelectorAll('.nav-item-mobile').forEach(function (el) {
-      var href = el.getAttribute('href').replace(/\/$/, '') || '/';
-      var isActive = (cleanPath === href ||
+      const href = el.getAttribute('href').replace(/\/$/, '') || '/';
+      const isActive = (cleanPath === href ||
         (href !== '/' && cleanPath.indexOf(href) === 0));
       el.classList.toggle('active', isActive);
     });
 
     // Close mobile menu
-    var mobileNav = document.getElementById('nav-mobile');
+    const mobileNav = document.getElementById('nav-mobile');
     if (mobileNav) mobileNav.classList.remove('active');
 
     // Reposition nav indicator after active state changes
@@ -83,15 +83,15 @@
 
     // Decode Cloudflare email obfuscation
     document.querySelectorAll('.__cf_email__[data-cfemail]').forEach(function(el) {
-      var encoded = el.getAttribute('data-cfemail');
+      const encoded = el.getAttribute('data-cfemail');
       if (!encoded) return;
-      var bytes = [];
-      for (var i = 0; i < encoded.length; i += 2) {
+      const bytes = [];
+      for (let i = 0; i < encoded.length; i += 2) {
         bytes.push(parseInt(encoded.substr(i, 2), 16));
       }
-      var key = bytes[0];
-      var email = '';
-      for (var j = 1; j < bytes.length; j++) {
+      const key = bytes[0];
+      let email = '';
+      for (let j = 1; j < bytes.length; j++) {
         email += String.fromCharCode(bytes[j] ^ key);
       }
       if (el.tagName === 'A') {
@@ -101,7 +101,7 @@
         el.removeAttribute('data-cfemail');
         return;
       }
-      var parentLink = el.closest('a');
+      const parentLink = el.closest('a');
       if (parentLink) {
         el.textContent = email;
         parentLink.setAttribute('href', 'mailto:' + email);
@@ -111,7 +111,7 @@
         el.removeAttribute('data-cfemail');
         return;
       }
-      var a = document.createElement('a');
+      const a = document.createElement('a');
       a.href = 'mailto:' + email;
       a.textContent = email;
       a.className = el.className.replace(/\b__cf_email__\b/g, '').trim();
@@ -132,7 +132,7 @@
 
   document.body.addEventListener('htmx:beforeRequest', function (evt) {
     if (!evt.detail || !evt.detail.boosted) return;
-    var main = document.querySelector('.main-content');
+    const main = document.querySelector('.main-content');
     if (main) {
       main.classList.add('is-leaving');
     }
@@ -140,7 +140,7 @@
 
   document.body.addEventListener('htmx:afterSettle', function (evt) {
     if (!evt.detail || !evt.detail.boosted) return;
-    var path = (evt.detail.pathInfo && evt.detail.pathInfo.path) || location.pathname;
+    const path = (evt.detail.pathInfo && evt.detail.pathInfo.path) || location.pathname;
     updateActiveNav(path);
     onContentReady();
   });
