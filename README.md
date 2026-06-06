@@ -16,7 +16,7 @@ A Hexo theme with Material Design 3 glassmorphism aesthetics.
 - **Win10 Start Menu Tiles** — Tag/category pages with tile grid layout
 - **Code Blocks** — Auto-detected language labels (30+ languages) + copy-to-clipboard with PrismJS
 - **Post Navigation** — Previous / Next post links at the bottom of each post
-- **Shortcodes** — `{{Tip|…}}` / `{% tip %}…{% endtip %}` admonitions, foldable blocks, spoiler text (inline + Nunjucks syntax)
+- **Shortcodes** — `{{Tip|desc|…}}` / `{% tip desc %}…{% endtip %}` admonitions, foldable blocks, spoiler text (inline + Nunjucks syntax)
 - **Dual Background** — Parallax effect + cross-fade rotation
 - **Local SVG Icons** — Material Symbols sprite (~7KB, zero CDN dependencies for icons)
 - **Responsive** — Desktop sidebar layout, full-width mobile adaptive
