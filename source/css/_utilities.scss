@@ -42,3 +42,122 @@
   background-color: rgba(128, 128, 128, 0.3);
   color: var(--md-sys-color-on-surface);
 }
+
+/* ---- Hidden (折叠文本) ---- */
+.hidden-block {
+  margin: 16px 0;
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--glass-radius-xs);
+  overflow: hidden;
+  background: var(--md-sys-color-surface-variant);
+
+  .hidden-summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface-variant);
+    list-style: none;
+    transition: background var(--transition-fast);
+
+    &::-webkit-details-marker { display: none; }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .hidden-arrow {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  }
+
+  &[open] .hidden-summary .hidden-arrow {
+    transform: rotate(90deg);
+  }
+
+  .hidden-content {
+    padding: 16px;
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-base);
+    color: var(--md-sys-color-on-surface);
+  }
+}
+
+/* ---- Admonition (提示/警告/严重警告框) ---- */
+.admonition {
+  margin: 16px 0;
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--glass-radius-xs);
+  overflow: hidden;
+
+  .admonition-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+
+    .admonition-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+  }
+
+  .admonition-body {
+    padding: 16px;
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-base);
+
+    p:last-child { margin-bottom: 0; }
+  }
+
+  /* Tip — 蓝色 */
+  &.tip {
+    border-left: 4px solid var(--admonition-tip-border);
+    background: var(--admonition-tip-bg);
+
+    .admonition-head {
+      color: var(--admonition-tip-fg);
+      background: var(--admonition-tip-head-bg);
+    }
+    .admonition-body {
+      color: var(--md-sys-color-on-surface);
+    }
+  }
+
+  /* Warn — 黄色 */
+  &.warn {
+    border-left: 4px solid var(--admonition-warn-border);
+    background: var(--admonition-warn-bg);
+
+    .admonition-head {
+      color: var(--admonition-warn-fg);
+      background: var(--admonition-warn-head-bg);
+    }
+    .admonition-body {
+      color: var(--md-sys-color-on-surface);
+    }
+  }
+
+  /* Critical — 红色 */
+  &.critical {
+    border-left: 4px solid var(--admonition-critical-border);
+    background: var(--admonition-critical-bg);
+
+    .admonition-head {
+      color: var(--admonition-critical-fg);
+      background: var(--admonition-critical-head-bg);
+    }
+    .admonition-body {
+      color: var(--md-sys-color-on-surface);
+    }
+  }
+}

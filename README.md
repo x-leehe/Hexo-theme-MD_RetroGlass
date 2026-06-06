@@ -15,7 +15,7 @@ A Hexo theme with Material Design 3 glassmorphism aesthetics.
 - **Dual Comment System** — Switch between Gitalk and [utterances](https://utteranc.es) via one config line
 - **Win10 Start Menu Tiles** — Tag/category pages with tile grid layout
 - **Code Blocks** — Language labels + copy-to-clipboard buttons with PrismJS
-- **Spoiler Text** — `{{Spoiler|hidden text}}` syntax for click-to-reveal content
+- **Shortcodes** — `{{Tip|…}}` `{{Warn|…}}` `{{Critical|…}}` admonitions, `{{Hidden|…}}` foldable blocks, `{{Spoiler|…}}` click-to-reveal text
 - **Dual Background** — Parallax effect + cross-fade rotation
 - **Local SVG Icons** — Material Symbols sprite (~7KB, zero CDN dependencies for icons)
 - **Responsive** — Desktop sidebar layout, full-width mobile adaptive
@@ -237,13 +237,64 @@ rss:
 scroll_to_top: true
 ```
 
-### Spoiler Text
+### Shortcodes
 
-Use `{{Spoiler|hidden content}}` in your Markdown posts to create click-to-reveal spoiler text. The text is blurred until the user clicks on it.
+All shortcodes use the syntax `{{Function|Description|content}}`. The `Description` field is optional — leave it empty to use the default label. All support **multi-line content** with full Markdown formatting.
 
-例：`{{Spoiler|The cake is a lie.}}` → <span style="filter:blur(4px);cursor:pointer">The cake is a lie.</span>
+#### Spoiler — Click-to-reveal text
 
-No plugin needed — handled by the theme's built-in `scripts/spoiler.js` filter.
+```
+{{Spoiler||The cake is a lie.}}
+```
+
+Text is blacked out until clicked or hovered. Ideal for hiding spoilers.
+
+#### Hidden — Foldable block
+
+```
+{{Hidden|Click to expand|Some **Markdown** content here.}}
+```
+
+Renders as a `<details>` / `<summary>` collapsible section.
+
+#### Tip / Info — Information box
+
+```
+{{Tip|Note|This is a helpful **tip** with formatting.}}
+```
+
+Blue-themed admonition for hints, notes, and supplementary info.
+
+#### Warn — Warning box
+
+```
+{{Warn||This action is **irreversible**.}}
+```
+
+Yellow-themed admonition for cautionary notes.
+
+#### Critical — Critical alert
+
+```
+{{Critical|Disclaimer|**Use at your own risk.**}}
+```
+
+Red-themed admonition for severe warnings or disclaimers.
+
+#### Shortcodes Configuration
+
+Customize default labels in `_config.yml`:
+
+```yaml
+shortcodes:
+  spoiler_default: 你知道的太多了
+  hidden_default: 展开
+  tip_default: 提示
+  warn_default: 警告
+  critical_default: 严重警告
+```
+
+No extra plugins needed — handled by the theme's built-in `scripts/shortcodes.js` filter.
 
 ## Navigation
 

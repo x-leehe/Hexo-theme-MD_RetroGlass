@@ -15,7 +15,7 @@
 - **双评论系统** — 一行配置在 Gitalk 和 [utterances](https://utteranc.es) 之间切换
 - **Win10 开始菜单磁贴** — 标签页/分类页采用磁贴网格布局
 - **代码块增强** — 语言标签 + 一键复制按钮 + PrismJS 高亮
-- **剧透文字** — `{{Spoiler|隐藏内容}}` 语法，点击揭示
+- **短代码** — `{{Tip|…}}` `{{Warn|…}}` `{{Critical|…}}` 警示框、`{{Hidden|…}}` 折叠块、`{{Spoiler|…}}` 点击揭示
 - **双背景层** — 视差效果 + 交叉淡入淡出轮播
 - **本地 SVG 图标** — Material Symbols 精灵图（约 7KB，图标零 CDN 依赖）
 - **响应式布局** — 桌面端侧边栏 + 主体双栏，移动端全宽自适应
@@ -237,13 +237,64 @@ rss:
 scroll_to_top: true
 ```
 
-### 剧透文字
+### 短代码
 
-在 Markdown 文章中使用 `{{Spoiler|隐藏内容}}` 语法创建点击揭示的剧透文字。文本在被点击前会模糊处理。
+所有短代码使用 `{{Function|描述|内容}}` 语法。`描述` 字段可选 — 留空则使用默认标签。全部支持**多行内容**和完整的 Markdown 格式。
 
-例：`{{Spoiler|蛋糕是个谎言。}}` → <span style="filter:blur(4px);cursor:pointer">蛋糕是个谎言。</span>
+#### Spoiler — 点击揭示（黑幕/剧透）
 
-无需额外插件 — 由主题内置的 `scripts/spoiler.js` 过滤器处理。
+```
+{{Spoiler||蛋糕是个谎言。}}
+```
+
+文字在被点击或悬停前为纯黑遮盖。适合隐藏剧透内容。
+
+#### Hidden — 折叠块
+
+```
+{{Hidden|点击展开|一些 **Markdown** 内容。}}
+```
+
+渲染为 `<details>` / `<summary>` 可折叠区域。
+
+#### Tip / Info — 提示框
+
+```
+{{Tip|注意|这是一条有用的**提示**，支持格式。}}
+```
+
+蓝色主题的提示框，用于补充说明和备注。
+
+#### Warn — 警告框
+
+```
+{{Warn||此操作**不可逆**。}}
+```
+
+黄色主题的警示框，用于提醒注意事项。
+
+#### Critical — 严重警告
+
+```
+{{Critical|免责声明|**使用前请自行评估风险。**}}
+```
+
+红色主题的严重警示框，用于免责声明等重要警告。
+
+#### 短代码配置
+
+在 `_config.yml` 中自定义默认标签：
+
+```yaml
+shortcodes:
+  spoiler_default: 你知道的太多了
+  hidden_default: 展开
+  tip_default: 提示
+  warn_default: 警告
+  critical_default: 严重警告
+```
+
+无需额外插件 — 由主题内置的 `scripts/shortcodes.js` 过滤器处理。
 
 ## 导航机制
 

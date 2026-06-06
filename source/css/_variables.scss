@@ -101,6 +101,20 @@
   --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Admonition (短代码警示框) */
+  --admonition-tip-border: #4dabf7;
+  --admonition-tip-bg: rgba(77, 171, 247, 0.08);
+  --admonition-tip-head-bg: rgba(77, 171, 247, 0.14);
+  --admonition-tip-fg: #74c0fc;
+  --admonition-warn-border: #ffd43b;
+  --admonition-warn-bg: rgba(255, 212, 59, 0.08);
+  --admonition-warn-head-bg: rgba(255, 212, 59, 0.14);
+  --admonition-warn-fg: #ffd43b;
+  --admonition-critical-border: #ff6b6b;
+  --admonition-critical-bg: rgba(255, 107, 107, 0.08);
+  --admonition-critical-head-bg: rgba(255, 107, 107, 0.14);
+  --admonition-critical-fg: #ff8787;
 }
 
 /* htmx loading indicator */

@@ -140,3 +140,15 @@ post:
   reading_time: true           # Estimate reading time
 
 scroll_to_top: true
+
+# -------------------------------
+# Shortcodes (短代码)
+# -------------------------------
+# Syntax: {{Function|Description|text}}
+#   Description is optional; leave empty to use the defaults below.
+shortcodes:
+  spoiler_default: 你知道的太多了
+  hidden_default: 展开
+  tip_default: 提示
+  warn_default: 警告
+  critical_default: 严重警告
