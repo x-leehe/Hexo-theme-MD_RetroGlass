@@ -55,8 +55,8 @@
   border-right: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(0, 0, 0, 0.2);
   pointer-events: none;
-  user-select: none;
   -webkit-user-select: none;
+  user-select: none;
   counter-reset: linenumber;
   overflow: hidden;
   padding: 16px 0;
@@ -94,8 +94,8 @@
   font-size: var(--font-size-xs);
   font-family: var(--font-code);
   color: var(--md-sys-color-on-surface-variant);
-  user-select: none;
   -webkit-user-select: none;
+  user-select: none;
 }
 
 .post-full-content pre.line-numbers > .highlight-header .highlight-lang,

@@ -1,9 +1,7 @@
 ﻿/* ============================================================   12. Win10 Start Menu 鈥?Shared Styles
-   ============================================================ */
+============================================================ */
 
-.start-container {
-  /* outer wrapper 鈥?no glass, let tiles be the star */
-}
+/* ---- Tile Container (no glass — let tiles be the star) ---- */
 
 .start-inner {
   max-width: 900px;
@@ -18,8 +16,8 @@
   margin-bottom: 20px;
   padding: 16px 20px;
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
   border: var(--glass-border);
   border-radius: var(--glass-radius-sm);
 }
@@ -69,8 +67,8 @@
   margin-bottom: 20px;
   padding: 10px 16px;
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
   border: var(--glass-border);
   border-radius: var(--glass-radius-sm);
 }
@@ -115,8 +113,8 @@
   position: relative;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
   border: var(--glass-border);
   box-shadow: var(--glass-shadow);
 }
@@ -200,6 +198,7 @@
   word-break: break-word;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -209,6 +208,7 @@
   font-size: var(--font-size-base);
   font-weight: 600;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
 }
 
 /* Tile badge 鈥?post count */
