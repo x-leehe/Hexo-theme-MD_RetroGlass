@@ -172,7 +172,7 @@ music:
   preload: auto            # auto | metadata | none
 ```
 
-> Uses [APlayer](https://github.com/DIYgod/APlayer) + [@xizeyoupan/meting](https://github.com/xizeyoupan/meting) (a maintained fork of MetingJS).
+> Uses [APlayer](https://github.com/DIYgod/APlayer) + @xizeyoupan/meting.
 
 ### Multiple Backgrounds
 

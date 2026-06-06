@@ -172,7 +172,7 @@ music:
   preload: auto            # auto | metadata | none
 ```
 
-> 使用 [APlayer](https://github.com/DIYgod/APlayer) + [@xizeyoupan/meting](https://github.com/xizeyoupan/meting)（MetingJS 的维护分支）。
+> 使用 [APlayer](https://github.com/DIYgod/APlayer) + @xizeyoupan/meting。
 
 ### 多张背景图轮播
 
