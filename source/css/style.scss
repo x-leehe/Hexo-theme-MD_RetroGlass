@@ -1,35 +1,35 @@
 /* ============================================================
    MD-RetroGlass — Main Stylesheet Entry Point
    Material Design 3 with Glassmorphism for Hexo
-   All partials are imported in dependency order.
+   All partials are loaded via @use in dependency order.
    ============================================================ */
 
 // 1. Design Tokens & Variables
-@use 'variables';
+@use '_variables';
 
 // 2. Foundation
-@use 'reset';
-@use 'background';
-@use 'layout';
+@use '_reset';
+@use '_background';
+@use '_layout';
 
 // 3. Components
-@use 'components/post-card';
-@use 'components/post-full';
-@use 'components/code-blocks';
-@use 'components/toc';
-@use 'components/post-nav';
-@use 'components/pagination';
-@use 'components/comments';
-@use 'components/music';
-@use 'components/scroll-top';
+@use '_components/post-card';
+@use '_components/post-full';
+@use '_components/code-blocks';
+@use '_components/toc';
+@use '_components/post-nav';
+@use '_components/pagination';
+@use '_components/comments';
+@use '_components/music';
+@use '_components/scroll-top';
 
 // 4. Pages
-@use 'pages/tiles';
-@use 'pages/archive';
-@use 'pages/categories';
+@use '_pages/tiles';
+@use '_pages/archive';
+@use '_pages/categories';
 
 // 5. Shared Utilities
-@use 'scrollbar';
-@use 'responsive';
-@use 'animations';
-@use 'utilities';
+@use '_scrollbar';
+@use '_responsive';
+@use '_animations';
+@use '_utilities';

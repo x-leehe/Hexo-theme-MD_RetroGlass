@@ -299,14 +299,19 @@
   }
 
   function initCodeHeaders() {
-    var figures = document.querySelectorAll('.post-full-content figure.highlight, .page-full-content figure.highlight');
-    figures.forEach(function (fig) {
+    var codeBlocks = document.querySelectorAll('.post-full-content pre.line-numbers, .page-full-content pre.line-numbers');
+    codeBlocks.forEach(function (pre) {
       // Already has header
-      if (fig.querySelector('.highlight-header')) return;
+      if (pre.querySelector(':scope > .highlight-header')) return;
 
-      // Extract language from class list (second class, e.g. "highlight css")
-      var classes = fig.className.split(/\s+/);
-      var langCls = classes.length > 1 ? classes[1] : '';
+      // Extract language from class (e.g. "line-numbers language-css")
+      var classes = pre.className.split(/\s+/);
+      var langCls = '';
+      classes.forEach(function (c) {
+        if (c.startsWith('language-') && c !== 'language-plain') {
+          langCls = c.replace('language-', '');
+        }
+      });
       var label = langDisplay(langCls);
 
       // Build header
@@ -325,17 +330,9 @@
       copyBtn.innerHTML = '<svg class="sym-icon" aria-hidden="true"><use href="#content_copy"/></svg><span>Copy</span>';
 
       copyBtn.addEventListener('click', function () {
-        // Collect all code lines (supports per-row split layout)
-        var codeEls = fig.querySelectorAll('.code code');
-        var text;
-        if (codeEls.length > 0) {
-          text = Array.from(codeEls).map(function (el) { return el.textContent || ''; }).join('\n');
-        } else {
-          var single = fig.querySelector('code');
-          text = single ? single.textContent || '' : '';
-        }
+        var codeEl = pre.querySelector(':scope > code');
+        var text = codeEl ? (codeEl.textContent || '') : '';
 
-        // Use Clipboard API
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(text).then(function () {
             showCopied(copyBtn);
@@ -350,8 +347,8 @@
       header.appendChild(langSpan);
       header.appendChild(copyBtn);
 
-      // Insert at top of figure
-      fig.insertBefore(header, fig.firstChild);
+      // Insert header at top of pre (before <code>)
+      pre.insertBefore(header, pre.firstChild);
     });
 
     function fallbackCopy(text, btn) {

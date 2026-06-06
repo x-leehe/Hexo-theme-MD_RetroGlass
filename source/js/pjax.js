@@ -44,91 +44,12 @@
   // ==========================================================
   // 2. Re-initialize after content swap
   // ==========================================================
-
-  /**
-   * Split code block tables from single-row into per-line rows.
-   * Fixes gutter line numbers staying aligned when long lines wrap.
-   */
-  function splitCodeLines() {
-    document.querySelectorAll('.main-content figure.highlight table').forEach(function (table) {
-      if (table.hasAttribute('data-split')) return; // already processed
-      table.setAttribute('data-split', '1');
-
-      var gutterTd = table.querySelector('.gutter');
-      var codeTd = table.querySelector('.code');
-      if (!gutterTd || !codeTd) return;
-
-      // Collect gutter <span> elements (line numbers)
-      var gutterSpans = Array.from(gutterTd.querySelectorAll('pre .line'));
-      // Collect code <span> elements (code lines) — inside .code pre code
-      var codePre = codeTd.querySelector('pre');
-      var codeEl = codeTd.querySelector('code');
-      if (!codePre || !codeEl || gutterSpans.length === 0) return;
-
-      // Each code line is separated by <br> inside <code>
-      // Gather child nodes of <code>, splitting at <br>
-      var codeLines = [];
-      var buf = [];
-      Array.from(codeEl.childNodes).forEach(function (node) {
-        if (node.nodeName === 'BR') {
-          codeLines.push(buf);
-          buf = [];
-        } else {
-          buf.push(node);
-        }
-      });
-      if (buf.length > 0) codeLines.push(buf);
-
-      if (gutterSpans.length !== codeLines.length) return;
-
-      var tbody = table.querySelector('tbody') || table;
-      var oldTr = table.querySelector('tr');
-      if (!oldTr) return;
-
-      // Build new rows: one <tr> per line
-      var frag = document.createDocumentFragment();
-      gutterSpans.forEach(function (gSpan, i) {
-        var tr = document.createElement('tr');
-
-        var gTd = document.createElement('td');
-        gTd.className = 'gutter';
-        var gPre = document.createElement('pre');
-        gPre.appendChild(gSpan.cloneNode(true));
-        gTd.appendChild(gPre);
-        tr.appendChild(gTd);
-
-        var cTd = document.createElement('td');
-        cTd.className = 'code';
-        var cPre = document.createElement('pre');
-        var cCode = document.createElement('code');
-        cCode.className = codeEl.className;
-        codeLines[i].forEach(function (n) { cCode.appendChild(n.cloneNode(true)); });
-        cPre.appendChild(cCode);
-        cTd.appendChild(cPre);
-        tr.appendChild(cTd);
-
-        frag.appendChild(tr);
-      });
-
-      // Replace old single-row structure
-      if (tbody !== table) {
-        tbody.innerHTML = '';
-        tbody.appendChild(frag);
-      } else {
-        oldTr.remove();
-        table.appendChild(frag);
-      }
-    });
-  }
-
-  // ==========================================================
-  // 3. Re-initialize after swap → renamed section
-  // ==========================================================
   function onContentReady() {
-    // Re-highlight code blocks
-    if (typeof hljs !== 'undefined') {
-      document.querySelectorAll('.main-content pre code').forEach(function (block) {
-        hljs.highlightElement(block);
+    // Re-highlight code blocks (PrismJS with preprocess:true does server-side
+    // highlighting; client-side re-init for dynamically loaded content)
+    if (typeof Prism !== 'undefined') {
+      document.querySelectorAll('.main-content pre.line-numbers > code').forEach(function (block) {
+        Prism.highlightElement(block);
       });
     }
 
@@ -149,9 +70,6 @@
     if (typeof window._initNavIndicator === 'function') {
       window._initNavIndicator();
     }
-
-    // Split code block table into per-line rows (fixes gutter alignment on wrap)
-    splitCodeLines();
 
     // Re-init Gitalk comments
     if (typeof window._initGitalk === 'function') {

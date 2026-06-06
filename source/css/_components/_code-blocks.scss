@@ -1,5 +1,5 @@
 ﻿/* ============================================================
-   7. Code Blocks
+   7. Code Blocks (PrismJS-native, preprocess:true)
    ============================================================ */
 
 /* Inline code */
@@ -13,93 +13,82 @@
   color: var(--md-sys-color-on-surface);
 }
 
-/* ---- Code Block Container (wraps the gutter+code table) ---- */
-.post-full-content figure.highlight,
-.page-full-content figure.highlight {
+/* ---- Code Block Container ---- */
+/* Matches prismjs output: <pre class="line-numbers language-xxx"><code>...</code></pre> */
+.post-full-content pre.line-numbers,
+.page-full-content pre.line-numbers {
+  position: relative;
   margin: 16px 0;
+  padding: 0;
   border-radius: var(--glass-radius-sm);
-  overflow: hidden;
+  overflow: visible;
   background: #1e1e2e;
   border: 1px solid var(--md-sys-color-outline);
 }
 
-/* Remove table gaps */
-.post-full-content figure.highlight table,
-.page-full-content figure.highlight table {
-  border-collapse: collapse;
-  width: 100%;
+/* The <code> block: left padding makes room for the gutter.
+   overflow:hidden clips bottom corners for border-radius. */
+.post-full-content pre.line-numbers > code,
+.page-full-content pre.line-numbers > code {
+  display: block;
+  padding: 16px 20px 16px 4.2em;
+  overflow: hidden;
+  border-radius: 0 0 var(--glass-radius-sm) var(--glass-radius-sm);
+  background: transparent !important;
+  font-size: var(--font-size-sm);
+  font-family: var(--font-code);
+  line-height: 1.6;
+  white-space: pre;
+  tab-size: 2;
   border: none;
+}
+
+/* ---- Gutter: line numbers (absolutely positioned relative to <pre>) ---- */
+/* Offset top by header height (8px padding × 2 + 1em line ≈ 44px). */
+.post-full-content pre.line-numbers .line-numbers-rows,
+.page-full-content pre.line-numbers .line-numbers-rows {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  bottom: 0;
+  width: 3.4em;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  counter-reset: linenumber;
+  overflow: hidden;
   padding: 16px 0;
 }
 
-.post-full-content figure.highlight tr,
-.page-full-content figure.highlight tr {
-  border: none;
+.post-full-content pre.line-numbers .line-numbers-rows > span,
+.page-full-content pre.line-numbers .line-numbers-rows > span {
+  display: block;
+  counter-increment: linenumber;
 }
 
-.post-full-content figure.highlight td,
-.page-full-content figure.highlight td {
-  padding: 0;
-  vertical-align: top;
-  border: none;
-}
-
-/* ---- Gutter: line numbers ---- */
-.post-full-content figure.highlight .gutter pre,
-.page-full-content figure.highlight .gutter pre {
-  margin: 0;
-  padding: 0 14px;
-  background: transparent;
-  border: none;
-  border-radius: 0;
+/* Generate line numbers via CSS counters */
+.post-full-content pre.line-numbers .line-numbers-rows > span::before,
+.page-full-content pre.line-numbers .line-numbers-rows > span::before {
+  content: counter(linenumber);
+  display: block;
+  padding-right: 12px;
   text-align: right;
-  overflow: hidden;
-  line-height: 1.5;
   color: rgba(205, 214, 244, 0.3);
   font-size: var(--font-size-sm);
   font-family: var(--font-code);
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-/* ---- Code column ---- */
-.post-full-content figure.highlight .code pre,
-.page-full-content figure.highlight .code pre {
-  margin: 0;
-  padding: 0 20px;
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  line-height: 1.5;
-  overflow-x: auto;
-}
-
-.post-full-content figure.highlight .code code,
-.page-full-content figure.highlight .code code {
-  background: transparent;
-  padding: 0;
-  display: block;
-  color: #cdd6f4;
   line-height: 1.6;
-  font-size: var(--font-size-sm);
 }
 
-/* ---- Override bare <pre> when it's inside figure.highlight ---- */
-.post-full-content figure.highlight pre,
-.page-full-content figure.highlight pre {
-  margin: 0;
-  border-radius: 0;
-  background: transparent !important;
-  border: none;
-}
-
-/* ---- Code block header bar (language + copy button) ---- */
-.post-full-content .highlight-header,
-.page-full-content .highlight-header {
+/* ---- Code block header bar (JS-injected .highlight-header) ---- */
+.post-full-content pre.line-numbers > .highlight-header,
+.page-full-content pre.line-numbers > .highlight-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 8px 16px;
+  border-radius: var(--glass-radius-sm) var(--glass-radius-sm) 0 0;
   background: rgba(0, 0, 0, 0.3);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   font-size: var(--font-size-xs);
@@ -109,8 +98,8 @@
   -webkit-user-select: none;
 }
 
-.post-full-content .highlight-lang,
-.page-full-content .highlight-lang {
+.post-full-content pre.line-numbers > .highlight-header .highlight-lang,
+.page-full-content pre.line-numbers > .highlight-header .highlight-lang {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -119,16 +108,16 @@
   text-transform: uppercase;
 }
 
-.post-full-content .highlight-lang .sym-icon,
-.page-full-content .highlight-lang .sym-icon {
+.post-full-content pre.line-numbers > .highlight-header .highlight-lang .sym-icon,
+.page-full-content pre.line-numbers > .highlight-header .highlight-lang .sym-icon {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
   opacity: 0.6;
 }
 
-.post-full-content .highlight-copy-btn,
-.page-full-content .highlight-copy-btn {
+.post-full-content pre.line-numbers > .highlight-header .highlight-copy-btn,
+.page-full-content pre.line-numbers > .highlight-header .highlight-copy-btn {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -143,34 +132,31 @@
   transition: all var(--transition-fast);
 }
 
-.post-full-content .highlight-copy-btn:hover,
-.page-full-content .highlight-copy-btn:hover {
+.post-full-content pre.line-numbers > .highlight-header .highlight-copy-btn:hover,
+.page-full-content pre.line-numbers > .highlight-header .highlight-copy-btn:hover {
   background: rgba(255, 255, 255, 0.06);
   border-color: var(--md-sys-color-outline);
   color: var(--md-sys-color-on-surface);
 }
 
-.post-full-content .highlight-copy-btn .sym-icon,
-.page-full-content .highlight-copy-btn .sym-icon {
+.post-full-content pre.line-numbers > .highlight-header .highlight-copy-btn .sym-icon,
+.page-full-content pre.line-numbers > .highlight-header .highlight-copy-btn .sym-icon {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
 }
 
-/* Copied feedback */
-.post-full-content .highlight-copy-btn.copied,
-.page-full-content .highlight-copy-btn.copied {
+.post-full-content pre.line-numbers > .highlight-header .highlight-copy-btn.copied,
+.page-full-content pre.line-numbers > .highlight-header .highlight-copy-btn.copied {
   color: #4caf50;
   border-color: rgba(76, 175, 80, 0.3);
   background: rgba(76, 175, 80, 0.1);
 }
 
-/* Hide header on figure that has no language class (plaintext / fallback) */
-.post-full-content figure.highlight.plaintext .highlight-header,
-.page-full-content figure.highlight.plaintext .highlight-header,
-.post-full-content figure.highlight.plain .highlight-header,
-.page-full-content figure.highlight.plain .highlight-header {
-  /* still show 鈥?plain text gets "TEXT" label */
+/* ---- Override prism-tomorrow background for pre/code inside our blocks ---- */
+.post-full-content pre.line-numbers[class*="language-"],
+.page-full-content pre.line-numbers[class*="language-"] {
+  background: #1e1e2e !important;
 }
 
 /* Inline code in post card excerpts */

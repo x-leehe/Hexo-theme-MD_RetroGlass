@@ -15,21 +15,21 @@ favicon: /images/favicon.png
 # Navigation Menu
 # -------------------------------
 menu:
-  Home: /
-  Archives: /archives
-  Tags: /tags
-  Categories: /categories
-  About: /about
-  Friends: /friends
+  首页: /
+  归档: /archives
+  标签: /tags
+  分类: /categories
+  关于: /about
+  友链: /friends
 
 # -------------------------------
 # Social Links
 # -------------------------------
 social:
-  GitHub: https://github.com/x-leehe
-  Telegram: https://t.me/about_leehe
-  Email: mailto:x-leehe@outlook.com
-  Steam: https://steamcommunity.com/id/x-leehe
+  GitHub: https://github.com/yourname
+  Telegram: https://t.me/yourname
+  Email: mailto:yourname@example.com
+  Steam: https://steamcommunity.com/id/yourname
 
 # -------------------------------
 # Background Images
@@ -58,9 +58,9 @@ font:
   line_height: 1.75
 
 # -------------------------------
-# Code Highlighting
+# Code Highlighting (PrismJS with server-side preprocess)
 # -------------------------------
-syntax_highlighter: highlight.js
+syntax_highlighter: prismjs
 
 # -------------------------------
 # Comment System (choose one: gitalk | utterances)
@@ -72,12 +72,12 @@ comment_system: utterances
 # -------------------------------
 gitalk:
   enable: false
-  clientID: clientID     # Your GitHub OAuth App clientID
-  clientSecret: clientSecret  # Your GitHub OAuth App clientSecret
-  repo: about_me        # Repository name for storing comments
-  owner: x-leehe
+  clientID: your_client_id     # Your GitHub OAuth App clientID
+  clientSecret: your_secret    # Your GitHub OAuth App clientSecret
+  repo: your_repo              # Repository name for storing comments
+  owner: your_github_username
   admin:
-    - x-leehe
+    - your_github_username
   id: location.pathname
   distractionFreeMode: false
   createIssueManually: false
@@ -89,21 +89,21 @@ gitalk:
 # -------------------------------
 # See: https://utteranc.es/
 utterances:
-  enable: true                   # Set to true and fill in below
-  repo: 'x-leehe/about_me'        # GitHub repo (format: owner/repo)
+  enable: false                  # Set to true and fill in below
+  repo: 'yourname/yourrepo'      # GitHub repo (format: owner/repo)
   issue_term: pathname            # pathname | url | title | og:title
-  label: 'from blog'                       # Optional issue label
+  label: ''                       # Optional issue label
   theme: photon-dark   # github-light | github-dark | preferred-color-scheme
 
 # -------------------------------
 # APlayer + MetingJS Music Player
 # -------------------------------
 music:
-  enable: true
+  enable: false
   server: netease
   type: playlist
-  id: '912199427'
-  api: 'https://meting.x-leehe.ccwu.cc/api?server=:server&type=:type&id=:id&r=:r'
+  id: '114514'
+  api: ''               # MetingJS API, leave empty for default
   list_folded: true
   autoplay: false
   order: list
@@ -122,7 +122,7 @@ seo:
 # -------------------------------
 footer:
   since: 2025
-  copyright: X-LeeHe
+  copyright: Your Name
   powered_by: true             # Show "Powered by Hexo" credit
   icp: ''                      # ICP备案号，支持HTML（如 <a href="https://beian.miit.gov.cn/">蜀ICP备XX号</a>）
   custom_html: ''              # 页脚自定义HTML（公安备案、版权声明等）
