@@ -1,5 +1,4 @@
-﻿/* ============================================================   13. Categories Page 鈥?Win10 Grouped Tiles
-   ============================================================ */
+﻿/* ============================================================   13. Categories Page (Win10 Grouped Tiles)   ============================================================ */
 
 .category-groups {
   display: flex;
@@ -8,9 +7,8 @@
 }
 
 /* Each category section */
-.cat-group {
-  /* nothing here 鈥?the tiles carry all the visual weight */
-}
+
+/* the tiles carry all the visual weight */
 
 /* Category header tile (large wide tile) */
 .cat-header-tile {
@@ -20,8 +18,8 @@
   overflow: hidden;
   margin-bottom: 10px;
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
   border: var(--glass-border);
   box-shadow: var(--glass-shadow);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -93,6 +91,7 @@
 .cat-post-tile .tile-label {
   font-size: var(--font-size-xs);
   -webkit-line-clamp: 3;
+  line-clamp: 3;
 }
 
 /* "more" tile for categories */

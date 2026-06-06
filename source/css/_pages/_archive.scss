@@ -1,10 +1,10 @@
 ﻿/* ============================================================
-   11. Archive Page
-   ============================================================ */
+  11. Archive Page
+============================================================ */
 .archive-inner {
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
   border: var(--glass-border);
   border-radius: var(--glass-radius);
   padding: 32px;
