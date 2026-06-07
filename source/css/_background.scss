@@ -14,17 +14,24 @@
 #bg-canvas,
 #bg-canvas-back {
   position: fixed;
-  top: -10px;
-  left: -10px;
-  width: calc(100% + 20px);
-  height: calc(100% + 20px);
+  top: -80px;
+  left: -80px;
+  width: calc(100% + 160px);
+  height: calc(100% + 160px);
+  max-width: none;   /* override img { max-width: 100% } from reset */
   z-index: 0;
   object-fit: cover;
   object-position: center center;
   filter: brightness(0.4) blur(10px);
-  transition: opacity 0.8s ease;
+  transition: opacity 0.8s ease, filter 0.5s ease;
   pointer-events: none;
   will-change: transform;
+}
+
+/* Light mode: brighter background */
+:root.light-mode #bg-canvas,
+:root.light-mode #bg-canvas-back {
+  filter: brightness(0.85) blur(10px);
 }
 
 #bg-canvas-back {
@@ -42,7 +49,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  background: rgba(28, 27, 31, 0.6);
+  background: var(--glass-bg);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border: 1px solid var(--md-sys-color-outline);

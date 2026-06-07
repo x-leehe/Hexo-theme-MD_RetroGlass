@@ -140,9 +140,9 @@
       const clientX = e.clientX, clientY = e.clientY;
       const centerX = window.innerWidth / 2;
       const centerY = window.innerHeight / 2;
-      // 最大偏移 10px（与 PageProj 一致）
-      bgParallaxX = (clientX - centerX) / centerX * 10;
-      bgParallaxY = (clientY - centerY) / centerY * 10;
+      // 最大偏移 40px（背景 130vw×130vh，余量充足）
+      bgParallaxX = (clientX - centerX) / centerX * 40;
+      bgParallaxY = (clientY - centerY) / centerY * 40;
       const t = 'translate(' + bgParallaxX + 'px, ' + bgParallaxY + 'px)';
       bgCanvas.style.transform = t;
       if (bgBack) bgBack.style.transform = t;

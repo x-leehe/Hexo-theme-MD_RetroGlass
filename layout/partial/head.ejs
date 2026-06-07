@@ -6,6 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+  <!-- Anti-FOUC: apply theme before any CSS paints -->
+  <script>
+    (function(){try{var s=localStorage.getItem('color-scheme');if(s==='time-based')s='time';if(s==='light'){document.documentElement.classList.add('light-mode');}else if(s==='auto'||s===null){if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches){document.documentElement.classList.add('light-mode');}}else if(s==='time'){var h=new Date().getHours();if(h>=6&&h<18){document.documentElement.classList.add('light-mode');}}}catch(e){}})();
+  </script>
+  <!-- Fallback: show body if JS is disabled -->
+  <noscript><style>body{visibility:visible}</style></noscript>
+
   <!-- Title -->
   <title>
     <% if (is_home()) { %>
@@ -44,8 +51,9 @@
 
   <!-- Fonts (self-hosted, see _variables.scss @font-face) -->
 
-  <!-- PrismJS (dark theme) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism-tomorrow.css">
+  <!-- PrismJS (dark theme default, light theme disabled) -->
+  <link rel="stylesheet" id="prism-dark" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism-tomorrow.css">
+  <link rel="stylesheet" id="prism-light" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.css" disabled>
 
   <!-- Theme Stylesheet -->
   <link rel="stylesheet" href="<%= url_for('css/style.css') %>">

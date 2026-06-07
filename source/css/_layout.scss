@@ -11,6 +11,7 @@
   align-items: center;
   justify-content: center;
   background: var(--md-sys-color-surface);
+  visibility: visible; /* override body visibility:hidden (anti-FOUC) */
   /* Smooth fade-out when hidden */
   transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
               visibility 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -336,6 +337,52 @@
 .nav-item.active {
   background: transparent;
   color: var(--md-sys-color-on-primary-container);
+}
+
+/* ---- Theme Toggle Button ---- */
+.header-theme-btn {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  transition: color var(--transition-fast),
+              background var(--transition-fast);
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+.header-theme-btn:hover {
+  background: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-on-surface);
+}
+
+.header-theme-btn .sym-icon {
+  width: 22px;
+  height: 22px;
+}
+
+/* Hide all icons by default; state class shows the right one */
+.header-theme-btn .icon-dark,
+.header-theme-btn .icon-light,
+.header-theme-btn .icon-auto,
+.header-theme-btn .icon-time {
+  display: none;
+}
+
+.header-theme-btn.light-mode-dark .icon-dark,
+.header-theme-btn.light-mode-light .icon-light,
+.header-theme-btn.light-mode-auto .icon-auto,
+.header-theme-btn.light-mode-time .icon-time {
+  display: block;
 }
 
 /* Mobile Menu Toggle */

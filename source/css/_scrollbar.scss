@@ -18,3 +18,12 @@
 ::-webkit-scrollbar-thumb:hover {
   background: var(--md-sys-color-outline);
 }
+
+/* Light mode: darker thumb for contrast against white background */
+:root.light-mode ::-webkit-scrollbar-thumb {
+  background: var(--md-sys-color-outline);
+}
+
+:root.light-mode ::-webkit-scrollbar-thumb:hover {
+  background: var(--md-sys-color-on-surface-variant);
+}

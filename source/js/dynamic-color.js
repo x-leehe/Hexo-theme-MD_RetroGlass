@@ -47,10 +47,34 @@
     return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
   }
 
+  // Cache last extracted RGB for re-apply on theme change
+  let _lastR = 0, _lastG = 0, _lastB = 0;
+  let _hasExtracted = false;
+
+  /**
+   * Check if light mode is currently active
+   */
+  function isLightMode() {
+    return document.documentElement.classList.contains('light-mode');
+  }
+
   /**
    * Update CSS custom properties with generated MD3 colors
+   * @param {number} r
+   * @param {number} g
+   * @param {number} b
+   * @param {boolean} [isLight] — force light/dark; auto-detected if omitted
    */
-  function updateColors(r, g, b) {
+  function updateColors(r, g, b, isLight) {
+    if (isLight === undefined) {
+      isLight = isLightMode();
+    }
+
+    _lastR = r;
+    _lastG = g;
+    _lastB = b;
+    _hasExtracted = true;
+
     const hsl = rgbToHsl(r, g, b);
     const h = hsl[0],
       rawS = hsl[1];
@@ -61,31 +85,51 @@
 
     const root = document.documentElement;
 
-    // Primary colors
-    const primary = 'hsl(' + h + ', ' + s + '%, 72%)';
-    const onPrimary = 'hsl(' + h + ', ' + s + '%, 12%)';
-    const primaryContainer = 'hsl(' + h + ', ' + s + '%, 32%)';
-    const onPrimaryContainer = 'hsl(' + h + ', ' + Math.min(s + 5, 100) + '%, 95%)';
+    if (isLight) {
+      // ---- Light scheme ----
+      const primary = 'hsl(' + h + ', ' + s + '%, 35%)';
+      const onPrimary = 'hsl(' + h + ', ' + s + '%, 100%)';
+      const primaryContainer = 'hsl(' + h + ', ' + Math.min(s + 10, 100) + '%, 90%)';
+      const onPrimaryContainer = 'hsl(' + h + ', ' + s + '%, 10%)';
+      const surface = 'hsl(' + h + ', ' + Math.min(s * 0.15, 15) + '%, 98%)';
+      const onSurface = 'hsl(' + h + ', ' + Math.min(s * 0.15, 15) + '%, 10%)';
+      const surfaceVariant = 'hsl(' + h + ', ' + Math.min(s * 0.2, 20) + '%, 90%)';
+      const onSurfaceVariant = 'hsl(' + h + ', ' + Math.min(s * 0.2, 20) + '%, 30%)';
+      const outline = 'hsl(' + h + ', ' + Math.min(s * 0.25, 25) + '%, 50%)';
 
-    // Surface colors (tinted with the hue)
-    const surface = 'hsl(' + h + ', ' + Math.min(s * 0.25, 25) + '%, 10%)';
-    const onSurface = 'hsl(' + h + ', ' + Math.min(s * 0.2, 20) + '%, 90%)';
-    const surfaceVariant = 'hsl(' + h + ', ' + Math.min(s * 0.35, 35) + '%, 22%)';
-    const onSurfaceVariant = 'hsl(' + h + ', ' + Math.min(s * 0.25, 25) + '%, 82%)';
-    const outline = 'hsl(' + h + ', ' + Math.min(s * 0.3, 30) + '%, 58%)';
+      root.style.setProperty('--md-sys-color-primary', primary);
+      root.style.setProperty('--md-sys-color-on-primary', onPrimary);
+      root.style.setProperty('--md-sys-color-primary-container', primaryContainer);
+      root.style.setProperty('--md-sys-color-on-primary-container', onPrimaryContainer);
+      root.style.setProperty('--md-sys-color-surface', surface);
+      root.style.setProperty('--md-sys-color-on-surface', onSurface);
+      root.style.setProperty('--md-sys-color-surface-variant', surfaceVariant);
+      root.style.setProperty('--md-sys-color-on-surface-variant', onSurfaceVariant);
+      root.style.setProperty('--md-sys-color-outline', outline);
+      syncAPlayerTheme(primary);
+    } else {
+      // ---- Dark scheme (original) ----
+      const primary = 'hsl(' + h + ', ' + s + '%, 72%)';
+      const onPrimary = 'hsl(' + h + ', ' + s + '%, 12%)';
+      const primaryContainer = 'hsl(' + h + ', ' + s + '%, 32%)';
+      const onPrimaryContainer = 'hsl(' + h + ', ' + Math.min(s + 5, 100) + '%, 95%)';
+      const surface = 'hsl(' + h + ', ' + Math.min(s * 0.25, 25) + '%, 10%)';
+      const onSurface = 'hsl(' + h + ', ' + Math.min(s * 0.2, 20) + '%, 90%)';
+      const surfaceVariant = 'hsl(' + h + ', ' + Math.min(s * 0.35, 35) + '%, 22%)';
+      const onSurfaceVariant = 'hsl(' + h + ', ' + Math.min(s * 0.25, 25) + '%, 82%)';
+      const outline = 'hsl(' + h + ', ' + Math.min(s * 0.3, 30) + '%, 58%)';
 
-    root.style.setProperty('--md-sys-color-primary', primary);
-    root.style.setProperty('--md-sys-color-on-primary', onPrimary);
-    root.style.setProperty('--md-sys-color-primary-container', primaryContainer);
-    root.style.setProperty('--md-sys-color-on-primary-container', onPrimaryContainer);
-    root.style.setProperty('--md-sys-color-surface', surface);
-    root.style.setProperty('--md-sys-color-on-surface', onSurface);
-    root.style.setProperty('--md-sys-color-surface-variant', surfaceVariant);
-    root.style.setProperty('--md-sys-color-on-surface-variant', onSurfaceVariant);
-    root.style.setProperty('--md-sys-color-outline', outline);
-
-    // Sync APlayer theme
-    syncAPlayerTheme(primary);
+      root.style.setProperty('--md-sys-color-primary', primary);
+      root.style.setProperty('--md-sys-color-on-primary', onPrimary);
+      root.style.setProperty('--md-sys-color-primary-container', primaryContainer);
+      root.style.setProperty('--md-sys-color-on-primary-container', onPrimaryContainer);
+      root.style.setProperty('--md-sys-color-surface', surface);
+      root.style.setProperty('--md-sys-color-on-surface', onSurface);
+      root.style.setProperty('--md-sys-color-surface-variant', surfaceVariant);
+      root.style.setProperty('--md-sys-color-on-surface-variant', onSurfaceVariant);
+      root.style.setProperty('--md-sys-color-outline', outline);
+      syncAPlayerTheme(primary);
+    }
   }
 
   /**
@@ -216,4 +260,11 @@
     initBackgroundEngine();
     watchAPlayerCreation();
   }
+
+  // Re-apply colors on theme change (light ↔ dark)
+  document.documentElement.addEventListener('themechange', function (e) {
+    if (_hasExtracted) {
+      updateColors(_lastR, _lastG, _lastB, e.detail && e.detail.isLight);
+    }
+  });
 })();
