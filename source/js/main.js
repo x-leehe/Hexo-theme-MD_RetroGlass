@@ -445,6 +445,87 @@
   // ==========================================================
   // Boot
   // ==========================================================
+
+  // --- Page Loader: animated percentage + hide after all assets are ready ---
+  var loaderEl = document.getElementById('page-loader');
+  var percentEl = document.querySelector('.page-loader__percent');
+  var loaderHidden = false;
+  var currentPercent = 0;
+  var targetPercent = 100;
+  var animFrameId = null;
+  var animStartTime = null;
+  var ANIM_DURATION = 3000; // base animation duration in ms
+
+  function updatePercent(now) {
+    if (!animStartTime) animStartTime = now;
+    var elapsed = now - animStartTime;
+
+    // Ease-out curve: fast at start, slow at end
+    var t = Math.min(elapsed / ANIM_DURATION, 1);
+    var eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+    currentPercent = Math.round(eased * targetPercent);
+
+    if (percentEl) {
+      percentEl.textContent = currentPercent + '%';
+    }
+
+    if (currentPercent < targetPercent && !loaderHidden) {
+      animFrameId = requestAnimationFrame(updatePercent);
+    }
+  }
+
+  // Start the percentage animation immediately
+  if (loaderEl && percentEl) {
+    animFrameId = requestAnimationFrame(updatePercent);
+  }
+
+  function hideLoader() {
+    if (!loaderEl || loaderHidden) return;
+    loaderHidden = true;
+
+    // Cancel animation if still running
+    if (animFrameId) {
+      cancelAnimationFrame(animFrameId);
+      animFrameId = null;
+    }
+
+    // Jump to 100% immediately
+    if (percentEl) {
+      percentEl.textContent = '100%';
+    }
+
+    // Small delay so user can see 100% briefly
+    setTimeout(function () {
+      if (!loaderEl) return;
+      loaderEl.classList.add('is-hidden');
+      // Remove from DOM after transition completes
+      loaderEl.addEventListener('transitionend', function handler() {
+        loaderEl.removeEventListener('transitionend', handler);
+        if (loaderEl.parentNode) loaderEl.parentNode.removeChild(loaderEl);
+        loaderEl = null;
+      });
+    }, 200);
+  }
+
+  // Wait for all resources (images, fonts, etc.) to finish loading
+  window.addEventListener('load', hideLoader);
+
+  // After 8 seconds, show slow-loading prompt instead of auto-hiding
+  var slowPromptTimer = setTimeout(function () {
+    if (loaderHidden) return;
+    var slowEl = document.querySelector('.page-loader__slow');
+    if (slowEl) {
+      slowEl.classList.add('is-visible');
+    }
+    // Dismiss button: user can manually hide the loader
+    var skipBtn = document.querySelector('.page-loader__skip-btn');
+    if (skipBtn) {
+      skipBtn.addEventListener('click', function () {
+        hideLoader();
+      });
+    }
+  }, 8000);
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
       initBgRotation();

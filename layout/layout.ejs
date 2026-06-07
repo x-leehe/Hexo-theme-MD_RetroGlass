@@ -10,6 +10,38 @@
       hx-push-url="true"
       hx-indicator="#htmx-indicator">
 
+  <!-- ============================================================
+    Page Loader — covers entire viewport until all assets are ready
+    ============================================================ -->
+  <div id="page-loader" class="page-loader" aria-hidden="true">
+    <div class="page-loader__inner">
+      <!-- Spinner -->
+      <div class="page-loader__spinner">
+        <svg class="page-loader__spinner-svg" viewBox="0 0 50 50" aria-label="Loading">
+          <circle class="page-loader__spinner-track" cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="3" opacity="0.15"/>
+          <circle class="page-loader__spinner-ring" cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <!-- Loading text -->
+      <div class="page-loader__brand">
+        <span class="page-loader__percent">0%</span>
+        <span class="page-loader__text">正在加载页面，请等待……</span>
+      </div>
+      <!-- Slow-loading prompt (shown after 8s if still loading) -->
+      <div class="page-loader__slow">
+        <p class="page-loader__slow-msg">加载速度慢，可能的原因：</p>
+        <ul class="page-loader__slow-reasons">
+          <li>网络连接不稳定或速度较慢</li>
+          <li>服务器响应延迟</li>
+          <li>浏览器缓存未建立（首次访问）</li>
+          <li>背景图片或字体文件较大，下载耗时较长</li>
+          <li>CDN 资源加载受阻</li>
+        </ul>
+        <button class="page-loader__skip-btn" type="button">我不在意样式 / 现在展示页面内容</button>
+      </div>
+    </div>
+  </div>
+
   <!-- htmx loading indicator -->
   <div id="htmx-indicator" class="htmx-indicator"></div>
 
