@@ -187,6 +187,16 @@
   align-items: center;
   justify-content: space-between;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transition: justify-content 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* When back button is visible: center logo, push nav to right */
+.header-inner.has-back {
+  justify-content: center;
+}
+
+.header-inner.has-back .nav-desktop {
+  margin-left: auto;
 }
 
 .site-logo {
@@ -195,12 +205,64 @@
   gap: 12px;
   text-decoration: none;
   color: var(--md-sys-color-on-surface);
-  transition: opacity var(--transition-fast);
+  transition: opacity var(--transition-fast),
+              transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .site-logo:hover {
   opacity: 0.85;
   color: var(--md-sys-color-on-surface);
+}
+
+/* ---- Header Left Group (back button + logo) ---- */
+.header-left {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ---- Header Back Button (animated, toggled by JS) ---- */
+.header-back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 0;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  text-decoration: none;
+  flex-shrink: 0;
+  overflow: hidden;
+  opacity: 0;
+  margin-right: 0;
+  pointer-events: none;
+  transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              margin-right 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.2s,
+              color 0.2s;
+}
+
+.header-back-btn.is-visible {
+  max-width: 60px;
+  opacity: 1;
+  margin-right: 4px;
+  pointer-events: auto;
+}
+
+.header-back-btn:hover {
+  background: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-on-surface);
+}
+
+.header-back-btn .sym-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
 }
 
 .logo-avatar {
@@ -568,4 +630,17 @@
 .footer-icp a:hover,
 .footer-custom a:hover {
   color: var(--md-sys-color-primary);
+}
+
+/* ---- Page Sleep: resource saving when tab hidden > 2 min ---- */
+[data-page-sleeping] *,
+[data-page-sleeping] *::before,
+[data-page-sleeping] *::after {
+  animation-play-state: paused !important;
+  transition: none !important;
+}
+
+[data-page-sleeping] #bg-canvas,
+[data-page-sleeping] #bg-canvas-back {
+  opacity: 0;
 }

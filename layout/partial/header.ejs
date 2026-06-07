@@ -3,12 +3,24 @@
   ============================================================ -->
 <header class="site-header">
   <div class="header-inner">
-    <!-- Logo / Site Title -->
-    <a href="<%= url_for('/') %>" class="site-logo">
-      <span class="logo-text">
-        <span class="logo-title"><%= config.title %></span>
-      </span>
-    </a>
+    <!-- Left group: back button + logo -->
+    <div class="header-left">
+      <!-- Back button — visibility toggled by JS (htmx-compatible) -->
+      <a class="header-back-btn"
+         href="<%= url_for('/') %>"
+         onclick="if(document.referrer&&document.referrer.includes(location.host)){history.back();return false}"
+         title="返回"
+         aria-label="返回">
+        <svg class="sym-icon" aria-hidden="true"><use href="#arrow_back"/></svg>
+      </a>
+
+      <!-- Logo / Site Title -->
+      <a href="<%= url_for('/') %>" class="site-logo">
+        <span class="logo-text">
+          <span class="logo-title"><%= config.title %></span>
+        </span>
+      </a>
+    </div>
 
     <!-- Desktop Navigation -->
     <nav class="nav-desktop">

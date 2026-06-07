@@ -59,4 +59,7 @@
   <% if (theme.backgrounds && theme.backgrounds.length > 0) { %>
   <link rel="preload" as="image" href="<%= url_for(theme.backgrounds[0]) %>" crossorigin="anonymous">
   <% } %>
+
+  <!-- Focus-title: dynamic tab title on visibility change -->
+  <script defer src="<%= url_for('js/focus-title.js') %>"></script>
 </head>

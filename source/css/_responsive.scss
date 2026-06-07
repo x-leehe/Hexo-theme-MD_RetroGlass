@@ -65,6 +65,15 @@
     display: flex;
   }
 
+  /* Cancel centered-title layout on mobile */
+  .header-inner.has-back {
+    justify-content: space-between;
+  }
+
+  .header-inner.has-back .nav-desktop {
+    margin-left: 0;
+  }
+
   .post-full-inner,
   .page-full-inner,
   .archive-inner,

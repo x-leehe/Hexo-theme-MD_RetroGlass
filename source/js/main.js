@@ -81,9 +81,13 @@
       }
 
       if (preload.complete) {
+        if (window.__bgImageLoaded) window.__bgImageLoaded();
         doCrossfade();
       } else {
-        preload.onload = doCrossfade;
+        preload.onload = function () {
+          if (window.__bgImageLoaded) window.__bgImageLoaded();
+          doCrossfade();
+        };
       }
 
       renderDots();
@@ -443,62 +447,127 @@
   }
 
   // ==========================================================
+  // 9. Header Back Button — show on post pages (htmx-aware)
+  // ==========================================================
+  function updateBackButton() {
+    const btn = document.querySelector('.header-back-btn');
+    const headerInner = document.querySelector('.header-inner');
+    if (!btn) return;
+    // .post-full only exists on article / post pages
+    const isPost = !!document.querySelector('.post-full');
+    btn.classList.toggle('is-visible', isPost);
+    if (headerInner) headerInner.classList.toggle('has-back', isPost);
+  }
+
+  // ==========================================================
   // Boot
   // ==========================================================
 
-  // --- Page Loader: animated percentage + hide after all assets are ready ---
-  var loaderEl = document.getElementById('page-loader');
-  var percentEl = document.querySelector('.page-loader__percent');
-  var loaderHidden = false;
-  var currentPercent = 0;
-  var targetPercent = 100;
-  var animFrameId = null;
-  var animStartTime = null;
-  var ANIM_DURATION = 3000; // base animation duration in ms
+  // --- Page Loader: percentage tracks real resource progress ---
+  let loaderEl = document.getElementById('page-loader');
+  const percentEl = document.querySelector('.page-loader__percent');
+  let loaderHidden = false;
+  let totalTracked = 0;
+  let loadedTracked = 0;
+  let animFrameId = null;
+  let displayPercent = 0;
+  let targetPercent = 0;
+  const SLOW_TIMEOUT = 8000;
+  const ANIM_SPEED = 0.06; // smoothing factor per frame
 
-  function updatePercent(now) {
-    if (!animStartTime) animStartTime = now;
-    var elapsed = now - animStartTime;
-
-    // Ease-out curve: fast at start, slow at end
-    var t = Math.min(elapsed / ANIM_DURATION, 1);
-    var eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
-    currentPercent = Math.round(eased * targetPercent);
-
-    if (percentEl) {
-      percentEl.textContent = currentPercent + '%';
-    }
-
-    if (currentPercent < targetPercent && !loaderHidden) {
-      animFrameId = requestAnimationFrame(updatePercent);
-    }
+  function recalcTarget() {
+    if (totalTracked === 0) return;
+    const raw = Math.round((loadedTracked / totalTracked) * 99);
+    if (raw > targetPercent) targetPercent = raw;
   }
 
-  // Start the percentage animation immediately
+  function onResourceDone() {
+    loadedTracked++;
+    recalcTarget();
+  }
+
+  // ----------------------------------------------------------
+  //  Discover & track all loadable resources on the page
+  // ----------------------------------------------------------
+  (function countResources() {
+    // --- <img> elements (includes bg-canvas, bg-canvas-back) ---
+    const imgs = document.querySelectorAll('img');
+    for (let i = 0; i < imgs.length; i++) {
+      const img = imgs[i];
+      totalTracked++;
+      if (img.complete) {
+        loadedTracked++;
+      } else {
+        img.addEventListener('load', onResourceDone, { once: true });
+        img.addEventListener('error', onResourceDone, { once: true });
+      }
+    }
+
+    // --- <link rel="stylesheet"> ---
+    const links = document.querySelectorAll('link[rel="stylesheet"]');
+    for (let j = 0; j < links.length; j++) {
+      totalTracked++;
+      if (links[j].sheet) {
+        loadedTracked++;
+      } else {
+        links[j].addEventListener('load', onResourceDone, { once: true });
+        links[j].addEventListener('error', onResourceDone, { once: true });
+      }
+    }
+
+    // --- Fonts (document.fonts API) ---
+    if (document.fonts && document.fonts.ready) {
+      totalTracked++;
+      document.fonts.ready.then(onResourceDone, onResourceDone);
+    }
+
+    // --- Background images (tracked via BG rotation preload hook) ---
+    if (typeof BG_IMAGES !== 'undefined' && BG_IMAGES.length > 0) {
+      totalTracked += BG_IMAGES.length;
+      window.__bgImageLoaded = function () {
+        loadedTracked++;
+        recalcTarget();
+      };
+    }
+
+    // Fallback: if nothing discoverable, animate toward 99%
+    if (totalTracked === 0) {
+      totalTracked = 1;
+      loadedTracked = 1;
+    }
+
+    recalcTarget();
+    // Ensure targetPercent is at least 1 so the number starts moving
+    if (targetPercent === 0) targetPercent = 1;
+  })();
+
+  // ----------------------------------------------------------
+  //  Smooth animation loop — chases targetPercent
+  // ----------------------------------------------------------
+  function animatePercent() {
+    displayPercent += (targetPercent - displayPercent) * ANIM_SPEED;
+    if (targetPercent - displayPercent < 0.3) displayPercent = targetPercent;
+    if (percentEl) percentEl.textContent = Math.round(displayPercent) + '%';
+    if (!loaderHidden) animFrameId = requestAnimationFrame(animatePercent);
+  }
+
   if (loaderEl && percentEl) {
-    animFrameId = requestAnimationFrame(updatePercent);
+    animFrameId = requestAnimationFrame(animatePercent);
   }
 
+  // ----------------------------------------------------------
+  //  hideLoader — fade out and remove the overlay
+  // ----------------------------------------------------------
   function hideLoader() {
     if (!loaderEl || loaderHidden) return;
     loaderHidden = true;
-
-    // Cancel animation if still running
-    if (animFrameId) {
-      cancelAnimationFrame(animFrameId);
-      animFrameId = null;
-    }
-
-    // Jump to 100% immediately
-    if (percentEl) {
-      percentEl.textContent = '100%';
-    }
-
-    // Small delay so user can see 100% briefly
+    if (animFrameId) { cancelAnimationFrame(animFrameId); animFrameId = null; }
+    targetPercent = 100;
+    displayPercent = 100;
+    if (percentEl) percentEl.textContent = '100%';
     setTimeout(function () {
       if (!loaderEl) return;
       loaderEl.classList.add('is-hidden');
-      // Remove from DOM after transition completes
       loaderEl.addEventListener('transitionend', function handler() {
         loaderEl.removeEventListener('transitionend', handler);
         if (loaderEl.parentNode) loaderEl.parentNode.removeChild(loaderEl);
@@ -507,24 +576,22 @@
     }, 200);
   }
 
-  // Wait for all resources (images, fonts, etc.) to finish loading
+  // window.load = ground truth — everything is truly ready
   window.addEventListener('load', hideLoader);
 
-  // After 8 seconds, show slow-loading prompt instead of auto-hiding
-  var slowPromptTimer = setTimeout(function () {
+  // After SLOW_TIMEOUT, show slow-loading prompt instead of auto-hiding
+  const slowPromptTimer = setTimeout(function () {
     if (loaderHidden) return;
-    var slowEl = document.querySelector('.page-loader__slow');
-    if (slowEl) {
-      slowEl.classList.add('is-visible');
-    }
-    // Dismiss button: user can manually hide the loader
-    var skipBtn = document.querySelector('.page-loader__skip-btn');
-    if (skipBtn) {
-      skipBtn.addEventListener('click', function () {
-        hideLoader();
-      });
-    }
-  }, 8000);
+    const slowEl = document.querySelector('.page-loader__slow');
+    if (slowEl) slowEl.classList.add('is-visible');
+    const skipBtn = document.querySelector('.page-loader__skip-btn');
+    if (skipBtn) skipBtn.addEventListener('click', hideLoader);
+  }, SLOW_TIMEOUT);
+
+  // --- Page Sleep: pause heavy operations when tab hidden > 2 min ---
+  document.addEventListener('pagestart.sleep', function () {
+    if (autoRotateTimer) { clearInterval(autoRotateTimer); autoRotateTimer = null; }
+  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
@@ -538,6 +605,7 @@
       initExternalLinks();
       initSpoiler();
       initSpoiler();
+      updateBackButton();
     });
   } else {
     initBgRotation();
@@ -549,5 +617,9 @@
     initNavIndicator();
     initExternalLinks();
     initSpoiler();
+    updateBackButton();
   }
+
+  // Keep back button in sync across htmx page swaps
+  document.addEventListener('htmx:afterSettle', updateBackButton);
 })();
