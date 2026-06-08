@@ -115,6 +115,48 @@
 .post-full-content blockquote p:last-child,
 .page-full-content blockquote p:last-child { margin-bottom: 0; }
 
+/* Definition list — bordered box to distinguish from body text */
+.post-full-content dl,
+.page-full-content dl {
+  margin: 20px 0;
+  padding: 4px 0;
+  border: 1px solid var(--md-sys-color-outline);
+  border-left: 4px solid var(--md-sys-color-outline);
+  border-radius: 0 var(--glass-radius-xs) var(--glass-radius-xs) 0;
+  background: rgba(161, 201, 255, 0.04);
+}
+
+.post-full-content dt,
+.page-full-content dt {
+  padding: 12px 18px 4px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--md-sys-color-primary);
+}
+
+.post-full-content dt:first-child,
+.page-full-content dt:first-child { padding-top: 14px; }
+
+.post-full-content dd,
+.page-full-content dd {
+  margin: 0;
+  padding: 2px 18px 12px 24px;
+  font-size: var(--font-size-sm);
+  color: var(--md-sys-color-on-surface-variant);
+  line-height: var(--line-height-base);
+}
+
+.post-full-content dd:last-child,
+.page-full-content dd:last-child { padding-bottom: 16px; }
+
+/* Footnote — offset for fixed header when jumping via anchor */
+.post-full-content .footnote-ref,
+.page-full-content .footnote-ref,
+.post-full-content .footnote-item,
+.page-full-content .footnote-item {
+  scroll-margin-top: 100px;
+}
+
 .post-full-content a,
 .page-full-content a {
   color: var(--md-sys-color-primary);

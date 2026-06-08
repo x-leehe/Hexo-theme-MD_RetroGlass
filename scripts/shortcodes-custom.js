@@ -9,10 +9,22 @@
  */
 hexo.extend.filter.register('before_post_render', function (data) {
     if (!data.content) return data;
-    var hexo = this;
+    const hexo = this;
+
+    // ---- Protect fenced code blocks from shortcode processing ----
+    // (Inline code is intentionally NOT protected — it should be rendered
+    //  as <code> by mdInline() inside shortcode bodies.)
+    const protectedBlocks = [];
+    data.content = data.content.replace(
+        /```[\s\S]*?```/g,
+        function (match) {
+            protectedBlocks.push(match);
+            return '<!--CB' + (protectedBlocks.length - 1) + '-->';
+        }
+    );
 
     // Default labels from theme config, with hardcoded fallbacks
-    var sc = (hexo.theme.config && hexo.theme.config.shortcodes) || {};
+    const sc = (hexo.theme.config && hexo.theme.config.shortcodes) || {};
 
     function mdInline(text) {
         return hexo.render.renderSync({ text: text, engine: 'markdown' });
@@ -51,6 +63,12 @@ hexo.extend.filter.register('before_post_render', function (data) {
         /\{\{Critical\|([\s\S]*?)\|([\s\S]+?)\}\}/g,
         (_, desc, text) =>
             '<div class="admonition critical"><div class="admonition-head"><svg class="sym-icon admonition-icon" aria-hidden="true"><use href="#report"/></svg><strong>' + (desc || sc.critical_default || '严重警告') + '</strong></div><div class="admonition-body">' + mdInline(text) + '</div></div>'
+    );
+
+    // ---- Restore protected code blocks ----
+    data.content = data.content.replace(
+        /<!--CB(\d+)-->/g,
+        function (_, i) { return protectedBlocks[+i]; }
     );
 
     return data;

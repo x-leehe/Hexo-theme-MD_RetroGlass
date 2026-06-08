@@ -38,11 +38,11 @@
       <% page.friends.forEach(function(friend, idx) { %>
         <%
           // Tile size: sm = 1×1, md = 2×1 (wider for those with desc)
-          var size = friend.desc ? 'md' : 'sm';
+          const size = friend.desc ? 'md' : 'sm';
           // Color hue by name hash for consistent per-friend accent
-          var hue = (function(s) {
-            var h = 0;
-            for (var i = 0; i < s.length; i++) h = ((h << 5) - h) + s.charCodeAt(i);
+          const hue = (function(s) {
+            let h = 0;
+            for (let i = 0; i < s.length; i++) h = ((h << 5) - h) + s.charCodeAt(i);
             return Math.abs(h) % 360;
           })(friend.name);
         %>
@@ -103,17 +103,17 @@
 
 <script>
 (function(){
-  var input = document.getElementById('friend-filter');
-  var grid = document.getElementById('tile-grid');
-  var noMatch = document.getElementById('no-friend-match');
+  const input = document.getElementById('friend-filter');
+  const grid = document.getElementById('tile-grid');
+  const noMatch = document.getElementById('no-friend-match');
   if (!input || !grid) return;
 
   input.addEventListener('input', function(){
-    var q = input.value.trim().toLowerCase();
-    var tiles = grid.querySelectorAll('.tile');
-    var visible = 0;
+    const q = input.value.trim().toLowerCase();
+    const tiles = grid.querySelectorAll('.tile');
+    let visible = 0;
     tiles.forEach(function(t){
-      var name = (t.getAttribute('data-friend') || '').toLowerCase();
+      const name = (t.getAttribute('data-friend') || '').toLowerCase();
       if (q === '' || name.indexOf(q) !== -1) {
         t.style.display = '';
         visible++;

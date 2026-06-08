@@ -12,10 +12,27 @@
   'use strict';
 
   // ==========================================================
+  // 0. One-time cleanup: purge old htmx history cache entries
+  //    (from before hx-history-elt was moved from <body> to .main-content)
+  // ==========================================================
+  (function clearLegacyCache() {
+    var FLAG = 'htmx-cache-cleared-v2';
+    if (sessionStorage && !sessionStorage.getItem(FLAG)) {
+      try {
+        Object.keys(localStorage).forEach(function (key) {
+          if (/^htmx-history-/.test(key)) {
+            localStorage.removeItem(key);
+          }
+        });
+        sessionStorage.setItem(FLAG, '1');
+      } catch (e) { /* ignore */ }
+    }
+  })();
+
+  // ==========================================================
   // 1. Update nav active state after navigation
   // ==========================================================
   function updateActiveNav(path) {
-    // Strip trailing slash for consistent matching
     const cleanPath = path.replace(/\/$/, '') || '/';
 
     document.querySelectorAll('.nav-desktop .nav-item').forEach(function (el) {
@@ -31,29 +48,24 @@
       el.classList.toggle('active', isActive);
     });
 
-    // Close mobile menu
     const mobileNav = document.getElementById('nav-mobile');
     if (mobileNav) mobileNav.classList.remove('active');
 
-    // Reposition nav indicator after active state changes
-    if (typeof window._initNavIndicator === 'function') {
-      window._initNavIndicator();
-    }
+    // NOTE: _initNavIndicator() is NOT called here — indicator reposition
+    // is deferred to the call site (htmx:afterSettle / onContentReady / etc.)
+    // via rAF so the browser has time to recalc layout after class changes.
   }
 
   // ==========================================================
   // 2. Re-initialize after content swap
   // ==========================================================
   function onContentReady() {
-    // Re-highlight code blocks (PrismJS with preprocess:true does server-side
-    // highlighting; client-side re-init for dynamically loaded content)
     if (typeof Prism !== 'undefined') {
       document.querySelectorAll('.main-content pre.line-numbers > code').forEach(function (block) {
         Prism.highlightElement(block);
       });
     }
 
-    // Re-apply external link attributes
     document.querySelectorAll('.main-content a[href^="http"]').forEach(function (link) {
       if (!link.hostname.includes(window.location.hostname)) {
         link.setAttribute('target', '_blank');
@@ -61,27 +73,25 @@
       }
     });
 
-    // Re-init code block headers
     if (typeof window._initCodeHeaders === 'function') {
       window._initCodeHeaders();
     }
 
-    // Re-init nav indicator (MD3 sliding pill)
+    // Defer indicator reposition until after browser layout
     if (typeof window._initNavIndicator === 'function') {
-      window._initNavIndicator();
+      requestAnimationFrame(function () {
+        requestAnimationFrame(window._initNavIndicator);
+      });
     }
 
-    // Re-init Gitalk comments
     if (typeof window._initGitalk === 'function') {
       setTimeout(window._initGitalk, 100);
     }
 
-    // Re-init Utterances comments
     if (typeof window._initUtterances === 'function') {
       setTimeout(window._initUtterances, 150);
     }
 
-    // Decode Cloudflare email obfuscation
     document.querySelectorAll('.__cf_email__[data-cfemail]').forEach(function(el) {
       const encoded = el.getAttribute('data-cfemail');
       if (!encoded) return;
@@ -118,7 +128,6 @@
       el.parentNode.replaceChild(a, el);
     });
 
-    // Re-init Table of Contents (custom toggle + animation)
     if (typeof window._initToc === 'function') {
       window._initToc();
     }
@@ -128,29 +137,72 @@
   // 3. htmx event hooks
   // ==========================================================
 
-  // --- Page transition: fade out old content before swap ---
+  // Track if a server request was made (vs. pure cache restore)
+  let pendingRequestPath = null;
+
+  // Helper: extract request path from htmx v2 event detail (v2 uses requestConfig, v1 uses pathInfo)
+  function getRequestPath(detail) {
+    if (!detail) return null;
+    if (detail.requestConfig && detail.requestConfig.path) return detail.requestConfig.path;
+    if (detail.pathInfo && detail.pathInfo.path) return detail.pathInfo.path;
+    return null;
+  }
 
   document.body.addEventListener('htmx:beforeRequest', function (evt) {
-    if (!evt.detail || !evt.detail.boosted) return;
-    const main = document.querySelector('.main-content');
-    if (main) {
-      main.classList.add('is-leaving');
+    if (!evt.detail) return;
+    // Record the path for any real server request (boosted or history cache miss)
+    pendingRequestPath = getRequestPath(evt.detail) || location.pathname;
+    // Only add leaving animation for boosted link clicks (not history restore requests)
+    if (evt.detail.boosted) {
+      const main = document.querySelector('.main-content');
+      if (main) {
+        main.classList.add('is-leaving');
+      }
     }
   });
 
   document.body.addEventListener('htmx:afterSettle', function (evt) {
-    if (!evt.detail || !evt.detail.boosted) return;
-    const path = (evt.detail.pathInfo && evt.detail.pathInfo.path) || location.pathname;
-    updateActiveNav(path);
-    onContentReady();
+    if (!evt.detail) return;
+    // Handle both boosted navigations AND history cache misses (real server requests)
+    if (evt.detail.boosted || pendingRequestPath) {
+      const path = pendingRequestPath || getRequestPath(evt.detail) || location.pathname;
+      pendingRequestPath = null;
+      updateActiveNav(path);
+      onContentReady();
+      // Scroll to top after content swap (htmx show:window:top may not fire on history misses)
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
   });
 
-  // --- Run on initial page load (not just htmx navigations) ---
-  function onInitialLoad() {
-    splitCodeLines();
+  // Handle history cache HIT (content restored from cache, no server request)
+  document.body.addEventListener('htmx:historyRestore', function () {
     updateActiveNav(location.pathname);
+    // Scroll to top after history restore
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    // Defer indicator reposition until after browser layout
     if (typeof window._initNavIndicator === 'function') {
-      window._initNavIndicator();
+      requestAnimationFrame(function () {
+        requestAnimationFrame(window._initNavIndicator);
+      });
+    }
+    // Cached content was already initialized before snapshot,
+    // but Gitalk iframe is lost — re-init if needed
+    if (typeof window._initGitalk === 'function') {
+      setTimeout(window._initGitalk, 100);
+    }
+  });
+
+  // --- Initial page load ---
+  function onInitialLoad() {
+    if (typeof splitCodeLines === 'function') {
+      splitCodeLines();
+    }
+    updateActiveNav(location.pathname);
+    // Defer indicator reposition until after browser layout
+    if (typeof window._initNavIndicator === 'function') {
+      requestAnimationFrame(function () {
+        requestAnimationFrame(window._initNavIndicator);
+      });
     }
   }
 

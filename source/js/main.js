@@ -447,13 +447,12 @@
   }
 
   // ==========================================================
-  // 9. Header Back Button — show on post pages (htmx-aware)
+  // 9. Header Back Button — show on post pages
   // ==========================================================
   function updateBackButton() {
     const btn = document.querySelector('.header-back-btn');
     const headerInner = document.querySelector('.header-inner');
     if (!btn) return;
-    // .post-full only exists on article / post pages
     const isPost = !!document.querySelector('.post-full');
     btn.classList.toggle('is-visible', isPost);
     if (headerInner) headerInner.classList.toggle('has-back', isPost);
@@ -623,3 +622,13 @@
   // Keep back button in sync across htmx page swaps
   document.addEventListener('htmx:afterSettle', updateBackButton);
 })();
+
+// ==========================================================
+// Dynamic imports — non-blocking parallel loading
+// Inspired by hexo-theme-whirlwind's JS loading strategy.
+// These modules load asynchronously without blocking the page.
+// ==========================================================
+import('./dynamic-color.js');
+import('./theme-manager.js');
+import('./pjax.js');
+import('./focus-title.js');

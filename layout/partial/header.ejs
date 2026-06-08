@@ -5,10 +5,11 @@
   <div class="header-inner">
     <!-- Left group: back button + logo -->
     <div class="header-left">
-      <!-- Back button — visibility toggled by JS (htmx-compatible) -->
+      <!-- Back button — follows browser history, handled by htmx popstate -->
       <a class="header-back-btn"
          href="<%= url_for('/') %>"
-         onclick="if(document.referrer&&document.referrer.includes(location.host)){history.back();return false}"
+         hx-boost="false"
+         onclick="history.back();return false"
          title="返回"
          aria-label="返回">
         <svg class="sym-icon" aria-hidden="true"><use href="#arrow_back"/></svg>
@@ -28,7 +29,7 @@
     <!-- Desktop Navigation -->
     <nav class="nav-desktop">
       <div class="nav-indicator" id="nav-indicator"></div>
-      <% for (var item in theme.menu) { %>
+      <% for (const item in theme.menu) { %>
         <a href="<%= url_for(theme.menu[item]) %>"
            class="nav-item<%= (page.path === theme.menu[item] || (theme.menu[item] !== '/' && page.path.startsWith(theme.menu[item]))) ? ' active' : '' %>">
           <%= item %>
@@ -52,7 +53,7 @@
 
   <!-- Mobile Navigation Overlay -->
   <nav class="nav-mobile" id="nav-mobile">
-    <% for (var item in theme.menu) { %>
+    <% for (const item in theme.menu) { %>
       <a href="<%= url_for(theme.menu[item]) %>"
          class="nav-item-mobile<%= (page.path === theme.menu[item] || (theme.menu[item] !== '/' && page.path.startsWith(theme.menu[item]))) ? ' active' : '' %>">
         <%= item %>

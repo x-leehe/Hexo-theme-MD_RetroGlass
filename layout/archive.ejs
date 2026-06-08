@@ -13,9 +13,9 @@
       <% } %>
     </header>
 
-    <% var yearlyPosts = {}; %>
+    <% const yearlyPosts = {}; %>
     <% page.posts.each(function(post) { %>
-      <% var year = date(post.date, 'YYYY'); %>
+      <% const year = date(post.date, 'YYYY'); %>
       <% if (!yearlyPosts[year]) { yearlyPosts[year] = []; } %>
       <% yearlyPosts[year].push(post); %>
     <% }); %>

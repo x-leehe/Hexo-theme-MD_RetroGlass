@@ -1,7 +1,7 @@
 <!-- ============================================================
   MD-RetroGlass — Sidebar partial (desktop only)
   ============================================================ -->
-<aside class="site-sidebar">
+<aside class="site-sidebar" hx-history="false">
   <!-- Profile Card -->
   <div class="sidebar-card profile-card">
     <% if (theme.avatar) { %>
@@ -12,7 +12,7 @@
 
     <!-- Tags (MD3 chips) -->
     <div class="sidebar-tags">
-      <% var tagCloud = site.tags.sort('length', -1).limit(8).toArray(); %>
+      <% const tagCloud = site.tags.sort('length', -1).limit(8).toArray(); %>
       <% tagCloud.forEach(function(tag) { %>
       <a href="<%= url_for(tag.path) %>" class="sidebar-tag-chip">
         <%= tag.name %>
@@ -30,7 +30,7 @@
       <span>Links</span>
     </h4>
     <div class="social-links">
-      <% for (var name in theme.social) { %>
+      <% for (const name in theme.social) { %>
       <a href="<%= theme.social[name] %>" class="social-link-item" target="_blank" rel="noopener" title="<%= name %>">
         <span class="social-icon">
           <% if (name === 'GitHub') { %><svg class="sym-icon" aria-hidden="true"><use href="#code"/></svg><% } %>

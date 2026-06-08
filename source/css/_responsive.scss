@@ -22,25 +22,54 @@
   }
 }
 
-/* Medium Desktop / Tablet: sidebar below main */
+/* Tablet: side-by-side desktop layout with fluid sidebar (80vw auto-centers) */
 @media (min-width: 769px) and (max-width: 1024px) {
   .site-wrapper {
-    max-width: 720px;
-    padding: 0 20px;
+    grid-template-columns: minmax(160px, 260px) minmax(0, 1fr);
+    grid-template-areas:
+      "header header"
+      "sidebar   main"
+      "footer footer";
   }
 
-  .site-sidebar {
-    display: grid;
+  .site-header { grid-area: header; }
+  .main-content { grid-area: main; }
+  .site-sidebar { grid-area: sidebar; }
+  .site-footer { grid-area: footer; }
+
+  .post-nav {
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
   }
 
-  .profile-card {
-    grid-column: 1 / -1;
+  /* Slightly reduce glass radius for tighter space */
+  :root {
+    --glass-radius: 22px;
+    --glass-radius-sm: 14px;
+  }
+
+  /* Compact APlayer for tablet */
+  .music-player-wrap .aplayer .aplayer-pic {
+    width: 64px !important;
+    height: 64px !important;
+  }
+  .music-player-wrap .aplayer .aplayer-info {
+    padding: 4px 8px;
+  }
+  .music-player-wrap .aplayer .aplayer-music {
+    font-size: 0.7rem;
+  }
+  .music-player-wrap .aplayer .aplayer-author {
+    font-size: 0.65rem;
+  }
+  .music-player-wrap .aplayer .aplayer-controller {
+    padding: 0 4px;
+  }
+  .music-player-wrap .aplayer .aplayer-time {
+    font-size: 0.65rem;
   }
 }
 
-/* Tablet */
+/* Mobile: hamburger menu + stacked layout */
 @media (max-width: 768px) {
   :root {
     --glass-radius: 20px;

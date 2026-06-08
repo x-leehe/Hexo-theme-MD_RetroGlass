@@ -71,7 +71,7 @@
     <%- partial('partial/header', { config: config, theme: theme, page: page }) %>
 
     <!-- Main Content -->
-    <main class="main-content">
+    <main class="main-content" hx-history-elt>
       <%- body %>
     </main>
 
@@ -104,10 +104,10 @@
       theme: '<%= theme.utterances.theme %>'
     };
     window._initUtterances = function() {
-      var el = document.getElementById('utterances-container');
+      const el = document.getElementById('utterances-container');
       if (!el) return;
       el.innerHTML = '';
-      var script = document.createElement('script');
+      const script = document.createElement('script');
       script.src = 'https://utteranc.es/client.js';
       script.setAttribute('repo', window._utterancesConfig.repo);
       script.setAttribute('issue-term', window._utterancesConfig.issueTerm);
@@ -137,12 +137,12 @@
       labels: <%- JSON.stringify(theme.gitalk.labels || ['Gitalk']) %>,
     };
     window._initGitalk = function() {
-      var container = document.getElementById('gitalk-container');
+      const container = document.getElementById('gitalk-container');
       if (!container) return;
-      var pageId = container.getAttribute('data-id');
+      const pageId = container.getAttribute('data-id');
       if (!pageId) return;
       container.innerHTML = '';
-      var config = Object.assign({}, window._gitalkBase, { id: pageId });
+      const config = Object.assign({}, window._gitalkBase, { id: pageId });
       new Gitalk(config).render('gitalk-container');
     };
   </script>
@@ -150,10 +150,7 @@
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/htmx.org@2/dist/htmx.min.js"></script>
-  <script src="<%= url_for('js/dynamic-color.js') %>"></script>
-  <script src="<%= url_for('js/theme-manager.js') %>"></script>
   <script src="<%= url_for('js/main.js') %>"></script>
-  <script src="<%= url_for('js/pjax.js') %>"></script>
 </body>
 
 </html>

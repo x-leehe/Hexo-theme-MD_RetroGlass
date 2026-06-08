@@ -10,15 +10,19 @@
 
 - **Material Design 3** — 从背景图片动态提取配色方案的色彩令牌
 - **Glassmorphism 毛玻璃** — `backdrop-filter: blur()` 半透明表面
-- **htmx 无刷新导航** — 基于 [htmx](https://htmx.org) 的页面切换
+- **Dark / Light / Auto / Time-based 四态切换** — 单击按钮循环切换（状态持久化至 `localStorage`）
+- **htmx v2 无刷新导航** — 基于 [htmx](https://htmx.org) 的页面切换（音乐不中断，侧边栏不受影响）
+- **动态 JS 加载** — 使用 `import()` 非阻塞并行加载（借鉴 hexo-theme-whirlwind）
 - **APlayer + MetingJS** — 内嵌音乐播放器，支持网易云歌单
+- **Markdown-it 渲染器** — 扩展 Markdown 语法（脚注、emoji、高亮、插入、上下标、任务列表、定义列表、缩写）
 - **双评论系统** — 一行配置在 Gitalk 和 [utterances](https://utteranc.es) 之间切换
 - **Win10 开始菜单磁贴** — 标签页/分类页采用磁贴网格布局
-- **代码块增强** — 自动识别语言标签（30+ 语言） + 一键复制 + PrismJS 高亮
+- **代码块增强** — 自动识别语言标签（30+ 语言） + 一键复制，已做短代码干扰保护
 - **文章导航** — 每篇文章底部显示上一篇 / 下一篇导航链接
 - **短代码** — `{{Tip|desc|…}}` / `{% tip desc %}…{% endtip %}` 警示框、折叠块、剧透文字（行内 + Nunjucks 双语法）
 - **双背景层** — 视差效果 + 交叉淡入淡出轮播
 - **本地 SVG 图标** — Material Symbols 精灵图（约 7KB，图标零 CDN 依赖）
+- **焦点标题** — 用户切走标签页时动态改变标题
 - **响应式布局** — 桌面端侧边栏 + 主体双栏，移动端全宽自适应
 
 ## 快速开始
@@ -29,10 +33,10 @@
 
 ```bash
 # SCSS 渲染器（必需 — 主题样式使用 SCSS 编写）
-npm install hexo-renderer-sass
+npm install hexo-renderer-dartsass
 
-# PrismJS 代码高亮（服务端预处理）
-npm install hexo-prism-plugin
+# Markdown-it 渲染器（必需 — 扩展 Markdown 语法支持）
+npm install hexo-renderer-markdown-it
 ```
 
 **注意：** 主题通过 `@font-face` 自托管 [HarmonyOS Sans SC](https://github.com/huawei-fonts/HarmonyOS-Sans)（正文字体）和 [JetBrainsMapleMono](https://github.com/SpaceTimee/Fusion-JetBrainsMapleMono)（代码字体）。请将字体文件放入 Hexo 站点的 `source/fonts/` 目录，或编辑 `source/css/_variables.scss` 使用你自己的字体。
@@ -107,13 +111,21 @@ font:
 
 > 主题内置了 HarmonyOS Sans SC（6 种字重）和 JetBrainsMapleMono 的 `@font-face` 声明。将 `.ttf` 文件放入 Hexo 站点的 `source/fonts/` 目录。你也可以在 `_config.yml` 和 `source/css/_variables.scss` 中更换为任意字体栈。
 
+### 主题模式（暗色 / 亮色 / 跟随系统 / 跟随时间）
+
+主题在顶栏内置了四态主题切换按钮。点击循环：**暗色 → 亮色 → 自动（跟随系统）→ 定时（6:00–18:00 亮色）→ 暗色 …**
+
+当前模式持久化在 `localStorage` 的 `color-scheme` 键中。`<head>` 中的内联脚本会先于 CSS 执行以防止 FOUC。同时触发 `themechange` 自定义事件供其他脚本响应。
+
 ### 代码高亮
 
 ```yaml
 syntax_highlighter: prismjs
 ```
 
-主题使用 [PrismJS](https://prismjs.com) 并通过 `hexo-prism-plugin` 进行服务端预处理。请确保已安装该插件（见前置依赖）。
+主题使用 Hexo 内置的 [PrismJS](https://prismjs.com) 支持，服务端预处理。暗色（`prism-tomorrow`）与亮色（`prism`）两套主题自动跟随主题管理器切换。
+
+### Comment System / 评论系统
 
 ### 评论系统
 
@@ -173,7 +185,7 @@ music:
   preload: auto            # auto | metadata | none
 ```
 
-> 使用 [APlayer](https://github.com/DIYgod/APlayer) + @xizeyoupan/meting。
+> 使用 [APlayer](https://github.com/DIYgod/APlayer) + MetingJS
 
 ### 多张背景图轮播
 
@@ -227,22 +239,31 @@ seo:
   bing_site_verification: ''
 ```
 
-### RSS
-
-```yaml
-rss:
-  enable: true
-```
-
-> 需要在 Hexo 站点中安装 `hexo-generator-feed` 插件。
-
 ### 回到顶部按钮
 
 ```yaml
 scroll_to_top: true
 ```
 
-### 短代码
+### Markdown 扩展语法
+
+主题使用 [markdown-it](https://github.com/markdown-it/markdown-it)（通过 `hexo-renderer-markdown-it`），启用了以下插件：
+
+| 插件 | 语法 | 渲染效果 |
+|------|------|----------|
+| `markdown-it-footnote` | `[^1]` | 脚注（带双向跳转） |
+| `markdown-it-emoji` | `:rocket:` | 🚀（快捷方式） |
+| `markdown-it-mark` | `==文字==` | `<mark>` 高亮 |
+| `markdown-it-ins` | `++文字++` | `<ins>` 插入线 |
+| `markdown-it-sub` | `~文字~` | `<sub>` 下标 |
+| `markdown-it-sup` | `^文字^` | `<sup>` 上标 |
+| `markdown-it-abbr` | `*[HTML]: …` | 缩写提示 |
+| `markdown-it-deflist` | `术语\n: 定义` | 定义列表 |
+| `markdown-it-task-lists` | `- [ ]` | 任务复选框 |
+
+定义列表会附加带边框的框体以便与正文区分。脚注锚点带有 `scroll-margin-top` 偏移量，避免被固定顶栏遮挡。
+
+## 短代码
 
 所有短代码支持**两种语法**：
 
@@ -252,6 +273,8 @@ scroll_to_top: true
 | **Nunjucks** | `{% function 描述 %}内容{% endfunction %}` | 多行、正文使用完整 Markdown |
 
 两者均不区分大小写。`描述` 字段可选 — 留空（行内：`||`，Nunjucks：省略）则使用默认标签。
+
+> **代码块保护：** 围栏代码块（`` ``` ``）内的短代码**永远不会**被处理——渲染前通过占位符替换进行保护。你可以放心在代码块中演示短代码语法。
 
 #### Spoiler — 点击揭示（黑幕/剧透）
 
@@ -334,7 +357,7 @@ shortcodes:
 
 ## 导航机制
 
-页面通过 [htmx](https://htmx.org) 的 `hx-boost` 属性实现无刷新导航，仅替换 `<main>` 内容区域。背景、侧边栏、APlayer 等持久元素不受影响。替换内容中的 `<script>` 标签会被自动执行——无需手动处理 PJAX 兼容。
+页面使用 [htmx](https://htmx.org) v2 的 `hx-boost` 实现无刷新导航。仅替换 `<main>` 内容区域——背景、侧边栏、APlayer 等持久元素不受影响。历史记录通过 `hx-history-elt` 限定在 `.main-content` 范围内，避免整页替换。JavaScript 模块（`pjax.js`、`theme-manager.js`、`dynamic-color.js`、`focus-title.js`）从单一入口 `main.js` 通过动态 `import()` 异步加载。
 
 ## 浏览器支持
 
@@ -344,9 +367,9 @@ shortcodes:
 
 - **[HarmonyOS Sans SC](https://github.com/huawei-fonts/HarmonyOS-Sans)** — 华为出品的优雅中文字体，用作默认正文字体。
 - **[JetBrainsMapleMono](https://github.com/SpaceTimee/Fusion-JetBrainsMapleMono)** — 融合 JetBrains Mono 与 Maple Mono 的优美等宽字体，用于代码块。
-- **[萌娘百科](https://mzh.moegirl.org.cn/)**(或[moegirlICU](https://moegirl.icu/)) — `{{Spoiler|text}}` 语法灵感来源于萌娘百科的剧透标签约定。
-- **[hexo-theme-whirlwind](https://github.com/SakuraKoi/Hexo-theme-Whirlwind)** — 部分架构模式（评论系统切换、侧边栏布局）借鉴自该主题。
-- **[Github Copilot](https://copilot.github.com/)** — 代码片段和文档撰写过程中得到的 AI 辅助。
+- **[萌娘百科](https://mzh.moegirl.org.cn/)** — `{{Spoiler|text}}` 语法灵感来源于萌娘百科的剧透标签约定。
+- **[hexo-theme-whirlwind](https://github.com/SakuraKoi/Hexo-theme-Whirlwind)** — 部分架构模式（评论系统切换、侧边栏布局、动态 JS 加载）借鉴自该主题。
+- **[GitHub Copilot](https://copilot.github.com/)** — 代码片段和文档撰写过程中得到的 AI 辅助。
 
 ## 许可证
 
