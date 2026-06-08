@@ -10,6 +10,11 @@
   <script>
     (function(){try{const s=localStorage.getItem('color-scheme');if(s==='time-based')s='time';if(s==='light'){document.documentElement.classList.add('light-mode');}else if(s==='auto'||s===null){if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches){document.documentElement.classList.add('light-mode');}}else if(s==='time'){const h=new Date().getHours();if(h>=6&&h<18){document.documentElement.classList.add('light-mode');}}}catch(e){}})();
   </script>
+  <!-- Font load timeout: if custom fonts don't load within 1.5s, fall back to system fonts.
+       Fonts continue loading silently in background; when ready they swap in automatically. -->
+  <script>
+    (function(){try{var t=setTimeout(function(){document.documentElement.classList.add('fonts-timed-out');},1500);if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){clearTimeout(t);document.documentElement.classList.remove('fonts-timed-out');});}}catch(e){}})();
+  </script>
   <!-- Fallback: show body if JS is disabled -->
   <noscript><style>body{visibility:visible}</style></noscript>
 

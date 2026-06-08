@@ -39,7 +39,7 @@ npm install hexo-renderer-dartsass
 npm install hexo-renderer-markdown-it
 ```
 
-**注意：** 主题通过 `@font-face` 自托管 [HarmonyOS Sans SC](https://github.com/huawei-fonts/HarmonyOS-Sans)（正文字体）和 [JetBrainsMapleMono](https://github.com/SpaceTimee/Fusion-JetBrainsMapleMono)（代码字体）。请将字体文件放入 Hexo 站点的 `source/fonts/` 目录，或编辑 `source/css/_variables.scss` 使用你自己的字体。
+**注意：** 主题通过 `@font-face` 自托管 [HarmonyOS Sans SC](https://github.com/huawei-fonts/HarmonyOS-Sans)（正文字体，3 种字重）和 [JetBrainsMapleMono](https://github.com/SpaceTimee/Fusion-JetBrainsMapleMono)（代码字体），均为子集化 WOFF2 格式。请将 `.woff2` 文件放入 Hexo 站点的 `source/fonts/` 目录，或编辑 `source/css/_variables.scss` 使用你自己的字体。
 
 ### 安装主题
 
@@ -61,15 +61,15 @@ theme: md-retroglass
 ### 必须：替换示例图片
 
 替换 `source/images/` 中的以下文件：
-- `avatar.jpg` — 头像
-- `bg-default.png` — 背景图
+- `avatar.webp` — 头像
+- `bg-default.webp` — 背景图
 - `favicon.png` — 网站图标
 
 ### 站点标识与导航
 
 ```yaml
 # 站点标识
-avatar: /images/avatar.jpg
+avatar: /images/avatar.webp
 favicon: /images/favicon.png
 
 # 导航菜单
@@ -109,7 +109,9 @@ font:
   line_height: 1.75
 ```
 
-> 主题内置了 HarmonyOS Sans SC（6 种字重）和 JetBrainsMapleMono 的 `@font-face` 声明。将 `.ttf` 文件放入 Hexo 站点的 `source/fonts/` 目录。你也可以在 `_config.yml` 和 `source/css/_variables.scss` 中更换为任意字体栈。
+> 主题内置了 HarmonyOS Sans SC（3 种字重，已子集化）和 JetBrainsMapleMono 的 `@font-face` 声明，使用 WOFF2 格式。将 `.woff2` 文件放入 Hexo 站点的 `source/fonts/` 目录。你也能够在 `_config.yml` 和 `source/css/_variables.scss` 中更换为任意字体栈。
+>
+> 若字体在 1.5 秒内未加载完成，会自动回退至系统字体；字体在后台继续加载，就绪后自动切换。
 
 ### 主题模式（暗色 / 亮色 / 跟随系统 / 跟随时间）
 
@@ -191,9 +193,9 @@ music:
 
 ```yaml
 backgrounds:
-  - /images/bg-01.jpg
-  - /images/bg-02.jpg
-  - /images/bg-03.jpg
+  - /images/bg-01.webp
+  - /images/bg-02.webp
+  - /images/bg-03.webp
 ```
 
 背景图每 15 秒自动交叉淡入淡出轮播。用户也可通过屏幕箭头按钮、圆点指示器或键盘 <kbd>←</kbd> / <kbd>→</kbd> 方向键手动切换。桌面端支持鼠标移动视差效果。

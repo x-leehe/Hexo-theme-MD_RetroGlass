@@ -10,49 +10,34 @@
 
 /* ---- Custom Fonts ---- */
 
-/* HarmonyOS Sans SC — Body text (6 weights) */
+/* HarmonyOS Sans SC — Body text (3 essential weights, subsetted WOFF2) */
 @font-face {
   font-family: 'HarmonyOS Sans SC';
-  src: url('/fonts/HarmonyOS_Sans_SC_Thin.ttf') format('truetype');
-  font-weight: 100; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: 'HarmonyOS Sans SC';
-  src: url('/fonts/HarmonyOS_Sans_SC_Light.ttf') format('truetype');
-  font-weight: 300; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: 'HarmonyOS Sans SC';
-  src: url('/fonts/HarmonyOS_Sans_SC_Regular.ttf') format('truetype');
+  src: url('/fonts/HarmonyOS_Sans_SC_Regular.woff2') format('woff2');
   font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: 'HarmonyOS Sans SC';
-  src: url('/fonts/HarmonyOS_Sans_SC_Medium.ttf') format('truetype');
+  src: url('/fonts/HarmonyOS_Sans_SC_Medium.woff2') format('woff2');
   font-weight: 500; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: 'HarmonyOS Sans SC';
-  src: url('/fonts/HarmonyOS_Sans_SC_Bold.ttf') format('truetype');
+  src: url('/fonts/HarmonyOS_Sans_SC_Bold.woff2') format('woff2');
   font-weight: 700; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: 'HarmonyOS Sans SC';
-  src: url('/fonts/HarmonyOS_Sans_SC_Black.ttf') format('truetype');
-  font-weight: 900; font-style: normal; font-display: swap;
 }
 
 /* JetBrainsMapleMono — Code */
 @font-face {
   font-family: 'JetBrainsMapleMono';
-  src: url('/fonts/JetBrainsMapleMono-Regular.ttf') format('truetype');
+  src: url('/fonts/JetBrainsMapleMono-Regular.woff2') format('woff2');
   font-weight: 400; font-style: normal; font-display: swap;
 }
 
 /* AaCute — Spoiler text */
 @font-face {
   font-family: 'AaCute';
-  src: url('/fonts/AaCute-full.ttf') format('truetype');
+  src: url('/fonts/AaCute-full.woff2') format('woff2');
   font-weight: 400; font-style: normal; font-display: swap;
 }
 
@@ -84,6 +69,11 @@
   --font-body: 'HarmonyOS Sans SC', 'Noto Sans SC', sans-serif;
   --font-code: 'JetBrainsMapleMono', 'JetBrains Mono', 'Fira Code', monospace;
   --font-spoiler: 'AaCute', var(--font-body);
+
+  /* System font fallback (used when .fonts-timed-out is set on <html>) */
+  --font-body-fallback: system-ui, -apple-system, 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', sans-serif;
+  --font-code-fallback: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
+  --font-spoiler-fallback: var(--font-body-fallback);
   --font-size-base: 16px;
   --line-height-base: 1.75;
   --font-size-sm: 0.875rem;
@@ -140,6 +130,13 @@
   --glass-blur: 24px;
   --glass-border: 1px solid var(--md-sys-color-outline);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* ---- Font load timeout: swap to system fonts ---- */
+:root.fonts-timed-out {
+  --font-body: var(--font-body-fallback);
+  --font-code: var(--font-code-fallback);
+  --font-spoiler: var(--font-spoiler-fallback);
 }
 
 /* ---- Anti-FOUC: hide body until theme is applied ---- */

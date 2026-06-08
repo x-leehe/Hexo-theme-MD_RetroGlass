@@ -1,14 +1,13 @@
 # ============================================================
 # MD-RetroGlass Theme Configuration
 # ============================================================
-# A Hexo theme with Material Design 3 glassmorphism aesthetics,
-# styled to match the PageProj (x-leehe.ccwu.cc) visual identity.
+# A Hexo theme with Material Design 3 glassmorphism aesthetics.
 # ============================================================
 
 # -------------------------------
 # Site Identity
 # -------------------------------
-avatar: /images/avatar.jpg
+avatar: /images/avatar.webp
 favicon: /images/favicon.png
 
 # -------------------------------
@@ -37,7 +36,7 @@ social:
 # Array of background image paths (relative to theme source/images/)
 # These rotate automatically on the client side.
 backgrounds:
-  - /images/bg-default.png
+  - /images/bg-default.webp
 
 # -------------------------------
 # Glassmorphism Settings

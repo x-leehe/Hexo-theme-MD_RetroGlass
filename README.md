@@ -39,7 +39,7 @@ npm install hexo-renderer-dartsass
 npm install hexo-renderer-markdown-it
 ```
 
-**Note:** The theme self-hosts [HarmonyOS Sans SC](https://github.com/huawei-fonts/HarmonyOS-Sans) (body) and [JetBrainsMapleMono](https://github.com/SpaceTimee/Fusion-JetBrainsMapleMono) (code) fonts via `@font-face`. Place the font files in your Hexo site's `source/fonts/` directory, or edit `source/css/_variables.scss` to use your own fonts.
+**Note:** The theme self-hosts [HarmonyOS Sans SC](https://github.com/huawei-fonts/HarmonyOS-Sans) (body, 3 weights) and [JetBrainsMapleMono](https://github.com/SpaceTimee/Fusion-JetBrainsMapleMono) (code) fonts via `@font-face`, in subsetted WOFF2 format. Place the `.woff2` files in your Hexo site's `source/fonts/` directory, or edit `source/css/_variables.scss` to use your own fonts.
 
 ### Install Theme
 
@@ -61,15 +61,15 @@ Then configure the theme by editing `themes/md-retroglass/_config.yml`.
 ### Required: Replace Example Images
 
 Replace these files in `source/images/`:
-- `avatar.jpg` — your avatar
-- `bg-default.png` — your background
+- `avatar.webp` — your avatar
+- `bg-default.webp` — your background
 - `favicon.png` — your favicon
 
 ### Site Identity & Navigation
 
 ```yaml
 # Site Identity
-avatar: /images/avatar.jpg
+avatar: /images/avatar.webp
 favicon: /images/favicon.png
 
 # Navigation Menu
@@ -109,7 +109,9 @@ font:
   line_height: 1.75
 ```
 
-> The theme bundles `@font-face` declarations for HarmonyOS Sans SC (6 weights) and JetBrainsMapleMono. Place the `.ttf` files under `source/fonts/` in your Hexo site. You can change these to any font stack in `_config.yml` and `source/css/_variables.scss`.
+> The theme bundles `@font-face` declarations for HarmonyOS Sans SC (3 weights, subsetted) and JetBrainsMapleMono, using WOFF2 format. Place the `.woff2` files under `source/fonts/` in your Hexo site. You can change these to any font stack in `_config.yml` and `source/css/_variables.scss`.
+>
+> If custom fonts fail to load within 1.5s, the theme automatically falls back to system fonts. Fonts continue loading in the background and swap in when ready.
 
 ### Theme Mode (Dark / Light / Auto / Time-based)
 
@@ -189,9 +191,9 @@ music:
 
 ```yaml
 backgrounds:
-  - /images/bg-01.jpg
-  - /images/bg-02.jpg
-  - /images/bg-03.jpg
+  - /images/bg-01.webp
+  - /images/bg-02.webp
+  - /images/bg-03.webp
 ```
 
 Backgrounds rotate automatically every 15 seconds with a cross-fade transition. Users can also manually switch via on-screen arrow buttons, dot indicators, or keyboard <kbd>←</kbd> / <kbd>→</kbd> arrow keys. A parallax effect tracks mouse movement on desktop.
