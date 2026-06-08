@@ -13,19 +13,23 @@ A Hexo theme with Material Design 3 glassmorphism aesthetics.
 - **Dark / Light / Auto / Time-based** — Four-state theme toggle (cycled via a single button, persisted in `localStorage`)
 - **htmx v2 Navigation** — Seamless page switching via [htmx](https://htmx.org) (music never stops, sidebar untouched)
 - **Dynamic JS Loading** — Non-blocking parallel `import()` calls (inspired by hexo-theme-whirlwind)
+- **Page Loader** — Full-screen loading overlay with progress percentage, slow-loading prompt after 8s, skip button
 - **APlayer + MetingJS** — Embedded music player with Netease playlist support
 - **Markdown-it Renderer** — Extended Markdown syntax (footnotes, emoji, highlight, insert, sub/superscript, task lists, definition lists, abbreviations)
 - **Dual Comment System** — Switch between Gitalk and [utterances](https://utteranc.es) via one config line
-- **Win10 Start Menu Tiles** — Tag/category pages with tile grid layout
-- **Code Blocks** — Auto-detected language labels (30+ languages) + copy-to-clipboard, protected from shortcode interference
+- **Win10 Start Menu Tiles** — Tag/category/friends pages with tile grid layout, color-hash accents, and client-side search filtering
+- **Link Preview Cards** — Auto-fetch OG metadata for external links; Telegram-style preview cards with `{% preview %}` shortcode
+- **Code Blocks** — Auto-detected language labels (30+ languages) + line numbers + copy-to-clipboard, protected from shortcode interference
 - **Post Navigation** — Previous / Next post links at the bottom of each post
-- **Shortcodes** — `{{Tip|desc|…}}` / `{% tip desc %}…{% endtip %}` admonitions, foldable blocks, spoiler text (inline + Nunjucks dual syntax)
+- **Shortcodes** — `{{Tip|desc|…}}` / `{% tip desc %}…{% endtip %}` admonitions, foldable blocks, spoiler, blur text, link preview cards (inline + Nunjucks dual syntax)
+- **Per-post Controls** — Front-matter flags to hide date, title, categories, tags, TOC, reading time, word count, or entire post from listing
 - **Dual Background** — Parallax effect + cross-fade rotation
 - **Local SVG Icons** — Material Symbols sprite (~7KB, zero CDN dependencies for icons)
 - **Focus Title** — Dynamic tab title that changes when the user switches away
-- **Responsive** — Desktop sidebar layout, full-width mobile adaptive
+- **Anti-FOUC & Font Fallback** — Inline `<head>` scripts prevent flash of unstyled content; fonts fall back to system stack after 1.5s if custom fonts haven't loaded
+- **Responsive** — Desktop sidebar layout, tablet with compact sidebar, full-width mobile with hamburger menu
 
-## Quick Start
+## (Not So) Quick Start
 
 ### Prerequisites
 
@@ -37,9 +41,26 @@ npm install hexo-renderer-dartsass
 
 # Markdown-it renderer (required — extended Markdown syntax support)
 npm install hexo-renderer-markdown-it
+
+# Font subsetting (required — auto-subsets fonts to only used characters)
+npm install subset-font --save-dev
 ```
 
-**Note:** The theme self-hosts [HarmonyOS Sans SC](https://github.com/huawei-fonts/HarmonyOS-Sans) (body, 3 weights) and [JetBrainsMapleMono](https://github.com/SpaceTimee/Fusion-JetBrainsMapleMono) (code) fonts via `@font-face`, in subsetted WOFF2 format. Place the `.woff2` files in your Hexo site's `source/fonts/` directory, or edit `source/css/_variables.scss` to use your own fonts.
+Then copy the font conversion script from the theme's `misc-scripts/` to your Hexo site's `scripts/` directory:
+
+```bash
+cp themes/md-retroglass/misc-scripts/font-convert.js scripts/
+```
+
+**Font workflow:** The theme ships TTF source fonts in `fonts-src/` (HarmonyOS Sans SC, JetBrainsMapleMono, AaCute). At build time, `font-convert.js` scans all HTML and Markdown for unique characters, subsets each font to only those glyphs via [subset-font](https://www.npmjs.com/package/subset-font) (harfbuzz WASM), and outputs compressed WOFF2 to `public/fonts/`. Run:
+
+```bash
+hexo generate && node scripts/font-convert.js
+```
+
+Or simply use the bundled npm script: `npm run build`.
+
+To use different fonts, replace the TTF files in `fonts-src/`, update `FONT_MAP` in `scripts/font-convert.js`, and edit the `@font-face` declarations in `source/css/_variables.scss`.
 
 ### Install Theme
 
@@ -109,7 +130,9 @@ font:
   line_height: 1.75
 ```
 
-> The theme bundles `@font-face` declarations for HarmonyOS Sans SC (3 weights, subsetted) and JetBrainsMapleMono, using WOFF2 format. Place the `.woff2` files under `source/fonts/` in your Hexo site. You can change these to any font stack in `_config.yml` and `source/css/_variables.scss`.
+> Font stack configuration is in `source/css/_variables.scss` — edit the `--font-body`, `--font-code`, and `--font-spoiler` CSS custom properties. The `@font-face` declarations point to `/fonts/` (served from `public/fonts/` after the subsetting build step).
+>
+> The font-related values in `_config.yml` are informational; to change fonts, edit `_variables.scss` and `fonts-src/` directly.
 >
 > If custom fonts fail to load within 1.5s, the theme automatically falls back to system fonts. Fonts continue loading in the background and swap in when ready.
 
@@ -197,6 +220,49 @@ backgrounds:
 ```
 
 Backgrounds rotate automatically every 15 seconds with a cross-fade transition. Users can also manually switch via on-screen arrow buttons, dot indicators, or keyboard <kbd>←</kbd> / <kbd>→</kbd> arrow keys. A parallax effect tracks mouse movement on desktop.
+
+### Link Preview Cards
+
+```yaml
+link_preview:
+  enable: true                 # Master switch for link preview cards
+  auto_fetch: true             # Auto-fetch og:description & og:image for external links
+  timeout: 5000                # Request timeout in ms
+```
+
+When `auto_fetch` is enabled, any post with `show-preview: true` in its front-matter will have standalone external links replaced with Telegram-style preview cards showing the link's OG title, description, and image.
+
+You can also manually create preview cards with the Nunjucks shortcode:
+
+```
+{% preview %}
+title: Example Site
+url: https://example.com
+desc: A description of the site
+icon: https://example.com/favicon.ico
+{% endpreview %}
+```
+
+The `desc` and `icon` fields are optional — if omitted, they will be auto-fetched from the target URL's OG metadata.
+
+### Per-post Front-matter Controls
+
+Each post supports these optional front-matter flags to selectively hide elements:
+
+| Flag | Effect |
+|------|--------|
+| `hide_date: true` | Hide publish date |
+| `hide_updated: true` | Hide last-updated date |
+| `hide_title: true` | Hide post title |
+| `hide_categories: true` | Hide category links |
+| `hide_tags: true` | Hide tag chips |
+| `hide_toc: true` | Hide table of contents |
+| `hide_reading_time: true` | Hide estimated reading time |
+| `hide_word_count: true` | Hide word count |
+| `hide_post: true` | Exclude post from homepage listing, archive, tags, and categories (the post page itself remains accessible via direct URL) |
+| `toc: false` | Disable TOC for this specific post |
+| `comments: false` | Disable comments for this post |
+| `show-preview: true` | Enable auto-fetch link preview cards for this post |
 
 ### Table of Contents (TOC)
 
@@ -335,6 +401,31 @@ Yellow-themed admonition for cautionary notes.
 ```
 
 Red-themed admonition for severe warnings or disclaimers.
+
+#### Blur — Blurred text (click to reveal)
+
+```
+{{Blur||Spoiler content here.}}
+
+{% blur %}
+Spoiler content here.
+{% endblur %}
+```
+
+Text is rendered with a CSS `blur()` filter. Click or hover to un-blur and reveal the content.
+
+#### Preview — Manual link preview card
+
+```
+{% preview %}
+title: Example Site
+url: https://example.com
+desc: A description (optional)
+icon: https://example.com/favicon.ico (optional)
+{% endpreview %}
+```
+
+Renders a Telegram-style link preview card. If `desc` or `icon` are omitted, they are auto-fetched from the target URL's OG metadata at build time.
 
 #### Shortcodes Configuration
 

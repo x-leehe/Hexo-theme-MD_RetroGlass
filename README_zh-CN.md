@@ -13,19 +13,23 @@
 - **Dark / Light / Auto / Time-based 四态切换** — 单击按钮循环切换（状态持久化至 `localStorage`）
 - **htmx v2 无刷新导航** — 基于 [htmx](https://htmx.org) 的页面切换（音乐不中断，侧边栏不受影响）
 - **动态 JS 加载** — 使用 `import()` 非阻塞并行加载（借鉴 hexo-theme-whirlwind）
+- **页面加载器** — 全屏加载覆盖层，显示进度百分比，8 秒后显示慢速加载提示及跳过按钮
 - **APlayer + MetingJS** — 内嵌音乐播放器，支持网易云歌单
 - **Markdown-it 渲染器** — 扩展 Markdown 语法（脚注、emoji、高亮、插入、上下标、任务列表、定义列表、缩写）
 - **双评论系统** — 一行配置在 Gitalk 和 [utterances](https://utteranc.es) 之间切换
-- **Win10 开始菜单磁贴** — 标签页/分类页采用磁贴网格布局
-- **代码块增强** — 自动识别语言标签（30+ 语言） + 一键复制，已做短代码干扰保护
+- **Win10 开始菜单磁贴** — 标签页/分类页/友链页采用磁贴网格布局，色相哈希着色，支持客户端搜索过滤
+- **链接预览卡片** — 自动抓取外部链接的 OG 元数据；支持 `{% preview %}` 短代码手动创建 Telegram 风格预览卡片
+- **代码块增强** — 自动识别语言标签（30+ 语言） + 行号 + 一键复制，已做短代码干扰保护
 - **文章导航** — 每篇文章底部显示上一篇 / 下一篇导航链接
-- **短代码** — `{{Tip|desc|…}}` / `{% tip desc %}…{% endtip %}` 警示框、折叠块、剧透文字（行内 + Nunjucks 双语法）
+- **短代码** — `{{Tip|desc|…}}` / `{% tip desc %}…{% endtip %}` 警示框、折叠块、剧透文字、模糊文字、链接预览卡片（行内 + Nunjucks 双语法）
+- **文章级控制** — 通过 Front-matter 标志隐藏日期、标题、分类、标签、目录、阅读时间、字数统计，或将文章从列表页隐藏
 - **双背景层** — 视差效果 + 交叉淡入淡出轮播
 - **本地 SVG 图标** — Material Symbols 精灵图（约 7KB，图标零 CDN 依赖）
 - **焦点标题** — 用户切走标签页时动态改变标题
-- **响应式布局** — 桌面端侧边栏 + 主体双栏，移动端全宽自适应
+- **防 FOUC 与字体回退** — `<head>` 内联脚本防止无样式内容闪烁；自定义字体 1.5 秒未加载自动回退至系统字体
+- **响应式布局** — 桌面端侧边栏 + 主体双栏，平板端紧凑侧边栏，移动端全宽自适应含汉堡菜单
 
-## 快速开始
+## (并非快速的) 快速开始
 
 ### 前置依赖
 
@@ -37,9 +41,26 @@ npm install hexo-renderer-dartsass
 
 # Markdown-it 渲染器（必需 — 扩展 Markdown 语法支持）
 npm install hexo-renderer-markdown-it
+
+# 字体子集化（必需 — 自动将字体精简至仅包含用到的字符）
+npm install subset-font --save-dev
 ```
 
-**注意：** 主题通过 `@font-face` 自托管 [HarmonyOS Sans SC](https://github.com/huawei-fonts/HarmonyOS-Sans)（正文字体，3 种字重）和 [JetBrainsMapleMono](https://github.com/SpaceTimee/Fusion-JetBrainsMapleMono)（代码字体），均为子集化 WOFF2 格式。请将 `.woff2` 文件放入 Hexo 站点的 `source/fonts/` 目录，或编辑 `source/css/_variables.scss` 使用你自己的字体。
+然后将主题 `misc-scripts/` 中的字体转换脚本复制到 Hexo 站点的 `scripts/` 目录：
+
+```bash
+cp themes/md-retroglass/misc-scripts/font-convert.js scripts/
+```
+
+**字体工作流：** 主题在 `fonts-src/` 中提供 TTF 源字体文件（HarmonyOS Sans SC、JetBrainsMapleMono、AaCute）。构建时，`font-convert.js` 扫描所有 HTML 和 Markdown 文件收集唯一字符，通过 [subset-font](https://www.npmjs.com/package/subset-font)（基于 harfbuzz WASM）将每种字体子集化为仅包含这些字形，并输出压缩 WOFF2 至 `public/fonts/`。运行：
+
+```bash
+hexo generate && node scripts/font-convert.js
+```
+
+或直接使用内置的 npm 脚本：`npm run build`。
+
+如需更换字体，替换 `fonts-src/` 中的 TTF 文件，更新 `scripts/font-convert.js` 中的 `FONT_MAP`，并编辑 `source/css/_variables.scss` 中的 `@font-face` 声明。
 
 ### 安装主题
 
@@ -109,7 +130,9 @@ font:
   line_height: 1.75
 ```
 
-> 主题内置了 HarmonyOS Sans SC（3 种字重，已子集化）和 JetBrainsMapleMono 的 `@font-face` 声明，使用 WOFF2 格式。将 `.woff2` 文件放入 Hexo 站点的 `source/fonts/` 目录。你也能够在 `_config.yml` 和 `source/css/_variables.scss` 中更换为任意字体栈。
+> 字体栈配置在 `source/css/_variables.scss` 中 — 编辑 `--font-body`、`--font-code` 和 `--font-spoiler` CSS 自定义属性。`@font-face` 声明指向 `/fonts/`（由子集化构建步骤输出至 `public/fonts/` 后提供服务）。
+>
+> `_config.yml` 中的字体相关值为信息参考；如需更换字体，请直接编辑 `_variables.scss` 和 `fonts-src/`。
 >
 > 若字体在 1.5 秒内未加载完成，会自动回退至系统字体；字体在后台继续加载，就绪后自动切换。
 
@@ -199,6 +222,49 @@ backgrounds:
 ```
 
 背景图每 15 秒自动交叉淡入淡出轮播。用户也可通过屏幕箭头按钮、圆点指示器或键盘 <kbd>←</kbd> / <kbd>→</kbd> 方向键手动切换。桌面端支持鼠标移动视差效果。
+
+### 链接预览卡片
+
+```yaml
+link_preview:
+  enable: true                 # 链接预览卡片总开关
+  auto_fetch: true             # 自动抓取外部链接的 og:description 和 og:image
+  timeout: 5000                # 请求超时时间（毫秒）
+```
+
+当 `auto_fetch` 启用时，任何在 Front-matter 中设置了 `show-preview: true` 的文章，其中的独立外部链接将被替换为 Telegram 风格的预览卡片，显示链接的 OG 标题、描述和图片。
+
+你也可以使用 Nunjucks 短代码手动创建预览卡片：
+
+```
+{% preview %}
+title: 示例站点
+url: https://example.com
+desc: 站点描述
+icon: https://example.com/favicon.ico
+{% endpreview %}
+```
+
+`desc` 和 `icon` 字段为可选项 — 若留空，将从目标 URL 的 OG 元数据自动抓取。
+
+### 文章级 Front-matter 控制
+
+每篇文章支持以下可选的 Front-matter 标志来选择性隐藏元素：
+
+| 标志 | 效果 |
+|------|------|
+| `hide_date: true` | 隐藏发布日期 |
+| `hide_updated: true` | 隐藏最后更新日期 |
+| `hide_title: true` | 隐藏文章标题 |
+| `hide_categories: true` | 隐藏分类链接 |
+| `hide_tags: true` | 隐藏标签徽章 |
+| `hide_toc: true` | 隐藏目录 |
+| `hide_reading_time: true` | 隐藏估算阅读时间 |
+| `hide_word_count: true` | 隐藏字数统计 |
+| `hide_post: true` | 从首页列表、归档、标签、分类中隐藏文章（文章页面本身仍可通过直接 URL 访问） |
+| `toc: false` | 针对该文章禁用目录 |
+| `comments: false` | 针对该文章禁用评论 |
+| `show-preview: true` | 为该文章启用自动抓取链接预览卡片 |
 
 ### 目录（TOC）
 
@@ -337,6 +403,31 @@ scroll_to_top: true
 ```
 
 红色主题的严重警示框，用于免责声明等重要警告。
+
+#### Blur — 模糊文字（点击揭示）
+
+```
+{{Blur||此处为剧透内容。}}
+
+{% blur %}
+此处为剧透内容。
+{% endblur %}
+```
+
+文字以 CSS `blur()` 滤镜模糊显示。点击或悬停可消除模糊，揭示内容。
+
+#### Preview — 手动链接预览卡片
+
+```
+{% preview %}
+title: 示例站点
+url: https://example.com
+desc: 站点描述（可选）
+icon: https://example.com/favicon.ico（可选）
+{% endpreview %}
+```
+
+渲染为 Telegram 风格的链接预览卡片。若省略 `desc` 或 `icon`，将在构建时从目标 URL 的 OG 元数据自动抓取。
 
 #### 短代码配置
 
