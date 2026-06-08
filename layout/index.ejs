@@ -3,15 +3,18 @@
   ============================================================ -->
 <div class="posts-container">
   <% page.posts.each(function(post) { %>
+  <% if (!post.hide_post) { %>
   <article class="post-card">
     <div class="post-card-inner">
       <!-- Post Meta -->
       <div class="post-card-meta">
+        <% if (!post.hide_date) { %>
         <time class="post-card-date" datetime="<%= date(post.date, 'YYYY-MM-DD') %>">
           <svg class="sym-icon" aria-hidden="true"><use href="#calendar_today"/></svg>
           <span><%= date(post.date, theme.post.date_format || 'YYYY-MM-DD') %></span>
         </time>
-        <% if (post.categories && post.categories.length > 0) { %>
+        <% } %>
+        <% if (!post.hide_categories && post.categories && post.categories.length > 0) { %>
         <span class="post-card-categories">
           <svg class="sym-icon" aria-hidden="true"><use href="#folder"/></svg>
           <% post.categories.forEach(function(cat) { %>
@@ -22,9 +25,11 @@
       </div>
 
       <!-- Post Title -->
+      <% if (!post.hide_title) { %>
       <h2 class="post-card-title">
         <a href="<%= url_for(post.path) %>"><%= post.title %></a>
       </h2>
+      <% } %>
 
       <!-- Post Excerpt -->
       <% if (post.excerpt) { %>
@@ -36,7 +41,7 @@
       <!-- Post Footer -->
       <div class="post-card-footer">
         <!-- Tags -->
-        <% if (post.tags && post.tags.length > 0) { %>
+        <% if (!post.hide_tags && post.tags && post.tags.length > 0) { %>
         <div class="post-card-tags">
           <% post.tags.forEach(function(tag) { %>
           <a href="<%= url_for(tag.path) %>" class="post-tag-chip">
@@ -55,6 +60,7 @@
       </div>
     </div>
   </article>
+  <% } %>
   <% }); %>
 
   <!-- Empty State -->

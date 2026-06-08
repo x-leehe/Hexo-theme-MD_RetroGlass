@@ -34,7 +34,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
     data.content = data.content.replace(
         /\{\{Spoiler\|([\s\S]*?)\|([\s\S]+?)\}\}/g,
         (_, desc, text) =>
-            '<span class="spoiler" title="' + (desc || sc.spoiler_default || '你知道的太多了') + '">' + text.replace(/\n/g, '<br>') + '</span>'
+            '<span class="spoiler" tabindex="0" title="' + (desc || sc.spoiler_default || '你知道的太多了') + '">' + text.replace(/\n/g, '<br>') + '</span>'
     );
 
     // ---- Hidden ----
@@ -63,6 +63,13 @@ hexo.extend.filter.register('before_post_render', function (data) {
         /\{\{Critical\|([\s\S]*?)\|([\s\S]+?)\}\}/g,
         (_, desc, text) =>
             '<div class="admonition critical"><div class="admonition-head"><svg class="sym-icon admonition-icon" aria-hidden="true"><use href="#report"/></svg><strong>' + (desc || sc.critical_default || '严重警告') + '</strong></div><div class="admonition-body">' + mdInline(text) + '</div></div>'
+    );
+
+    // ---- Blur (inline-only; raw text, \n → <br>) ----
+    data.content = data.content.replace(
+        /\{\{Blur\|([\s\S]*?)\|([\s\S]+?)\}\}/g,
+        (_, desc, text) =>
+            '<span class="blur" tabindex="0" title="' + (desc || sc.blur_default || '你知道的太多了') + '">' + text.replace(/\n/g, '<br>') + '</span>'
     );
 
     // ---- Restore protected code blocks ----

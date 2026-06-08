@@ -5,19 +5,23 @@
   <div class="post-full-inner">
     <!-- Post Header -->
     <header class="post-full-header">
+      <% if (!page.hide_title) { %>
       <h1 class="post-full-title"><%= page.title %></h1>
+      <% } %>
 
       <div class="post-full-meta">
         <!-- Date -->
+        <% if (!page.hide_date) { %>
         <span class="post-meta-item">
           <svg class="sym-icon" aria-hidden="true"><use href="#calendar_today"/></svg>
           <time datetime="<%= date(page.date, 'YYYY-MM-DD') %>">
             <%= date(page.date, theme.post.date_format || 'YYYY-MM-DD') %>
           </time>
         </span>
+        <% } %>
 
         <!-- Updated -->
-        <% if (page.updated && page.updated !== page.date) { %>
+        <% if (!page.hide_updated && page.updated && page.updated !== page.date) { %>
         <span class="post-meta-item">
           <svg class="sym-icon" aria-hidden="true"><use href="#edit"/></svg>
           <time datetime="<%= date(page.updated, 'YYYY-MM-DD') %>">
@@ -27,7 +31,7 @@
         <% } %>
 
         <!-- Reading Time -->
-        <% if (theme.post.reading_time) { %>
+        <% if (!page.hide_reading_time && theme.post.reading_time) { %>
         <span class="post-meta-item">
           <svg class="sym-icon" aria-hidden="true"><use href="#schedule"/></svg>
           <span><%= Math.max(1, Math.ceil(page.content.replace(/<[^>]*>/g, '').length / 500)) %> min read</span>
@@ -35,14 +39,16 @@
         <% } %>
 
         <!-- Word Count -->
+        <% if (!page.hide_word_count) { %>
         <span class="post-meta-item">
           <svg class="sym-icon" aria-hidden="true"><use href="#text_fields"/></svg>
           <span><%= page.content.replace(/<[^>]*>/g, '').length %> chars</span>
         </span>
+        <% } %>
       </div>
 
       <!-- Categories -->
-      <% if (page.categories && page.categories.length > 0) { %>
+      <% if (!page.hide_categories && page.categories && page.categories.length > 0) { %>
       <div class="post-full-categories">
         <svg class="sym-icon" aria-hidden="true"><use href="#folder"/></svg>
         <% page.categories.forEach(function(cat) { %>
@@ -52,7 +58,7 @@
       <% } %>
 
       <!-- Tags -->
-      <% if (page.tags && page.tags.length > 0) { %>
+      <% if (!page.hide_tags && page.tags && page.tags.length > 0) { %>
       <div class="post-full-tags">
         <% page.tags.forEach(function(tag) { %>
         <a href="<%= url_for(tag.path) %>" class="post-tag-chip">
@@ -65,7 +71,7 @@
     </header>
 
     <!-- Table of Contents -->
-    <% if (theme.toc && theme.toc.enable && page.toc !== false) { %>
+    <% if (!page.hide_toc && theme.toc && theme.toc.enable && page.toc !== false) { %>
     <div class="post-toc" id="post-toc" hx-disable>
       <button class="toc-summary" id="toc-toggle" aria-expanded="false">
         <svg class="sym-icon" aria-hidden="true"><use href="#toc"/></svg>

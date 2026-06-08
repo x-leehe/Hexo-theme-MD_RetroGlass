@@ -66,7 +66,7 @@
       <span>Recent Posts</span>
     </h4>
     <ul class="recent-posts-list">
-      <% site.posts.sort('date', -1).limit(5).forEach(function(post) { %>
+      <% site.posts.sort('date', -1).filter(function(p) { return !p.hide_post; }).limit(5).forEach(function(post) { %>
       <li>
         <a href="<%= url_for(post.path) %>" class="recent-post-link">
           <span class="recent-post-title"><%= post.title %></span>

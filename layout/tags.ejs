@@ -35,7 +35,7 @@
       <% site.tags.sort('length', -1).forEach(function(tag, idx) { %>
         <%
           // Tile size by post count (1→small, 2-3→wide, 4+→large)
-          const count = tag.length;
+          const count = tag.posts.filter(function(p) { return !p.hide_date && !p.hide_updated && !p.hide_word_count && !p.hide_reading_time && !p.hide_tags && !p.hide_categories && !p.hide_toc && !p.hide_title && !p.hide_post; }).length;
           const size = count >= 4 ? 'lg' : (count >= 2 ? 'md' : 'sm');
           // Color hue by name hash for consistent per-tag accent
           const hue = (function(s) {

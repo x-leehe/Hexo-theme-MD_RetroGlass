@@ -33,6 +33,7 @@
         <h2 class="archive-year-title"><%= year %></h2>
         <ul class="archive-posts">
           <% yearlyPosts[year].forEach(function(post) { %>
+          <% if (!post.hide_date && !post.hide_updated && !post.hide_word_count && !post.hide_reading_time && !post.hide_tags && !post.hide_categories && !post.hide_toc && !post.hide_title && !post.hide_post) { %>
           <li class="archive-post-item">
             <time class="archive-post-date" datetime="<%= date(post.date, 'YYYY-MM-DD') %>">
               <%= date(post.date, 'MM-DD') %>
@@ -41,8 +42,8 @@
               <%= post.title %>
             </a>
           </li>
+          <% } %>
           <% }); %>
-        </ul>
       </section>
       <% }); %>
     </div>

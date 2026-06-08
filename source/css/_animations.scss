@@ -32,3 +32,24 @@
 .page-full-inner {
   animation: fadeIn 0.4s ease;
 }
+
+/* ============================================================
+   20. Shortcodes — Blur & Spoiler Accessibility
+   ============================================================ */
+.blur {
+  filter: blur(4px);
+  transition: filter 0.3s ease;
+  cursor: pointer;
+}
+
+.blur:hover,
+.blur:focus {
+  filter: blur(0);
+  outline: none;
+}
+
+/* Spoiler keyboard accessibility */
+.spoiler:focus {
+  background: transparent;
+  color: inherit;
+}

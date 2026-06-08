@@ -127,6 +127,14 @@ footer:
   custom_html: ''              # 页脚自定义HTML（公安备案、版权声明等）
 
 # -------------------------------
+# Link Preview Card
+# -------------------------------
+link_preview:
+  enable: true                 # Enable link preview cards
+  auto_fetch: true             # Auto-fetch og:description & og:image when show-preview: true
+  timeout: 5000                # Request timeout in ms
+
+# -------------------------------
 # Misc
 # -------------------------------
 toc:
@@ -148,6 +156,7 @@ scroll_to_top: true
 shortcodes:
   spoiler_default: 你知道的太多了
   hidden_default: 展开
+  blur_default: 你知道的太多了
   tip_default: 提示
   warn_default: 警告
   critical_default: 严重警告
