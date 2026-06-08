@@ -267,8 +267,8 @@ All shortcodes support **two syntaxes**:
 
 | Style | Syntax | Best for |
 |-------|--------|----------|
-| **Inline** | `{{Function|Description|content}}` | Single-line, quick usage |
-| **Nunjucks** | `{% function Description %}content{% endfunction %}` | Multi-line, full Markdown in body |
+| **Inline** | ` {{Function|Description|content}} ` | Single-line, quick usage |
+| **Nunjucks** | ` {% function Description %}content{% endfunction %} ` | Multi-line, full Markdown in body |
 
 Both are case-insensitive. The `Description` field is optional — leave it empty (inline: `||`, Nunjucks: omit) to use the default label.
 
