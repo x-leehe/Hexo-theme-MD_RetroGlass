@@ -12,14 +12,32 @@ hexo.extend.filter.register('before_post_render', function (data) {
     const hexo = this;
 
     // ---- Protect fenced code blocks from shortcode processing ----
-    // (Inline code is intentionally NOT protected — it should be rendered
-    //  as <code> by mdInline() inside shortcode bodies.)
     const protectedBlocks = [];
     data.content = data.content.replace(
         /```[\s\S]*?```/g,
         function (match) {
             protectedBlocks.push(match);
             return '<!--CB' + (protectedBlocks.length - 1) + '-->';
+        }
+    );
+
+    // ---- Protect inline code containing Nunjucks syntax ----
+    // Hexo's escapeAllSwigTags (post.js) walks the raw Markdown character by
+    // character looking for {% %}, {{ }}, and {# #} patterns.  It does not
+    // understand Markdown backtick quoting, so `{% group 2 %}` inside inline
+    // code is still seen as a live Nunjucks tag.  When the post also contains
+    // a matching {% endgroup %}, the state machine enters "full tag" mode and
+    // wraps everything between them into a single swig placeholder — restoring
+    // raw Markdown into the rendered HTML later, which then trips up Nunjucks.
+    //
+    // Fix: convert backtick code that contains {% / {{ / {# to an HTML <code>
+    // tag with entity-escaped braces.  Markdown-it (html:true) passes the
+    // <code> through verbatim, and tag.render() later re-escapes it via
+    // rCodeTag, so Nunjucks never sees a bare {.
+    data.content = data.content.replace(
+        /`([^`\n]*?\{[%{#][^`\n]*?)`/g,
+        function (_, code) {
+            return '<code>' + code.replace(/\{/g, '&#123;').replace(/\}/g, '&#125;') + '</code>';
         }
     );
 

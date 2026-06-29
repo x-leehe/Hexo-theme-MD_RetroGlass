@@ -96,23 +96,40 @@
     <!-- Post Footer -->
     <footer class="post-full-footer">
       <!-- Previous / Next Navigation -->
+      <%
+        // Build a filtered list that excludes hide_post pages so
+        // hidden posts don't appear as prev/next nav targets.
+        var all = site.posts.sort('date', -1).toArray();
+        var cur = -1, prev, next;
+        for (var i = 0; i < all.length; i++) {
+          if (all[i].path === page.path) { cur = i; break; }
+        }
+        if (cur >= 0) {
+          for (var i = cur + 1; i < all.length; i++) {        // older posts
+            if (!all[i].hide_post) { prev = all[i]; break; }
+          }
+          for (var i = cur - 1; i >= 0; i--) {                 // newer posts
+            if (!all[i].hide_post) { next = all[i]; break; }
+          }
+        }
+      %>
       <nav class="post-nav">
-        <% if (page.prev) { %>
-        <a href="<%= url_for(page.prev.path) %>" class="post-nav-item post-nav-prev">
+        <% if (prev) { %>
+        <a href="<%= url_for(prev.path) %>" class="post-nav-item post-nav-prev">
           <span class="post-nav-label">
             <svg class="sym-icon" aria-hidden="true"><use href="#chevron_left"/></svg>
             <span>Previous</span>
           </span>
-          <span class="post-nav-title"><%= page.prev.title %></span>
+          <span class="post-nav-title"><%= prev.title %></span>
         </a>
         <% } %>
-        <% if (page.next) { %>
-        <a href="<%= url_for(page.next.path) %>" class="post-nav-item post-nav-next">
+        <% if (next) { %>
+        <a href="<%= url_for(next.path) %>" class="post-nav-item post-nav-next">
           <span class="post-nav-label">
             <span>Next</span>
             <svg class="sym-icon" aria-hidden="true"><use href="#chevron_right"/></svg>
           </span>
-          <span class="post-nav-title"><%= page.next.title %></span>
+          <span class="post-nav-title"><%= next.title %></span>
         </a>
         <% } %>
       </nav>
