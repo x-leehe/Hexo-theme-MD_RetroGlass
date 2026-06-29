@@ -52,13 +52,19 @@ npm install subset-font --save-dev
 cp themes/md-retroglass/misc-scripts/font-convert.js scripts/
 ```
 
-**字体工作流：** 主题在 `fonts-src/` 中提供 TTF 源字体文件（HarmonyOS Sans SC、JetBrainsMapleMono、AaCute）。构建时，`font-convert.js` 扫描所有 HTML 和 Markdown 文件收集唯一字符，通过 [subset-font](https://www.npmjs.com/package/subset-font)（基于 harfbuzz WASM）将每种字体子集化为仅包含这些字形，并输出压缩 WOFF2 至 `public/fonts/`。运行：
+**字体工作流：** 主题在 `fonts-src/` 中提供 TTF 源字体文件（HarmonyOS Sans SC、JetBrainsMapleMono、AaCute）。将主题 `misc-scripts/` 中的字体转换脚本复制到 Hexo 站点的 `scripts/` 目录——Hexo 在启动时会自动加载它，并在每次 `hexo generate` 完成后通过 `generateAfter` hook 自动运行字体子集化，无需手动执行额外步骤：
 
 ```bash
-hexo generate && node scripts/font-convert.js
+cp themes/md-retroglass/misc-scripts/font-convert.js scripts/
 ```
 
-或直接使用内置的 npm 脚本：`npm run build`。
+构建时，`font-convert.js` 扫描所有 HTML 和 Markdown 文件收集唯一字符，通过 [subset-font](https://www.npmjs.com/package/subset-font)（基于 harfbuzz WASM）将每种字体子集化为仅包含这些字形，并输出压缩 WOFF2 至 `public/fonts/`。只需运行：
+
+```bash
+hexo generate
+```
+
+或使用 npm 脚本：`npm run build`。如需手动独立重新运行字体子集化，请使用 `npm run subset-fonts`。
 
 如需更换字体，替换 `fonts-src/` 中的 TTF 文件，更新 `scripts/font-convert.js` 中的 `FONT_MAP`，并编辑 `source/css/_variables.scss` 中的 `@font-face` 声明。
 
@@ -151,8 +157,6 @@ syntax_highlighter: prismjs
 主题使用 Hexo 内置的 [PrismJS](https://prismjs.com) 支持，服务端预处理。暗色（`prism-tomorrow`）与亮色（`prism`）两套主题自动跟随主题管理器切换。
 
 ### Comment System / 评论系统
-
-### 评论系统
 
 通过 `comment_system` 选择评论后端：
 
@@ -300,6 +304,8 @@ footer:
 
 ### SEO
 
+> ⚠️ **重要：** 默认配置为 `noindex, nofollow`，禁止搜索引擎收录。如要公开你的博客，请务必修改 `_config.yml` 中的 `seo.robots` 为 `index, follow`。
+
 ```yaml
 seo:
   robots: noindex, nofollow
@@ -333,14 +339,16 @@ scroll_to_top: true
 
 ## 短代码
 
-所有短代码支持**两种语法**：
+短代码支持**两种语法**。推荐优先使用 Nunjucks 风格（`{% %}`）——支持多行内容、完整 Markdown，且不会与模板引擎分隔符混淆：
 
-| 风格 | 语法 | 适用场景 |
+| 风格 | 语法 | 推荐场景 |
 |------|------|----------|
-| **行内** | ` {{Function\|描述\|内容}} ` | 单行、快速使用 |
-| **Nunjucks** | `{% function 描述 %}内容{% endfunction %}` | 多行、正文使用完整 Markdown |
+| **Nunjucks** | `{% function 描述 %}内容{% endfunction %}` | 所有短代码——**默认使用此语法** |
+| **行内** | ` {{Function\|描述\|内容}} ` | 仅限快速单行 Spoiler / Blur |
 
-两者均不区分大小写。`描述` 字段可选 — 留空（行内：`||`，Nunjucks：省略）则使用默认标签。
+两者均不区分大小写。`描述` 字段可选——留空（行内：`||`，Nunjucks：省略）则使用默认标签。
+
+> ⚠️ 行内 `{{}}` 语法在 Hidden、Tip、Warn、Critical 等块级短代码中也可使用，但**不推荐**：行内 Markdown 渲染可能产生非预期结果，且与模板引擎标记混用时容易造成歧义。建议块级内容统一使用 `{% %}`。
 
 > **代码块保护：** 围栏代码块（`` ``` ``）内的短代码**永远不会**被处理——渲染前通过占位符替换进行保护。你可以放心在代码块中演示短代码语法。
 
@@ -359,8 +367,6 @@ scroll_to_top: true
 #### Hidden — 折叠块
 
 ```
-{{Hidden|点击展开|一些 **Markdown** 内容。}}
-
 {% hidden 点击展开 %}
 一些 **Markdown** 内容。
 {% endhidden %}
@@ -371,8 +377,6 @@ scroll_to_top: true
 #### Tip / Info — 提示框
 
 ```
-{{Tip|注意|这是一条有用的**提示**，支持格式。}}
-
 {% tip 注意 %}
 这是一条有用的**提示**，支持格式。
 {% endtip %}
@@ -383,8 +387,6 @@ scroll_to_top: true
 #### Warn — 警告框
 
 ```
-{{Warn||此操作**不可逆**。}}
-
 {% warn %}
 此操作**不可逆**。
 {% endwarn %}
@@ -395,8 +397,6 @@ scroll_to_top: true
 #### Critical — 严重警告
 
 ```
-{{Critical|免责声明|**使用前请自行评估风险。**}}
-
 {% critical 免责声明 %}
 **使用前请自行评估风险。**
 {% endcritical %}
@@ -442,11 +442,134 @@ shortcodes:
   critical_default: 严重警告
 ```
 
-无需额外插件 — `{{}}` 语法由 `before_post_render` 过滤器处理，`{% %}` 语法在 `scripts/shortcodes.js` 中注册为原生 Hexo/Nunjucks 标签。
+无需额外插件 — `{{}}` 语法由 `before_post_render` 过滤器处理，`{% %}` 语法在 `scripts/shortcodes-custom.js` 和 `scripts/shortcodes-nunjucks.js` 中注册为原生 Hexo/Nunjucks 标签。
 
 ### 代码块头部
 
 每个代码块自动显示**语言标签**（自动识别 30+ 种语言，包括 JavaScript、TypeScript、Python、Rust、Go、Docker、YAML 等）和**一键复制按钮**。未知语言则首字母大写显示。htmx 页面切换后自动重新初始化。
+
+## 用户组加密
+
+MD-RetroGlass 内置基于 [hexo-blog-encrypt](https://github.com/D0n9X1n/hexo-blog-encrypt) v4.0.2 的零信任多用户组加密系统（PBKDF2-SHA256 + AES-256-GCM）。可以为文章定义多个**访问等级**（如访客/好友/VIP/管理员），每等级独立密码，对文章或段落进行加密。
+
+### 架构
+
+```
+文章 Front-matter           _config.yml                  .encrypt-secret.yml
+(encrypt.min_level: 2)  →   encrypt.groups.levels      → levels: { N: password }
+                             （仅名称+标签，              （仅密码，
+                              可安全提交至 Git）           必须自行 gitignore）
+                                     │
+                                     ▼
+                              构建时深度合并
+                              PBKDF2 + AES-256-GCM
+                              逐等级加密 + 往返验证
+                                     │
+                                     ▼
+                              部署产物
+                              （仅 salt + nonce + 密文）
+```
+
+### 配置
+
+在你的 Hexo 站点 `_config.yml` 中（或主题 `_config.yml` 中）：
+
+```yaml
+encrypt:
+  enable: true
+  secret_file: .encrypt-secret.yml    # 外置密码文件
+  tips:
+    password_incorrect: "密码错误！请你重新输入。"
+    page_corrupt: "这不是你的问题——数据可能被破坏了！快告诉主人有坏人在撬锁！"
+  groups:
+    levels:
+      0:
+        name: guest
+        label: 访客
+        # 无需密码 — 公开访问
+      1:
+        name: friend
+        label: 好友
+      2:
+        name: vip
+        label: VIP
+      3:
+        name: admin
+        label: 管理员
+```
+
+创建 `.encrypt-secret.yml`（从主题提供的模板复制）：
+
+```yaml
+levels:
+  1:
+    password: "你的好友密码"
+  2:
+    password: "你的VIP密码"
+  3:
+    password: "你的管理员密码"
+```
+
+> ⚠️ **重要：** 在你的 Hexo 站点中，**必须**将 `.encrypt-secret.yml` 加入 `.gitignore`！主题仓库中包含此文件仅作为**模板**（密码为占位符 `CHANGE_ME`），以便你了解格式——在你的站点中，它包含真实密码，绝对不可提交至 Git。
+
+### Front-matter 用法
+
+**全页加密** — 整篇文章需要验证：
+
+```yaml
+---
+title: 秘密文章
+encrypt:
+  min_level: 2    # 仅 Lv.2（VIP）及以上可读
+---
+```
+
+**段落内联加密** — 指定段落需要验证：
+
+```nunjucks
+所有人都能看到的公开内容。
+
+{% group 2 %}
+此段落需要 Lv.2（VIP）及以上等级验证。
+{% endgroup %}
+
+更多公开内容。
+```
+
+### 三种场景对比
+
+| | 完全加密 | 部分加密 | 不加密 |
+|---|---|---|---|
+| 触发条件 | `encrypt.min_level` ≥ 1 | `{% group N %}` 短代码 | 无 encrypt / 无 group |
+| 访客看到 | 全屏密码弹窗 | 公开内容 + 展开式验证块 | 全部内容 |
+| 加密范围 | 整篇正文 | 仅 `{% group %}` 段落 | 无 |
+| sessionStorage | ✅ 同标签页自动解 | ✅ 同标签页自动解 | N/A |
+
+### 工作原理
+
+- **构建时：** 每篇文章/段落按等级分别加密，每等级使用独立的 salt/nonce。加密后立即执行往返验证（`encrypt → decrypt`），验证通过才会部署。内容完整性哈希（`SHA-256(密文||salt||nonce||pwdcheck)`）嵌入页面，用于运行时检测部署后篡改。
+- **客户端：** Web Crypto API（`PBKDF2` + `AES-GCM`）。用户选择用户组，输入密码。HMAC 指纹在昂贵的 PBKDF2 派生**之前**预校验密码正确性。解密后的内容绝不会发送到服务器。
+- **sessionStorage：** 解密成功后，派生密钥缓存至 `sessionStorage`——同标签页浏览同等级文章自动解密，无需重复输入密码。关闭标签页即清除缓存。
+- **htmx 安全：** `htmx:beforeHistorySave` 监听器在缓存前将已解密内容替换回加密外壳，确保明文不会泄露到 htmx 的 localStorage 历史缓存中。
+
+### ⚠️ 安全警告与免责声明
+
+本加密为**浏览器端 AES-GCM 对称加密**——提高阅读门槛，但**并非军事级安全**。以下风险客观存在：
+
+- 密码泄露（窥屏、键盘记录器、`.encrypt-secret.yml` 被他人获取）
+- 中间人攻击（务必使用 **HTTPS**）
+- 浏览器恶意扩展
+- Cloudflare Pages / Vercel 等远程构建部署：如 `.encrypt-secret.yml` 被 gitignore 排除，远端构建将失败。需确保仓库为 **Private**，或通过平台环境变量/Secrets 功能在构建时注入密码。
+
+**如内容因任何原因泄漏，本主题概不负责。** 请将加密视为「增加阅读门槛」而非「绝对保密」。
+
+### 依赖
+
+| 来源 | 说明 |
+|------|------|
+| Node.js `crypto` | 服务端 PBKDF2 + AES-GCM（零 npm 依赖） |
+| Web Crypto API | 客户端解密（所有现代浏览器原生支持） |
+| [hexo-blog-encrypt](https://github.com/D0n9X1n/hexo-blog-encrypt) v4.0.2 | 加密插件基础（扩展而非替换） |
 
 ## 导航机制
 

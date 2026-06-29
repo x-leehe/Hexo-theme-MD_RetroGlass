@@ -112,6 +112,11 @@ music:
 # SEO & Meta
 # -------------------------------
 seo:
+  # ⚠️⚠️⚠️  重要：发布之前必须修改此项！⚠️⚠️⚠️
+  # 当前默认禁止所有搜索引擎收录。
+  # 如果要让搜索引擎收录你的博客，请改为：
+  #   robots: index, follow
+  # 并填写下方的 google_site_verification / bing_site_verification。
   robots: noindex, nofollow    # 搜索引擎不允许抓取任何内容
   google_site_verification: ''
   bing_site_verification: ''
@@ -147,6 +152,42 @@ post:
   reading_time: true           # Estimate reading time
 
 scroll_to_top: true
+
+# -------------------------------
+# Encrypt — Multi-Group Access Control
+# -------------------------------
+# Zero-trust password encryption for posts.
+# Level structure is safe to commit to Git. Actual passwords live in
+# .encrypt-secret.yml (see template below) — add that file to .gitignore!
+#
+# ⚠️ SECURITY DISCLAIMER:
+# This is browser-side AES-GCM symmetric encryption — NOT military-grade.
+# HTTPS is REQUIRED. Passwords in .encrypt-secret.yml must be gitignored.
+# For Cloudflare Pages / Vercel remote builds, ensure the repo is Private
+# OR inject secrets via platform environment variables at build time.
+# The theme is NOT liable for any content leakage.
+encrypt:
+  enable: true
+  secret_file: .encrypt-secret.yml    # Path to external password file
+  tips:
+    password_incorrect: "密码错误！请你重新输入。"
+    page_corrupt: "这不是你的问题——数据可能被破坏了！快告诉主人有坏人在撬锁！"
+  groups:
+    levels:
+      0:
+        name: guest
+        label: 访客
+        # Guest has no password — public access
+      1:
+        name: friend
+        label: 好友
+        # Password lives in .encrypt-secret.yml
+      2:
+        name: vip
+        label: VIP
+      3:
+        name: admin
+        label: 管理员
 
 # -------------------------------
 # Shortcodes (短代码)

@@ -1,0 +1,330 @@
+/* ============================================================
+   MD-RetroGlass — Encrypt UI (Multi-Group Password)
+   Material Design 3 Glassmorphism over hexo-blog-encrypt shell.
+   Reuses --md-sys-color-* and --glass-* tokens for dark/light.
+   ============================================================ */
+
+/* ── Full-page encrypt overlay ─────────────────────────────────── */
+.hbe-container {
+  max-width: 480px;
+  margin: 2rem auto;
+}
+
+.hbe-content {
+  text-align: center;
+  font-size: var(--font-size-base);
+  padding: 2rem 1.5rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-shadow);
+}
+
+.hbe-message {
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface);
+  margin-bottom: 1.25rem;
+  line-height: 1.5;
+}
+
+/* ── Level select dropdown ─────────────────────────────────────── */
+.hbe-level-select-wrapper {
+  margin-bottom: 1.25rem;
+  width: 100%;
+}
+
+.hbe-level-select {
+  width: 100%;
+  max-width: 280px;
+  padding: 0.6em 1em;
+  font-size: var(--font-size-base);
+  font-family: var(--font-body);
+  color: var(--md-sys-color-on-surface);
+  background: var(--md-sys-color-surface-variant);
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--glass-radius-xs);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238d9199' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 2.2em;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.hbe-level-select:focus {
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 3px rgba(161, 201, 255, 0.25);
+}
+
+/* ── Form layout ───────────────────────────────────────────────── */
+.hbe-form {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Same for level-select-wrapper — JS hides this on integrity failure */
+.hbe-level-select-wrapper {
+  display: block !important;
+}
+
+/* ── Password input (glass-morphed) ────────────────────────────── */
+.hbe-input {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 320px;
+}
+
+.hbe-input-field {
+  width: 100%;
+  padding: 0.75em 1em;
+  font-size: var(--font-size-base);
+  font-family: var(--font-body);
+  color: var(--md-sys-color-on-surface);
+  background: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--glass-radius-xs);
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  box-sizing: border-box;
+}
+
+.hbe-input-field:focus {
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 3px rgba(161, 201, 255, 0.25);
+}
+
+.hbe-input-field::placeholder {
+  color: var(--md-sys-color-on-surface-variant);
+  opacity: 0.6;
+}
+
+.hbe-input-label {
+  display: none; /* Clean glassmorphism — placeholder is enough */
+}
+
+/* ── Decrypt button ────────────────────────────────────────────── */
+.hbe-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  padding: 0.65em 1.6em;
+  font-size: var(--font-size-base);
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--md-sys-color-on-primary);
+  background: var(--md-sys-color-primary);
+  border: none;
+  border-radius: var(--glass-radius-xs);
+  cursor: pointer;
+  transition: background var(--transition-fast), box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.hbe-button:hover {
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.hbe-button:active {
+  transform: scale(0.97);
+}
+
+.hbe-button:disabled,
+.hbe-button[aria-busy="true"] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.hbe-button-hidden {
+  display: none;
+}
+
+/* ── Error region ──────────────────────────────────────────────── */
+.hbe-error {
+  min-height: 1.2em;
+  margin: 0;
+  padding: 0.4em 0.8em;
+  font-size: var(--font-size-sm);
+  font-family: var(--font-body);
+  color: var(--md-sys-color-error);
+  background: transparent;
+  border-radius: var(--glass-radius-xs);
+  transition: background var(--transition-fast);
+}
+
+.hbe-error:not(:empty) {
+  background: rgba(255, 180, 171, 0.1);
+}
+
+/* ── Page corrupt / lock-down state ────────────────────────────── */
+.hbe-corrupt {
+  padding: 2rem;
+  text-align: center;
+}
+
+.hbe-corrupt .hbe-error {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--md-sys-color-error);
+  background: rgba(255, 180, 171, 0.12);
+  padding: 1em 1.5em;
+  border-radius: var(--glass-radius-xs);
+  border: 1px solid rgba(255, 180, 171, 0.25);
+}
+
+/* ── Shake animation (wrong password) ──────────────────────────── */
+@keyframes hbe-shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 50%, 90% { transform: translateX(-4px); }
+  30%, 70% { transform: translateX(4px); }
+}
+
+.hbe-shake {
+  animation: hbe-shake 0.4s ease-in-out;
+}
+
+/* ── Fade-in transition (decrypt success) ──────────────────────── */
+@keyframes hbe-fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hbe-decrypted-content {
+  animation: hbe-fade-in var(--transition-normal);
+}
+
+/* ── Inline group-locked blocks ({% group N %}) ───────────────── */
+.group-locked {
+  margin: 1.25rem 0;
+}
+
+.group-locked-details {
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--glass-radius-sm);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  overflow: hidden;
+}
+
+.group-locked-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  list-style: none; /* Hide default <details> marker */
+}
+
+.group-locked-summary::-webkit-details-marker {
+  display: none;
+}
+
+.group-locked-summary .sym-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  fill: var(--md-sys-color-on-surface-variant);
+  transition: transform var(--transition-fast);
+}
+
+.group-locked-details[open] .group-locked-summary .sym-icon {
+  transform: rotate(90deg);
+}
+
+.group-locked-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.group-select {
+  padding: 0.4em 0.75em;
+  font-size: var(--font-size-sm);
+  font-family: var(--font-body);
+  color: var(--md-sys-color-on-surface);
+  background: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--glass-radius-xs);
+  outline: none;
+  min-width: 100px;
+}
+
+.group-password {
+  flex: 1;
+  min-width: 140px;
+  padding: 0.4em 0.75em;
+  font-size: var(--font-size-sm);
+  font-family: var(--font-body);
+  color: var(--md-sys-color-on-surface);
+  background: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--glass-radius-xs);
+  outline: none;
+}
+
+.group-unlock-btn {
+  padding: 0.4em 1em;
+  font-size: var(--font-size-sm);
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--md-sys-color-on-primary);
+  background: var(--md-sys-color-primary);
+  border: none;
+  border-radius: var(--glass-radius-xs);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.group-unlock-btn:hover {
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.group-error {
+  width: 100%;
+  font-size: var(--font-size-xs);
+  color: var(--md-sys-color-error);
+  min-height: 1em;
+}
+
+.group-error:empty {
+  display: none;
+}
+
+/* ── Light mode overrides ──────────────────────────────────────── */
+:root.light-mode .hbe-input-field {
+  background: var(--md-sys-color-surface);
+}
+
+:root.light-mode .group-locked-details {
+  background: var(--glass-bg);
+}
+
+:root.light-mode .hbe-error:not(:empty) {
+  background: rgba(186, 26, 26, 0.08);
+}

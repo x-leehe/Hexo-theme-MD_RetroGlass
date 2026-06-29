@@ -149,17 +149,9 @@
   <% } %>
 
   <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/htmx.org@2/dist/htmx.min.js"></script>
+  <script src="<%= url_for('js/htmx.min.js') %>"></script>
+  <script src="<%= url_for('js/group-decrypt.js') %>"></script>
   <script type="module" src="<%= url_for('js/main.js') %>"></script>
-
-  <!-- Service Worker — persistent font cache (independent of HTTP cache) -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('<%= url_for('sw.js') %>').catch(function(err) {
-        console.warn('SW registration failed:', err);
-      });
-    }
-  </script>
 </body>
 
 </html>

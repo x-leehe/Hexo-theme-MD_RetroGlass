@@ -367,7 +367,7 @@
       try {
         const ok = document.execCommand('copy');
         if (ok) showCopied(btn);
-      } catch (e) { /* ignore */ }
+      } catch (e) { console.error('[main] fallbackCopy:', e); }
       document.body.removeChild(ta);
     }
 
@@ -602,7 +602,6 @@
       initCodeHeaders();
       initNavIndicator();
       initExternalLinks();
-      initSpoiler();
       initSpoiler();
       updateBackButton();
     });

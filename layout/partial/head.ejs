@@ -57,8 +57,8 @@
   <!-- Fonts (self-hosted, see _variables.scss @font-face) -->
 
   <!-- PrismJS (dark theme default, light theme disabled) -->
-  <link rel="stylesheet" id="prism-dark" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism-tomorrow.css">
-  <link rel="stylesheet" id="prism-light" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.css" disabled>
+  <link rel="stylesheet" id="prism-dark" href="<%= url_for('css/prism-tomorrow.css') %>">
+  <link rel="stylesheet" id="prism-light" href="<%= url_for('css/prism.css') %>" disabled>
 
   <!-- Theme Stylesheet -->
   <link rel="stylesheet" href="<%= url_for('css/style.css') %>">

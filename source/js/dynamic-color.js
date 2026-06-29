@@ -212,6 +212,7 @@
         updateColors(r, g, b);
       } catch (e) {
         // CORS or canvas taint — use default palette
+        console.error('[dynamic-color] extractColor:', e);
       }
     }
 

@@ -16,7 +16,7 @@
   //    (from before hx-history-elt was moved from <body> to .main-content)
   // ==========================================================
   (function clearLegacyCache() {
-    var FLAG = 'htmx-cache-cleared-v2';
+    const FLAG = 'htmx-cache-cleared-v2';
     if (sessionStorage && !sessionStorage.getItem(FLAG)) {
       try {
         Object.keys(localStorage).forEach(function (key) {
@@ -25,7 +25,7 @@
           }
         });
         sessionStorage.setItem(FLAG, '1');
-      } catch (e) { /* ignore */ }
+      } catch (e) { console.error('[pjax] clearLegacyCache:', e); }
     }
   })();
 
@@ -189,6 +189,22 @@
     // but Gitalk iframe is lost — re-init if needed
     if (typeof window._initGitalk === 'function') {
       setTimeout(window._initGitalk, 100);
+    }
+  });
+
+  // Handle navigation errors (server errors, network failures, etc.)
+  document.body.addEventListener('htmx:responseError', function (evt) {
+    console.error('[pjax] Navigation error:', evt.detail);
+    const main = document.querySelector('.main-content');
+    if (main) {
+      main.classList.remove('is-leaving');
+      const errBox = document.createElement('div');
+      errBox.className = 'admonition critical';
+      errBox.innerHTML = '<div class="admonition-head">' +
+        '<svg class="sym-icon admonition-icon" aria-hidden="true"><use href="#report"/></svg>' +
+        '<strong>页面加载失败</strong></div>' +
+        '<div class="admonition-body"><p>导航过程中发生错误，请检查网络连接后刷新页面重试。</p></div>';
+      main.insertBefore(errBox, main.firstChild);
     }
   });
 

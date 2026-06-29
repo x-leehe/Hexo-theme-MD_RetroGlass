@@ -21,6 +21,13 @@
     const CACHE = new Map();
 
     /**
+     * Escape HTML special characters to prevent injection.
+     */
+    function escapeHtml(str) {
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    /**
      * Fetch a URL and return the body as a string (Promise).
      */
     function fetchBody(targetUrl) {
@@ -67,18 +74,24 @@
      * Build preview card HTML string.
      */
     function buildCardHTML(href, title, description, image, host) {
-        const imgHTML = image
-            ? '<img class="preview-favicon" src="' + image + '" alt="" loading="lazy" onerror="this.style.display=\'none\';var s=this.nextElementSibling;if(s)s.style.display=\'block\'" onload="this.parentElement.classList.add(\'has-image\')">'
+        const safeImage = escapeHtml(image);
+        const safeTitle = escapeHtml(title || host || '外部链接');
+        const safeDesc = escapeHtml(description || '');
+        const safeHost = escapeHtml(host || '');
+        const safeHref = escapeHtml(href);
+
+        const imgHTML = safeImage
+            ? '<img class="preview-favicon" src="' + safeImage + '" alt="" loading="lazy" onerror="this.style.display=\'none\';let s=this.nextElementSibling;if(s)s.style.display=\'block\'" onload="this.parentElement.classList.add(\'has-image\')">'
               + '<svg class="sym-icon preview-icon-fallback" aria-hidden="true"><use href="#link"/></svg>'
             : '<svg class="sym-icon preview-icon-fallback" aria-hidden="true"><use href="#link"/></svg>';
 
-        return '<a class="link-preview-card" href="' + href + '" target="_blank" rel="noopener">'
-            + '<div class="preview-url-top">' + (host || '') + '</div>'
+        return '<a class="link-preview-card" href="' + safeHref + '" target="_blank" rel="noopener">'
+            + '<div class="preview-url-top">' + safeHost + '</div>'
             + '<div class="preview-body">'
             + '<div class="preview-thumb">' + imgHTML + '</div>'
             + '<div class="preview-info">'
-            + '<div class="preview-title">' + (title || host || '外部链接') + '</div>'
-            + '<div class="preview-desc">' + (description || '') + '</div>'
+            + '<div class="preview-title">' + safeTitle + '</div>'
+            + '<div class="preview-desc">' + safeDesc + '</div>'
             + '</div>'
             + '</div>'
             + '</a>';

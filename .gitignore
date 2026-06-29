@@ -8,6 +8,10 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+.omo/
 
 # Logs
 *.log
+
+# Docs (except hexo-blog-encrypt plugin which is part of the theme)
+docs/

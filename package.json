@@ -11,7 +11,17 @@
     "glassmorphism"
   ],
   "license": "MIT",
+  "scripts": {
+    "build": "hexo generate",
+    "subset-fonts": "node scripts/font-convert.js",
+    "test": "vitest run"
+  },
   "dependencies": {
-    "hexo-renderer-sass": "^0.5.0"
+    "hexo-renderer-dartsass": "^1.2.0",
+    "hexo-renderer-markdown-it": "^7.1.1"
+  },
+  "devDependencies": {
+    "subset-font": "^2.5.0",
+    "vitest": "^2.0.0"
   }
 }

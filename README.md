@@ -52,13 +52,19 @@ Then copy the font conversion script from the theme's `misc-scripts/` to your He
 cp themes/md-retroglass/misc-scripts/font-convert.js scripts/
 ```
 
-**Font workflow:** The theme ships TTF source fonts in `fonts-src/` (HarmonyOS Sans SC, JetBrainsMapleMono, AaCute). At build time, `font-convert.js` scans all HTML and Markdown for unique characters, subsets each font to only those glyphs via [subset-font](https://www.npmjs.com/package/subset-font) (harfbuzz WASM), and outputs compressed WOFF2 to `public/fonts/`. Run:
+**Font workflow:** The theme ships TTF source fonts in `fonts-src/` (HarmonyOS Sans SC, JetBrainsMapleMono, AaCute). Copy the font conversion script from the theme's `misc-scripts/` to your Hexo site's `scripts/` directory — Hexo automatically loads it at startup and runs font subsetting via the `generateAfter` hook after every `hexo generate`, with no manual steps needed:
 
 ```bash
-hexo generate && node scripts/font-convert.js
+cp themes/md-retroglass/misc-scripts/font-convert.js scripts/
 ```
 
-Or simply use the bundled npm script: `npm run build`.
+At build time, `font-convert.js` scans all HTML and Markdown for unique characters, subsets each font to only those glyphs via [subset-font](https://www.npmjs.com/package/subset-font) (harfbuzz WASM), and outputs compressed WOFF2 to `public/fonts/`. Simply run:
+
+```bash
+hexo generate
+```
+
+Or use the npm script: `npm run build`. To manually re-run font subsetting independently, use `npm run subset-fonts`.
 
 To use different fonts, replace the TTF files in `fonts-src/`, update `FONT_MAP` in `scripts/font-convert.js`, and edit the `@font-face` declarations in `source/css/_variables.scss`.
 
@@ -298,6 +304,8 @@ footer:
 
 ### SEO
 
+> ⚠️ **Important:** The default configuration is `noindex, nofollow`, which blocks all search engine indexing. If you want your blog to appear in search results, you **must** change `seo.robots` to `index, follow` in `_config.yml` before publishing.
+
 ```yaml
 seo:
   robots: noindex, nofollow
@@ -331,14 +339,16 @@ Definition lists are visually wrapped in a bordered box to distinguish them from
 
 ## Shortcodes
 
-All shortcodes support **two syntaxes**:
+Shortcodes support **two syntaxes**. Nunjucks-style (`{% %}`) is the recommended primary syntax — it handles multi-line content, full Markdown, and avoids confusion with template engine delimiters:
 
-| Style | Syntax | Best for |
-|-------|--------|----------|
-| **Inline** | ` {{Function\|Description\|content}} ` | Single-line, quick usage |
-| **Nunjucks** | ` {% function Description %}content{% endfunction %} ` | Multi-line, full Markdown in body |
+| Style | Syntax | Recommended for |
+|-------|--------|-----------------|
+| **Nunjucks** | ` {% function Description %}content{% endfunction %} ` | All shortcodes — **use this by default** |
+| **Inline** | ` {{Function\|Description\|content}} ` | Quick single-line Spoiler / Blur only |
 
 Both are case-insensitive. The `Description` field is optional — leave it empty (inline: `||`, Nunjucks: omit) to use the default label.
+
+> ⚠️ The inline `{{}}` syntax works for all shortcodes (Hidden, Tip, Warn, Critical included), but is **not recommended** for block-level content — inline Markdown rendering may produce unexpected results, and mixing `{{}}` with template engine markup can cause ambiguity. Prefer `{% %}` for anything beyond simple Spoiler/Blur text.
 
 > **Code block protection:** Shortcodes inside fenced code blocks (`` ``` ``) are **never** processed — they are protected by placeholder substitution before shortcode rendering. You can safely demonstrate shortcode syntax in code blocks.
 
@@ -357,8 +367,6 @@ Text is blacked out until clicked or hovered. Ideal for hiding spoilers.
 #### Hidden — Foldable block
 
 ```
-{{Hidden|Click to expand|Some **Markdown** content here.}}
-
 {% hidden Click to expand %}
 Some **Markdown** content here.
 {% endhidden %}
@@ -369,8 +377,6 @@ Renders as a `<details>` / `<summary>` collapsible section.
 #### Tip / Info — Information box
 
 ```
-{{Tip|Note|This is a helpful **tip** with formatting.}}
-
 {% tip Note %}
 This is a helpful **tip** with formatting.
 {% endtip %}
@@ -381,8 +387,6 @@ Blue-themed admonition for hints, notes, and supplementary info. (`Info` / `info
 #### Warn — Warning box
 
 ```
-{{Warn||This action is **irreversible**.}}
-
 {% warn %}
 This action is **irreversible**.
 {% endwarn %}
@@ -393,8 +397,6 @@ Yellow-themed admonition for cautionary notes.
 #### Critical — Critical alert
 
 ```
-{{Critical|Disclaimer|**Use at your own risk.**}}
-
 {% critical Disclaimer %}
 **Use at your own risk.**
 {% endcritical %}
@@ -440,11 +442,134 @@ shortcodes:
   critical_default: 严重警告
 ```
 
-No extra plugins needed — the `{{}}` syntax is handled by `before_post_render` filter, and the `{% %}` syntax is registered as native Hexo/Nunjucks tags in `scripts/shortcodes.js`.
+No extra plugins needed — the `{{}}` syntax is handled by `before_post_render` filter, and the `{% %}` syntax is registered as native Hexo/Nunjucks tags in `scripts/shortcodes-custom.js` and `scripts/shortcodes-nunjucks.js`.
 
 ### Code Block Headers
 
 Each code block automatically displays a **language label** (auto-detected from 30+ languages including JavaScript, TypeScript, Python, Rust, Go, Docker, YAML, etc.) and a **copy-to-clipboard button**. Unknown languages are capitalized by name. Fully re-initialized on htmx page transitions.
+
+## User Group Encryption
+
+MD-RetroGlass includes a zero-trust, multi-group encryption system built on [hexo-blog-encrypt](https://github.com/D0n9X1n/hexo-blog-encrypt) v4.0.2 (PBKDF2-SHA256 + AES-256-GCM). It lets you define **access levels** (e.g. guest/friend/vip/admin) with independent passwords, and encrypt posts or paragraphs for specific levels.
+
+### Architecture
+
+```
+Post Front-matter           _config.yml                  .encrypt-secret.yml
+(encrypt.min_level: 2)  →   encrypt.groups.levels      → levels: { N: password }
+                             (name + label only,          (passwords only,
+                              safe to commit)             MUST gitignore)
+                                     │
+                                     ▼
+                              Build-time deep merge
+                              PBKDF2 + AES-256-GCM
+                              Per-level encrypt + round-trip verify
+                                     │
+                                     ▼
+                              Deployment output
+                              (salt + nonce + ciphertext only)
+```
+
+### Configuration
+
+Add to your Hexo site's `_config.yml` (or the theme `_config.yml`):
+
+```yaml
+encrypt:
+  enable: true
+  secret_file: .encrypt-secret.yml    # External password file
+  tips:
+    password_incorrect: "Wrong password! Please try again."
+    page_corrupt: "Data integrity check failed — the content may have been tampered with."
+  groups:
+    levels:
+      0:
+        name: guest
+        label: Guest
+        # No password — public access
+      1:
+        name: friend
+        label: Friend
+      2:
+        name: vip
+        label: VIP
+      3:
+        name: admin
+        label: Admin
+```
+
+Create `.encrypt-secret.yml` (from the template provided with the theme):
+
+```yaml
+levels:
+  1:
+    password: "your-friend-password"
+  2:
+    password: "your-vip-password"
+  3:
+    password: "your-admin-password"
+```
+
+> ⚠️ **CRITICAL:** Add `.encrypt-secret.yml` to your site's `.gitignore`! The theme repo includes it as a **template** (with `CHANGE_ME` placeholders) so you can see the format — but in your site, it contains real passwords and MUST NOT be committed.
+
+### Front-matter Usage
+
+**Full-page encryption** — the entire post requires authentication:
+
+```yaml
+---
+title: Secret Post
+encrypt:
+  min_level: 2    # Only Lv.2 (VIP) and above can read
+---
+```
+
+**Partial inline encryption** — specific paragraphs require authentication:
+
+```nunjucks
+Public content visible to everyone.
+
+{% group 2 %}
+This paragraph requires Lv.2 (VIP) or above.
+{% endgroup %}
+
+More public content.
+```
+
+### Behavior Matrix
+
+| | Full-page Encrypt | Inline Encrypt | No Encrypt |
+|---|---|---|---|
+| Trigger | `encrypt.min_level` ≥ 1 | `{% group N %}` shortcode | No `encrypt` / no `group` |
+| Guest sees | Full-screen password overlay | Public content + expandable verification blocks | All content |
+| Encryption scope | Entire post body | Only `{% group %}` paragraphs | None |
+| sessionStorage | ✅ Same-tab auto-unlock | ✅ Same-tab auto-unlock | N/A |
+
+### How It Works
+
+- **Build time:** Each post/paragraph is encrypted once per level with independent salt/nonce. Content is round-trip verified (`encrypt → decrypt`) before deployment. Integrity hashes (`SHA-256(ciphertext||salt||nonce||pwdcheck)`) are embedded to detect post-deployment tampering.
+- **Client side:** Web Crypto API (`PBKDF2` + `AES-GCM`). User selects their group, enters the password. An HMAC fingerprint pre-verifies the password **before** the expensive PBKDF2 derivation. Decrypted content never touches a server.
+- **sessionStorage:** After successful decryption, the derived key is cached in `sessionStorage` — navigating to other posts at the same level auto-decrypts without re-prompting. Closing the tab clears the cache.
+- **htmx safe:** A `htmx:beforeHistorySave` listener swaps decrypted content back to the encrypted shell before caching, so plaintext never leaks into htmx's localStorage history.
+
+### ⚠️ Security Disclaimer
+
+This is **browser-side AES-GCM symmetric encryption** — it raises the reading bar but is **NOT military-grade security**. The following risks exist:
+
+- Password leakage (shoulder surfing, keyloggers, compromised `.encrypt-secret.yml`)
+- Man-in-the-middle attacks (always use **HTTPS**)
+- Malicious browser extensions
+- Cloudflare Pages / Vercel remote builds: if `.encrypt-secret.yml` is gitignored, the build will fail. Either keep the repo **Private** or inject passwords via platform environment variables / Secrets at build time.
+
+**The theme is NOT liable for any content leakage.** Treat encryption as "raising the reading bar" rather than "absolute secrecy."
+
+### Dependencies
+
+| Source | Purpose |
+|--------|---------|
+| Node.js `crypto` | Server-side PBKDF2 + AES-GCM (zero npm deps) |
+| Web Crypto API | Client-side decryption (native in all modern browsers) |
+| [hexo-blog-encrypt](https://github.com/D0n9X1n/hexo-blog-encrypt) v4.0.2 | Encryption plugin foundation (extended, not replaced) |
 
 ## Navigation
 

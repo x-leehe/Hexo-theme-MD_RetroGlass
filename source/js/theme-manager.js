@@ -28,14 +28,14 @@
       // Migrate old 'time-based' value
       if (v === 'time-based') v = 'time';
       if (STATES.indexOf(v) !== -1) return v;
-    } catch (e) { /* ignore */ }
+    } catch (e) { console.error('[theme] getMode:', e); }
     return 'auto';
   }
 
   function saveMode(mode) {
     try {
       localStorage.setItem(STORAGE_KEY, mode);
-    } catch (e) { /* ignore */ }
+    } catch (e) { console.error('[theme] saveMode:', e); }
   }
 
   // ==========================================================
@@ -143,9 +143,11 @@
   function startTimeCheck() {
     stopTimeCheck();
     timeCheckTimer = setInterval(function () {
-      if (getMode() === 'time') {
-        applyTheme('time');
-      }
+      try {
+        if (getMode() === 'time') {
+          applyTheme('time');
+        }
+      } catch (e) { console.error('[theme] timeCheck:', e); }
     }, 60000); // every 60 seconds
   }
 

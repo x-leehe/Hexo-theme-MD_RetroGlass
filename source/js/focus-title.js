@@ -10,26 +10,29 @@
     function updateAwayTitle() {
         if (!leaveTime) return;
         const elapsed = Math.floor((Date.now() - leaveTime) / 1000);
+        // Still within first 10s — keep initial message
+        if (elapsed < 10) return;
 
-        if (elapsed < 10) {
-            // still within the first 10s — keep initial message
-            return;
+        // Lookup table: [threshold_seconds, message]
+        const stages = [
+            [30,  '已离开超过 10 秒……'],
+            [60,  '已离开超过 30 秒……'],
+            [120, '已离开超过 1 分钟……'],
+        ];
+
+        let text = '页面将睡眠以节约浏览器资源……';
+        for (let i = 0; i < stages.length; i++) {
+            if (elapsed < stages[i][0]) {
+                text = stages[i][1];
+                break;
+            }
         }
 
-        let text;
-        if (elapsed < 30) {
-            text = '已离开超过 10 秒……';
-        } else if (elapsed < 60) {
-            text = '已离开超过 30 秒……';
-        } else if (elapsed < 120) {
-            text = '已离开超过 1 分钟……';
-        } else {
-            text = '页面将睡眠以节约浏览器资源……';
-            if (!sleepTriggered) {
-                sleepTriggered = true;
-                document.documentElement.dataset.pageSleeping = '';
-                document.dispatchEvent(new CustomEvent('pagestart.sleep'));
-            }
+        // Trigger sleep once when entering the final stage
+        if (text === '页面将睡眠以节约浏览器资源……' && !sleepTriggered) {
+            sleepTriggered = true;
+            document.documentElement.dataset.pageSleeping = '';
+            document.dispatchEvent(new CustomEvent('pagestart.sleep'));
         }
         document.title = text;
     }
